@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_settings"
-        android:name="com.example.myread.ui.gallery.GalleryFragment"
-        android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_settings" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.myread.ui.slideshow.SlideshowFragment"
+        android:id="@+id/nav_search"
+        android:name="com.example.myread.ui.search.SearchFragment"
         android:label="@string/menu_search"
         tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.example.myread.ui.settings.SettingsFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>
