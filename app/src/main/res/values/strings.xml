@@ -36,4 +36,10 @@
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="register_txt">Sign up</string>
+
+    <string name="datasaverswitch_desc">A switch to turn on the data saver</string>
+    <string name="datasaverswitch_text">Data Saver</string>
+    <string name="userstatsswitch_desc">A switch to turn on the sharing of anonymous user statistics</string>
+    <string name="userstatsswitch_text">Share anonymous user statistics</string>
+    <string name="searchbar_hint">Book name:</string>
 </resources>
