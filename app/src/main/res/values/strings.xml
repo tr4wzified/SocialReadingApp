@@ -27,4 +27,9 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_search">Search books</string>
     <string name="title_activity_settings2">Settings2Activity</string>
+    <string name="datasaverswitch_desc">A switch to turn on the data saver</string>
+    <string name="datasaverswitch_text">Data Saver</string>
+    <string name="userstatsswitch_desc">A switch to turn on the sharing of anonymous user statistics</string>
+    <string name="userstatsswitch_text">Share anonymous user statistics</string>
+    <string name="searchbar_hint">Book name:</string>
 </resources>
