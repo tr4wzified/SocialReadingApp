@@ -22,14 +22,9 @@ public class SearchFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         searchViewModel =
                 new ViewModelProvider(this).get(SearchViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_settings, container, false);
-        final TextView textView = root.findViewById(R.id.text_settings);
-        searchViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        View root = inflater.inflate(R.layout.fragment_search, container, false);
+        final TextView textView = root.findViewById(R.id.text_search);
+        searchViewModel.getText().observe(getViewLifecycleOwner(), s -> textView.setText(s));
         return root;
     }
 }
