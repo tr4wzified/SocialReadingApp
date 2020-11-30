@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyRead">
         <activity
-            android:name=".MainActivity"
+            android:name=".RegisterActivity"
             android:label="@string/title_activity_main2"
             android:theme="@style/Theme.MyRead.NoActionBar">
             <intent-filter>
