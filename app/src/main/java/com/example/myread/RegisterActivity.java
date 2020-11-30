@@ -24,6 +24,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.concurrent.*;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 
 public class RegisterActivity extends AppCompatActivity {
     private String trim_username, trim_password, trim_confirm_password;
@@ -45,7 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
         confirm_password = (EditText) findViewById(R.id.confirm_password);
 
         register_btn.setOnClickListener(v -> {
-            System.out.println("Doet het het?");
             getEditString();
 
             if (TextUtils.isEmpty(trim_username)) {
@@ -57,13 +64,13 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (!trim_password.equals(trim_confirm_password)) {
                 Toast.makeText(RegisterActivity.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
             } else{
-                URL url = null;
+                URL baseurl = null;
                 try {
-                    url = new URL("https://172.0.0.1:2048/register");
+                    baseurl = new URL("https://192.168.2.23:2048");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-                HttpURLConnection client = null;
+                OkHttpClient client = new OkHttpClient();
 //                    HashMap<String, String> params;
 //                    params.
 //                    StringBuilder sbParams = new StringBuilder();
@@ -80,47 +87,31 @@ public class RegisterActivity extends AppCompatActivity {
 //                        }
 //                        i++
 //                    }
-                try {
-                    assert url != null;
-                    client = (HttpURLConnection) url.openConnection();
+                assert baseurl != null;
+                final RequestBody formBody = new FormBody.Builder()
+                        .add("name", trim_username)
+                        .add("pass", trim_password)
+                        .build();
 
-                    client.setRequestMethod("POST");
-                    client.setRequestProperty("name", trim_username);
-                    client.setRequestProperty("pass", trim_password);
-                    client.setDoOutput(true);
-                    client.setReadTimeout(10000);
-                    client.setConnectTimeout(15000);
-                    client.connect();
+                final Request request = new Request.Builder()
+                        .url(baseurl + "/register")
+                        .post(formBody)
+                        .build();
 
+                Thread thr = new Thread(() -> {
+                    try (Response response = client.newCall(request).execute()) {
 
-//                        DataOutputStream wr = new DataOutputStream(client.getOutputStream());
-//                        wr.writeBytes(sbParams);
-//                        wr.flush();
-//                        wr.close();
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                        if (!response.isSuccessful()) {
+                            throw new IOException("Unexpected code " + response);
+                        }
 
-                try {
-                    InputStream in = new BufferedInputStream(client.getInputStream());
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                    StringBuilder result = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        result.append(line);
+                        // Get response body
+                        System.out.println(response);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-                    Log.d("test", "result from server: " + result.toString());
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (client != null) {
-                        client.disconnect();
-                    }
-                }
+                });
+                thr.start();
             }
         });
 
@@ -131,4 +122,6 @@ public class RegisterActivity extends AppCompatActivity {
         trim_password = password.getText().toString().trim();
         trim_confirm_password = confirm_password.getText().toString().trim();
     }
+
+
 }
