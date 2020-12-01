@@ -3,9 +3,9 @@ package com.example.myread;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -32,6 +32,7 @@ import okhttp3.Response;
 public class RegisterActivity extends AppCompatActivity {
     private String trim_username, trim_password, trim_confirm_password;
     private EditText username, password, confirm_password;
+    private TextView logintext;
 
 
     @Override
@@ -44,6 +45,12 @@ public class RegisterActivity extends AppCompatActivity {
         confirm_password = findViewById(R.id.confirm_password);
         Button register_btn = findViewById(R.id.register_btn);
         register_btn.setOnClickListener(v -> registerUser());
+        logintext = findViewById(R.id.login_txt);
+        logintext.setOnClickListener(v -> {
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        });
+
+
     }
 
 
@@ -126,10 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(trim_confirm_password)) {
             Toast.makeText(RegisterActivity.this, "Confirm Password field is empty.", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (pass_con.equals(pass)) {
-            return true;
-        }
-        return false;
+        } else return pass_con.equals(pass);
     }
 
     public void registerUser() {

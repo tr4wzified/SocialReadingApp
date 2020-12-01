@@ -43,4 +43,6 @@
     <string name="userstatsswitch_desc">A switch to turn on the sharing of anonymous user statistics</string>
     <string name="userstatsswitch_text">Share anonymous user statistics</string>
     <string name="searchbar_hint">Book name:</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="don_t_have_an_account_yet">Don\'t have an account yet?</string>
 </resources>
