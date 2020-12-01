@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +32,6 @@ import okhttp3.Response;
 
 
 public class RegisterActivity extends AppCompatActivity {
-    private String trim_username, trim_password, trim_confirm_password;
     private EditText username, password, confirm_password;
     private TextView logintext;
 
@@ -44,17 +45,24 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         confirm_password = findViewById(R.id.confirm_password);
         Button register_btn = findViewById(R.id.register_btn);
-        register_btn.setOnClickListener(v -> registerUser());
+
+        //register_btn.setOnClickListener(v -> registerUser());
+
+        register_btn.setOnClickListener(v -> {
+            registerUser(username.getText().toString().trim(), password.getText().toString().trim(), confirm_password.getText().toString().trim());
+        });
         logintext = findViewById(R.id.login_txt);
         logintext.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
+        registrationTest();
 
+//        init();
 
     }
 
 
-    private void sendPost() {
+    private void sendPost(String name, String password) {
         try {
             URL url = null;
             try {
@@ -65,8 +73,8 @@ public class RegisterActivity extends AppCompatActivity {
             OkHttpClient client = getUnsafeOkHttpClient();
             assert url != null;
             final RequestBody formBody = new FormBody.Builder()
-                    .add("name", trim_username)
-                    .add("pass", trim_password)
+                    .add("name", name)
+                    .add("pass", password)
                     .build();
 
             final Request request = new Request.Builder()
@@ -95,14 +103,16 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void getEditString() {
-        trim_username = username.getText().toString().trim();
-        trim_password = password.getText().toString().trim();
-        trim_confirm_password = confirm_password.getText().toString().trim();
-    }
 
-    private Boolean validateUsername() {
-        if (TextUtils.isEmpty(trim_username)) {
+
+//    private void getEditString() {
+//        trim_username = username.getText().toString().trim();
+//        trim_password = password.getText().toString().trim();
+//        trim_confirm_password = confirm_password.getText().toString().trim();
+//    }
+
+    private Boolean validateUsername(String reg_username) {
+        if (TextUtils.isEmpty(reg_username)) {
             Toast.makeText(RegisterActivity.this, "Username field is empty.", Toast.LENGTH_SHORT).show();
             return false;
         } else {
@@ -111,10 +121,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private Boolean validatePassword() {
-        Matcher matcher = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{4,20})").matcher(trim_password);
+    private Boolean validatePassword(String reg_password) {
+        Matcher matcher = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{9,64})").matcher(reg_password);
 
-        if (TextUtils.isEmpty(trim_password)) {
+        if (TextUtils.isEmpty(reg_password)) {
             Toast.makeText(RegisterActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show();
             return false;
         } else if (!matcher.matches()) {
@@ -127,24 +137,28 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private Boolean validatePasswordConfirm() {
-        String pass = trim_password;
-        String pass_con = trim_confirm_password;
-        if (TextUtils.isEmpty(trim_confirm_password)) {
+    private Boolean validatePasswordConfirm(String reg_password, String reg_passwordConfirm) {
+        if (TextUtils.isEmpty(reg_passwordConfirm)) {
             Toast.makeText(RegisterActivity.this, "Confirm Password field is empty.", Toast.LENGTH_SHORT).show();
             return false;
-        } else return pass_con.equals(pass);
+        } else if (reg_passwordConfirm.equals(reg_password)) {
+            return true;
+        }
+        return false;
     }
 
-    public void registerUser() {
-        getEditString();
-        if (validateUsername() && validatePassword() && validatePasswordConfirm()) {
-            sendPost();
+    public void registerUser(String username, String password, String passwordConfirm) {
+        //        getEditString();
+        if (!validateUsername(username) | !validatePassword(password) | !validatePasswordConfirm(password, passwordConfirm)) {
+            System.out.println("User information failed validation: " + username);
+            return;
+        } else {
+            sendPost(username, password);
+            System.out.println("User information passed validation: " + username);
         }
     }
 
-
-    private OkHttpClient getUnsafeOkHttpClient() {
+    private OkHttpClient getUnsafeOkHttpClient(){
         try {
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
@@ -174,6 +188,48 @@ public class RegisterActivity extends AppCompatActivity {
             return builder.build();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void registrationTest() {
+        List<String> name = new ArrayList<String>();
+        List<String> pass = new ArrayList<String>();
+        List<String> pass_con = new ArrayList<String>();
+
+        name.add("JaccoKees");
+        name.add("Willem");
+        name.add("Trawzified");
+        name.add("Hendrik");
+        name.add("AltLocky32");
+        name.add("Robin234234");
+        name.add("Jacsquare");
+        name.add("joostvanhengelen");
+
+        pass.add("Kees12aaaa");
+        pass.add("Willem12@3aaaa");
+        pass.add("Trawy987!aaaa");
+        pass.add("wachtwoordaaaa");
+        pass.add("Sperzi3Boonaaaa!");
+        pass.add("RobinXD!3aaa");
+        pass.add("squarielolaa3");
+        pass.add("Hengelenmaaraaalol");
+
+        pass_con.add("Kees12aaaa");
+        pass_con.add("Willem12@3aaaa");
+        pass_con.add("Trawy987!aaaa");
+        pass_con.add("wachtwoordaaaa");
+        pass_con.add("Sperzi3Boonaaaa!");
+        pass_con.add("RobinXD!33aaa");
+        pass_con.add("squarielolaa3");
+        pass_con.add("Hengelenmaaraaalol");
+
+        for (int i = 0; i < name.size(); i++) {
+            String username = name.get(i);
+            String password = pass.get(i);
+            String pass_confirm = pass_con.get(i);
+            registerUser(username, password, pass_confirm);
+
+            System.out.println();
         }
     }
 }
