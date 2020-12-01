@@ -111,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show();
             return false;
         } else if (!matcher.matches()) {
-            password.setError("Password must contain 8 characters with at least 1 number, 1 lower case letter, 1 upper case letter, 1 special character");
+            password.setError("Password must contain 8 characters with at least 1 number, 1 lower case letter, 1 upper case letter and 1 special character");
             return false;
         } else {
             password.setError(null);
