@@ -1,6 +1,7 @@
 package com.example.myread;
 
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -21,10 +22,19 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.concurrent.*;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -42,19 +52,20 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         init();
     }
 
     private void init() {
-        Button register_btn = (Button)findViewById(R.id.register_btn);
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
-        confirm_password = (EditText) findViewById(R.id.confirm_password);
+        Button register_btn = findViewById(R.id.register_btn);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        confirm_password = findViewById(R.id.confirm_password);
 
         register_btn.setOnClickListener(v -> {
+            //set trimmed vars
             getEditString();
 
+            //check for errors in user input
             if (TextUtils.isEmpty(trim_username)) {
                 Toast.makeText(RegisterActivity.this, "Username field is empty.", Toast.LENGTH_SHORT).show();
             } else if (TextUtils.isEmpty(trim_password)) {
@@ -64,55 +75,48 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (!trim_password.equals(trim_confirm_password)) {
                 Toast.makeText(RegisterActivity.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
             } else{
-                URL baseurl = null;
+                URL url = null;
                 try {
-                    baseurl = new URL("https://192.168.2.23:2048");
+                    url = new URL("https://10.0.2.2:2048/register");
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-                OkHttpClient client = new OkHttpClient();
-//                    HashMap<String, String> params;
-//                    params.
-//                    StringBuilder sbParams = new StringBuilder();
-//                    int i = 0;
-//
-//                    for (String key : params.keySet()) {
-//                        try {
-//                            if (i !=0) {
-//                                sbParams.append("&");
-//                            }
-//                            sbParams.append(key).append("=").append(URLEncoder.encode(params.get(key), "UTF-8"));
-//                        } catch (UnsupportedEncodingException e) {
-//                            e.printStackTrace();
-//                        }
-//                        i++
-//                    }
-                assert baseurl != null;
+
+                //Create http client that allows self signed certificates
+                OkHttpClient client = getUnsafeOkHttpClient();
+                assert url != null;
+
+                //build request inside
                 final RequestBody formBody = new FormBody.Builder()
                         .add("name", trim_username)
                         .add("pass", trim_password)
                         .build();
 
+                //build actual request
                 final Request request = new Request.Builder()
-                        .url(baseurl + "/register")
+                        .url(url)
                         .post(formBody)
                         .build();
 
+                //start new thread for networking purposes
                 Thread thr = new Thread(() -> {
                     try (Response response = client.newCall(request).execute()) {
 
                         if (!response.isSuccessful()) {
                             throw new IOException("Unexpected code " + response);
                         }
+                        else {
+                            //Redirect to start screen
+                        }
 
-                        // Get response body
                         System.out.println(response);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server.", Toast.LENGTH_SHORT).show());
                     }
                 });
                 thr.start();
             }
+
         });
 
     }
@@ -123,5 +127,36 @@ public class RegisterActivity extends AppCompatActivity {
         trim_confirm_password = confirm_password.getText().toString().trim();
     }
 
+    private OkHttpClient getUnsafeOkHttpClient() {
+        try {
+            final TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
 
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[]{};
+                        }
+                    }
+            };
+
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
+
+            builder.hostnameVerifier((hostname, session) -> true);
+
+            return builder.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
