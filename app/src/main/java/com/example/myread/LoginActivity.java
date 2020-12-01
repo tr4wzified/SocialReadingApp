@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                     // Get response body
                     System.out.println(response);
                 } catch (IOException e) {
-                    runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
                 }
             });
             thr.start();

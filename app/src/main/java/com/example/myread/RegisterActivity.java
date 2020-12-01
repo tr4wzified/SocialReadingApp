@@ -3,31 +3,18 @@ package com.example.myread;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.TypedArrayUtils;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,7 +31,6 @@ import okhttp3.Response;
 
 
 public class RegisterActivity extends AppCompatActivity {
-    private String trim_username, trim_password, trim_confirm_password;
     private EditText username, password, confirm_password;
 
 
@@ -108,6 +94,8 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+
+
 //    private void getEditString() {
 //        trim_username = username.getText().toString().trim();
 //        trim_password = password.getText().toString().trim();
@@ -125,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private Boolean validatePassword(String reg_password) {
-        Matcher matcher = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{4,64})").matcher(reg_password);
+        Matcher matcher = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{9,64})").matcher(reg_password);
 
         if (TextUtils.isEmpty(reg_password)) {
             Toast.makeText(RegisterActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show();
@@ -153,9 +141,11 @@ public class RegisterActivity extends AppCompatActivity {
     public void registerUser(String username, String password, String passwordConfirm) {
         //        getEditString();
         if (!validateUsername(username) | !validatePassword(password) | !validatePasswordConfirm(password, passwordConfirm)) {
+            System.out.println("User information failed validation: " + username);
             return;
         } else {
             sendPost(username, password);
+            System.out.println("User information passed validation: " + username);
         }
     }
 
@@ -206,31 +196,29 @@ public class RegisterActivity extends AppCompatActivity {
         name.add("Jacsquare");
         name.add("joostvanhengelen");
 
-        pass.add("Kees12");
-        pass.add("Willem12@3");
-        pass.add("Trawy987!");
-        pass.add("wachtwoord");
-        pass.add("Sperzi3Boon!");
-        pass.add("RobinXD!3");
-        pass.add("squarielol3");
-        pass.add("Hengelenmaarlol");
+        pass.add("Kees12aaaa");
+        pass.add("Willem12@3aaaa");
+        pass.add("Trawy987!aaaa");
+        pass.add("wachtwoordaaaa");
+        pass.add("Sperzi3Boonaaaa!");
+        pass.add("RobinXD!3aaa");
+        pass.add("squarielolaa3");
+        pass.add("Hengelenmaaraaalol");
 
-        pass_con.add("Kees12");
-        pass_con.add("Willem12@3");
-        pass_con.add("Trawy987!");
-        pass_con.add("wachtwoord");
-        pass_con.add("Sperzi3Boon!");
-        pass_con.add("RobinXD!3");
-        pass_con.add("squarielol3");
-        pass_con.add("Hengelenmaarlol");
-        int i = 0;
+        pass_con.add("Kees12aaaa");
+        pass_con.add("Willem12@3aaaa");
+        pass_con.add("Trawy987!aaaa");
+        pass_con.add("wachtwoordaaaa");
+        pass_con.add("Sperzi3Boonaaaa!");
+        pass_con.add("RobinXD!33aaa");
+        pass_con.add("squarielolaa3");
+        pass_con.add("Hengelenmaaraaalol");
 
-        for (String user : name) {
+        for (int i = 0; i < name.size(); i++) {
             String username = name.get(i);
             String password = pass.get(i);
             String pass_confirm = pass_con.get(i);
             registerUser(username, password, pass_confirm);
-            i++;
 
             System.out.println();
         }
