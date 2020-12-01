@@ -2,9 +2,7 @@ package com.example.myread;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,10 +14,6 @@ import androidx.core.content.res.TypedArrayUtils;
 
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.cert.CertificateException;
@@ -38,16 +31,7 @@ import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -109,12 +93,13 @@ public class RegisterActivity extends AppCompatActivity {
                         throw new IOException("Unexpected code " + response);
                     } else {
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show());
                     }
 
                     // Get response body
                     System.out.println(response);
                 } catch (IOException e) {
-                    runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server.", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
                 }
             });
             thr.start();
@@ -123,11 +108,11 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void getEditString() {
-        trim_username = username.getText().toString().trim();
-        trim_password = password.getText().toString().trim();
-        trim_confirm_password = confirm_password.getText().toString().trim();
-    }
+//    private void getEditString() {
+//        trim_username = username.getText().toString().trim();
+//        trim_password = password.getText().toString().trim();
+//        trim_confirm_password = confirm_password.getText().toString().trim();
+//    }
 
     private Boolean validateUsername(String reg_username) {
         if (TextUtils.isEmpty(reg_username)) {
@@ -135,7 +120,6 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         } else {
             username.setError(null);
-//            username.setErrorEnabled(false);
             return true;
         }
     }
@@ -167,7 +151,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void registerUser(String username, String password, String passwordConfirm) {
-//        getEditString();
+        //        getEditString();
         if (!validateUsername(username) | !validatePassword(password) | !validatePasswordConfirm(password, passwordConfirm)) {
             return;
         } else {
@@ -175,8 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-
-    private OkHttpClient getUnsafeOkHttpClient() {
+    private OkHttpClient getUnsafeOkHttpClient(){
         try {
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {

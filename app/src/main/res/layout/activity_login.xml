@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.example.myread.LoginActivity">
 
     <TextView
         android:id="@+id/username_txt"
@@ -40,7 +41,8 @@
         android:layout_height="50dp"
         android:inputType="text"
         tools:layout_editor_absoluteX="61dp"
-        tools:layout_editor_absoluteY="248dp" />
+        tools:layout_editor_absoluteY="248dp"
+        android:autofillHints="username" />
 
     <EditText
         android:id="@+id/password"
@@ -62,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="108dp"
         android:text="@string/login_txt"
-        android:textColor="@color/design_default_color_primary"
+        android:textColor="@color/coolred"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
