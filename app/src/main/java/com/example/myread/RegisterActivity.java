@@ -2,9 +2,7 @@ package com.example.myread;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,35 +11,13 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.security.cert.CertificateException;
-import java.util.HashMap;
-import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -67,11 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         confirm_password = findViewById(R.id.confirm_password);
         Button register_btn = findViewById(R.id.register_btn);
-        register_btn.setOnClickListener(v -> {
-            registerUser();
-        });
-
-//        init();
+        register_btn.setOnClickListener(v -> registerUser());
     }
 
 
@@ -91,7 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
                     .build();
 
             final Request request = new Request.Builder()
-                    .url(url + "/register")
+                    .url(url)
                     .post(formBody)
                     .build();
 
@@ -101,12 +73,13 @@ public class RegisterActivity extends AppCompatActivity {
                         throw new IOException("Unexpected code " + response);
                     } else {
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show());
                     }
 
                     // Get response body
                     System.out.println(response);
                 } catch (IOException e) {
-                    runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server.", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
                 }
             });
             thr.start();
@@ -127,7 +100,6 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         } else {
             username.setError(null);
-//            username.setErrorEnabled(false);
             return true;
         }
     }
@@ -162,9 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void registerUser() {
         getEditString();
-        if (!validateUsername() | !validatePassword() | !validatePasswordConfirm()) {
-            return;
-        } else {
+        if (validateUsername() && validatePassword() && validatePasswordConfirm()) {
             sendPost();
         }
     }
