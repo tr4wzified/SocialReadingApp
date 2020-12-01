@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -39,17 +40,21 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Button login_btn = findViewById(R.id.login_btn);
+        TextView registertext = findViewById(R.id.register_txt);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         login_btn.setOnClickListener(v -> {
             login();
+        });
+        registertext.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
     }
 
     private void login() {
         getEditString();
         if (validateUsername() && validatePassword()){
-
+            sendPost();
         }
     }
 
@@ -59,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private Boolean validateUsername() {
-        ArrayList<String>[] listarray = new ArrayList[3];
         if (TextUtils.isEmpty(trim_username)) {
             Toast.makeText(LoginActivity.this, "Username field is empty.", Toast.LENGTH_SHORT).show();
             return false;
@@ -83,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             URL url = null;
             try {
-                url = new URL("https://10.0.2.2:2048/register");
+                url = new URL("https://10.0.2.2:2048/login");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -102,16 +106,16 @@ public class LoginActivity extends AppCompatActivity {
             Thread thr = new Thread(() -> {
                 try (Response response = client.newCall(request).execute()) {
                     if (!response.isSuccessful()) {
-                        throw new IOException("Unexpected code " + response);
+                        runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show());
                     } else {
-                        startActivity(new Intent(LoginActivity.this, LoginActivity.class));
-                        runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show());
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class)); // FIX!!!!!!!!!!!!
+                        runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
                     }
 
                     // Get response body
                     System.out.println(response);
                 } catch (IOException e) {
-                    runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
                 }
             });
             thr.start();
