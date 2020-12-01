@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.TypedArrayUtils;
+
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -21,13 +24,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,14 +74,16 @@ public class RegisterActivity extends AppCompatActivity {
         confirm_password = findViewById(R.id.confirm_password);
         Button register_btn = findViewById(R.id.register_btn);
         register_btn.setOnClickListener(v -> {
-            registerUser();
+            registerUser(username.getText().toString().trim(), password.getText().toString().trim(), confirm_password.getText().toString().trim());
         });
+
+        registrationTest();
 
 //        init();
     }
 
 
-    private void sendPost() {
+    private void sendPost(String name, String password) {
         try {
             URL url = null;
             try {
@@ -86,12 +94,12 @@ public class RegisterActivity extends AppCompatActivity {
             OkHttpClient client = getUnsafeOkHttpClient();
             assert url != null;
             final RequestBody formBody = new FormBody.Builder()
-                    .add("name", trim_username)
-                    .add("pass", trim_password)
+                    .add("name", name)
+                    .add("pass", password)
                     .build();
 
             final Request request = new Request.Builder()
-                    .url(url + "/register")
+                    .url(url)
                     .post(formBody)
                     .build();
 
@@ -121,8 +129,8 @@ public class RegisterActivity extends AppCompatActivity {
         trim_confirm_password = confirm_password.getText().toString().trim();
     }
 
-    private Boolean validateUsername() {
-        if (TextUtils.isEmpty(trim_username)) {
+    private Boolean validateUsername(String reg_username) {
+        if (TextUtils.isEmpty(reg_username)) {
             Toast.makeText(RegisterActivity.this, "Username field is empty.", Toast.LENGTH_SHORT).show();
             return false;
         } else {
@@ -132,10 +140,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private Boolean validatePassword() {
-        Matcher matcher = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{4,20})").matcher(trim_password);
+    private Boolean validatePassword(String reg_password) {
+        Matcher matcher = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{4,64})").matcher(reg_password);
 
-        if (TextUtils.isEmpty(trim_password)) {
+        if (TextUtils.isEmpty(reg_password)) {
             Toast.makeText(RegisterActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show();
             return false;
         } else if (!matcher.matches()) {
@@ -148,24 +156,22 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private Boolean validatePasswordConfirm() {
-        String pass = trim_password;
-        String pass_con = trim_confirm_password;
-        if (TextUtils.isEmpty(trim_confirm_password)) {
+    private Boolean validatePasswordConfirm(String reg_password, String reg_passwordConfirm) {
+        if (TextUtils.isEmpty(reg_passwordConfirm)) {
             Toast.makeText(RegisterActivity.this, "Confirm Password field is empty.", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (pass_con.equals(pass)) {
+        } else if (reg_passwordConfirm.equals(reg_password)) {
             return true;
         }
         return false;
     }
 
-    public void registerUser() {
-        getEditString();
-        if (!validateUsername() | !validatePassword() | !validatePasswordConfirm()) {
+    public void registerUser(String username, String password, String passwordConfirm) {
+//        getEditString();
+        if (!validateUsername(username) | !validatePassword(password) | !validatePasswordConfirm(password, passwordConfirm)) {
             return;
         } else {
-            sendPost();
+            sendPost(username, password);
         }
     }
 
@@ -200,6 +206,50 @@ public class RegisterActivity extends AppCompatActivity {
             return builder.build();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void registrationTest() {
+        List<String> name = new ArrayList<String>();
+        List<String> pass = new ArrayList<String>();
+        List<String> pass_con = new ArrayList<String>();
+
+        name.add("JaccoKees");
+        name.add("Willem");
+        name.add("Trawzified");
+        name.add("Hendrik");
+        name.add("AltLocky32");
+        name.add("Robin234234");
+        name.add("Jacsquare");
+        name.add("joostvanhengelen");
+
+        pass.add("Kees12");
+        pass.add("Willem12@3");
+        pass.add("Trawy987!");
+        pass.add("wachtwoord");
+        pass.add("Sperzi3Boon!");
+        pass.add("RobinXD!3");
+        pass.add("squarielol3");
+        pass.add("Hengelenmaarlol");
+
+        pass_con.add("Kees12");
+        pass_con.add("Willem12@3");
+        pass_con.add("Trawy987!");
+        pass_con.add("wachtwoord");
+        pass_con.add("Sperzi3Boon!");
+        pass_con.add("RobinXD!3");
+        pass_con.add("squarielol3");
+        pass_con.add("Hengelenmaarlol");
+        int i = 0;
+
+        for (String user : name) {
+            String username = name.get(i);
+            String password = pass.get(i);
+            String pass_confirm = pass_con.get(i);
+            registerUser(username, password, pass_confirm);
+            i++;
+
+            System.out.println();
         }
     }
 }
