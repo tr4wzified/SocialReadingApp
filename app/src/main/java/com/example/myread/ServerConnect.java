@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +25,6 @@ import okhttp3.Response;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
 public class ServerConnect {
-
     public static class Response {
         public Response(boolean successful, String response){
             this.successful = successful;
@@ -63,10 +63,9 @@ public class ServerConnect {
         try {
             URL url = null;
             try {
-                url = new URL("https://172.16.0.213:2048" + page);
+                url = new URL("https://10.0.2.2:2048" + page);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-
             }
             assert url != null;
 
@@ -74,7 +73,6 @@ public class ServerConnect {
 
             final Request request = new Request.Builder().url(url).post(body).build();
 
-            ServerCall c = new ServerCall(client, request);
             ExecutorService e = newFixedThreadPool(1);
             Response r = (Response) e.submit(new ServerCall(client, request)).get();
             return r;
@@ -85,6 +83,35 @@ public class ServerConnect {
         return new Response(false, "");
     }
 
+    public static Response sendGet(String page) {
+        try {
+            URL url = null;
+            try {
+                url = new URL("https://10.0.2.2:2048" + page);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            assert  url != null;
+
+            OkHttpClient client = getUnsafeOkHttpClient();
+
+            final Request request = new Request.Builder().url(url).build();
+            ExecutorService e = newFixedThreadPool(1);
+            Response r = (Response) e.submit(new ServerCall(client, request)).get();
+            return r;
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return new Response(false, "");
+    }
+
+    public static Response getBook(String id) {
+        return sendGet("/book/" + id);
+    }
+
+    public static Response getBookList(String id) {
+        return sendGet("/booklist/" + id);
+    }
 
     private static OkHttpClient getUnsafeOkHttpClient() {
         try {
