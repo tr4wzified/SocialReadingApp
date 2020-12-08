@@ -12,8 +12,7 @@
         android:theme="@style/Theme.MyRead">
         <activity
             android:name=".RegisterActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/Theme.MyRead.NoActionBar">
+            android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +22,8 @@
         <activity
             android:name=".LoginActivity" />
         <activity
-            android:name=".MainActivity" />
+            android:name=".MainActivity"
+            android:theme="@style/Theme.MyRead.NoActionBar" />
     </application>
 
 </manifest>

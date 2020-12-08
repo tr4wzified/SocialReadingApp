@@ -43,12 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         TextView registertext = findViewById(R.id.register_txt);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
-        login_btn.setOnClickListener(v -> {
-            login();
-        });
-        registertext.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-        });
+        login_btn.setOnClickListener(v -> login());
+        registertext.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
     private void login() {

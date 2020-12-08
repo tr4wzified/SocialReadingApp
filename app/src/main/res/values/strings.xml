@@ -18,7 +18,7 @@
     <string name="title_activity_main">MyRead</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">[Naam]</string>
+    <string name="nav_header_title">[Name]</string>
     <string name="nav_header_subtitle">[Email]</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
@@ -35,14 +35,12 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="register_txt">Sign up</string>
-    <string name="login_txt">Log in</string>
 
     <string name="datasaverswitch_desc">A switch to turn on the data saver</string>
     <string name="datasaverswitch_text">Data Saver</string>
     <string name="userstatsswitch_desc">A switch to turn on the sharing of anonymous user statistics</string>
     <string name="userstatsswitch_text">Share anonymous user statistics</string>
     <string name="searchbar_hint">Book name:</string>
-    <string name="already_have_an_account">Already have an account?</string>
-    <string name="don_t_have_an_account_yet">Don\'t have an account yet?</string>
+    <string name="already_account_txt">Already have an account?</string>
+    <string name="no_account_txt">Don\'t have an account yet?</string>
 </resources>
