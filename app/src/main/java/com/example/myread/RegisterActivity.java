@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -69,6 +70,8 @@ public class RegisterActivity extends AppCompatActivity {
         else
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration unsuccessful.", Toast.LENGTH_SHORT).show());
     }
+
+
 
 //    private void getEditString() {
 //        trim_username = username.getText().toString().trim();

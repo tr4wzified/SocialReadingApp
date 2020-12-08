@@ -2,6 +2,7 @@ package com.example.myread;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.Button;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -34,6 +35,17 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        Button get_book = findViewById(R.id.get_book);
+
+        get_book.setOnClickListener(v -> {
+            getBook();
+        });
+    }
+
+    private void getBook() {
+        ServerConnect.Response response = ServerConnect.getBook("OL26586969M");
+        System.out.println(response.response);
     }
 
     @Override
