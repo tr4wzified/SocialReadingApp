@@ -45,7 +45,6 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         confirm_password = findViewById(R.id.confirm_password);
         Button register_btn = findViewById(R.id.register_btn);
-
         //register_btn.setOnClickListener(v -> registerUser());
 
         register_btn.setOnClickListener(v -> {
@@ -55,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
         logintext.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
-        registrationTest();
+//        registrationTest();
 
 //        init();
 
