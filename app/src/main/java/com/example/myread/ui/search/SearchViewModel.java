@@ -10,7 +10,6 @@ public class SearchViewModel extends ViewModel {
 
     public SearchViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("Search books here");
     }
 
     public LiveData<String> getText() {

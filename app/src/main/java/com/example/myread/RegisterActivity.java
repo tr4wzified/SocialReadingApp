@@ -45,20 +45,12 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         confirm_password = findViewById(R.id.confirm_password);
         Button register_btn = findViewById(R.id.register_btn);
-
-        //register_btn.setOnClickListener(v -> registerUser());
-
-        register_btn.setOnClickListener(v -> {
-            registerUser(username.getText().toString().trim(), password.getText().toString().trim(), confirm_password.getText().toString().trim());
-        });
         logintext = findViewById(R.id.login_txt);
-        logintext.setOnClickListener(v -> {
-            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-        });
+
+        register_btn.setOnClickListener(v -> registerUser(username.getText().toString().trim(), password.getText().toString().trim(), confirm_password.getText().toString().trim()));
+        logintext.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
+
         registrationTest();
-
-//        init();
-
     }
 
 
@@ -85,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
             Thread thr = new Thread(() -> {
                 try (Response response = client.newCall(request).execute()) {
                     if (!response.isSuccessful()) {
-                        throw new IOException("Unexpected code " + response);
+                        runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Failed!", Toast.LENGTH_SHORT).show());
                     } else {
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                         runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show());
@@ -141,17 +133,13 @@ public class RegisterActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(reg_passwordConfirm)) {
             Toast.makeText(RegisterActivity.this, "Confirm Password field is empty.", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (reg_passwordConfirm.equals(reg_password)) {
-            return true;
-        }
-        return false;
+        } else return reg_passwordConfirm.equals(reg_password);
     }
 
     public void registerUser(String username, String password, String passwordConfirm) {
         //        getEditString();
         if (!validateUsername(username) | !validatePassword(password) | !validatePasswordConfirm(password, passwordConfirm)) {
             System.out.println("User information failed validation: " + username);
-            return;
         } else {
             sendPost(username, password);
             System.out.println("User information passed validation: " + username);
@@ -192,9 +180,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void registrationTest() {
-        List<String> name = new ArrayList<String>();
-        List<String> pass = new ArrayList<String>();
-        List<String> pass_con = new ArrayList<String>();
+        List<String> name = new ArrayList<>();
+        List<String> pass = new ArrayList<>();
+        List<String> pass_con = new ArrayList<>();
 
         name.add("JaccoKees");
         name.add("Willem");
