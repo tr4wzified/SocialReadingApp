@@ -1,4 +1,4 @@
-package com.example.myread.Models;
+package com.example.myread.models;
 
 import java.util.Date;
 import java.util.List;
