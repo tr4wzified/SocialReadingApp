@@ -43,12 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         TextView registertext = findViewById(R.id.register_txt);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
-        login_btn.setOnClickListener(v -> {
-            login();
-        });
-        registertext.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-        });
+        login_btn.setOnClickListener(v -> login());
+        registertext.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
     private void login() {
@@ -87,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             URL url = null;
             try {
-                url = new URL("https://10.0.2.2:2048/login");
+                url = new URL("https://172.16.0.213:2048/login");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
