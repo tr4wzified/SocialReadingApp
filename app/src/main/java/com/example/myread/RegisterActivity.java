@@ -55,31 +55,51 @@ public class RegisterActivity extends AppCompatActivity {
         logintext.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
-        //registrationTest();
-
-//        init();
-
     }
 
+
     private void sendPost(String name, String password) {
+        try {
+            URL url = null;
+            try {
+                url = new URL("https://10.0.2.2:2048/register");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            OkHttpClient client = getUnsafeOkHttpClient();
+            assert url != null;
             final RequestBody formBody = new FormBody.Builder()
                     .add("name", name)
                     .add("pass", password)
                     .build();
 
-            ServerConnect.Response response = ServerConnect.sendPost("/register", formBody);
-            System.out.println(response.response);
-                    if (response.successful) {
+            final Request request = new Request.Builder()
+                    .url(url)
+                    .post(formBody)
+                    .build();
+
+            Thread thr = new Thread(() -> {
+                try (Response response = client.newCall(request).execute()) {
+                    if (!response.isSuccessful()) {
+                        throw new IOException("Unexpected code " + response);
+                    } else {
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                         runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show());
                     }
-                    else if (response.response == "Unable to reach server") {
-                        runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
-                    }
-                    else {
-                        runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration unsuccessful.", Toast.LENGTH_SHORT).show());
-                    }
+
+                    // Get response body
+                    System.out.println(response);
+                } catch (IOException e) {
+                    runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
+                }
+            });
+            thr.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+
 
 //    private void getEditString() {
 //        trim_username = username.getText().toString().trim();
@@ -131,6 +151,39 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             sendPost(username, password);
             System.out.println("User information passed validation: " + username);
+        }
+    }
+
+    private OkHttpClient getUnsafeOkHttpClient(){
+        try {
+            final TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[]{};
+                        }
+                    }
+            };
+
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
+
+            builder.hostnameVerifier((hostname, session) -> true);
+
+            return builder.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
