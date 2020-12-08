@@ -55,55 +55,31 @@ public class RegisterActivity extends AppCompatActivity {
         logintext.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
-        registrationTest();
+        //registrationTest();
 
 //        init();
 
     }
 
-
     private void sendPost(String name, String password) {
-        try {
-            URL url = null;
-            try {
-                url = new URL("https://10.0.2.2:2048/register");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            OkHttpClient client = getUnsafeOkHttpClient();
-            assert url != null;
             final RequestBody formBody = new FormBody.Builder()
                     .add("name", name)
                     .add("pass", password)
                     .build();
 
-            final Request request = new Request.Builder()
-                    .url(url)
-                    .post(formBody)
-                    .build();
-
-            Thread thr = new Thread(() -> {
-                try (Response response = client.newCall(request).execute()) {
-                    if (!response.isSuccessful()) {
-                        throw new IOException("Unexpected code " + response);
-                    } else {
+            ServerConnect.Response response = ServerConnect.sendPost("/register", formBody);
+            System.out.println(response.response);
+                    if (response.successful) {
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                         runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show());
                     }
-
-                    // Get response body
-                    System.out.println(response);
-                } catch (IOException e) {
-                    runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
-                }
-            });
-            thr.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    else if (response.response == "Unable to reach server") {
+                        runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
+                    }
+                    else {
+                        runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration unsuccessful.", Toast.LENGTH_SHORT).show());
+                    }
     }
-
-
 
 //    private void getEditString() {
 //        trim_username = username.getText().toString().trim();
