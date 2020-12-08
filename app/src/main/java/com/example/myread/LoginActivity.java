@@ -80,76 +80,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void sendPost() {
-        try {
-            URL url = null;
-            try {
-                url = new URL("https://10.0.2.2:2048/login");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            OkHttpClient client = getUnsafeOkHttpClient();
-            assert url != null;
-            final RequestBody formBody = new FormBody.Builder()
-                    .add("name", trim_username)
-                    .add("pass", trim_password)
-                    .build();
+        final RequestBody formBody = new FormBody.Builder()
+                .add("name", trim_username)
+                .add("pass", trim_password)
+                .build();
 
-            final Request request = new Request.Builder()
-                    .url(url)
-                    .post(formBody)
-                    .build();
+        ServerConnect.Response response = ServerConnect.sendPost("/login", formBody);
+        System.out.println(response.response);
 
-            Thread thr = new Thread(() -> {
-                try (Response response = client.newCall(request).execute()) {
-                    if (!response.isSuccessful()) {
-                        runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show());
-                    } else {
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class)); // FIX!!!!!!!!!!!!
-                        runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
-                    }
-
-                    // Get response body
-                    System.out.println(response);
-                } catch (IOException e) {
-                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
-                }
-            });
-            thr.start();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (response.successful) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
         }
-    }
-
-    private OkHttpClient getUnsafeOkHttpClient() {
-        try {
-            final TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-
-                        @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
-
-                        @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
-                        @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return new java.security.cert.X509Certificate[]{};
-                        }
-                    }
-            };
-
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-
-            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-
-            builder.hostnameVerifier((hostname, session) -> true);
-
-            return builder.build();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        else if (response.response == "Unable to reach server")
+            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
+        else
+            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login unsuccessful.", Toast.LENGTH_SHORT).show());
     }
 }
