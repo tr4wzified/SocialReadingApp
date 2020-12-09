@@ -1,16 +1,15 @@
 package com.example.myread;
 
-import android.content.Intent;
-import android.widget.Toast;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
@@ -18,10 +17,12 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
@@ -75,8 +76,7 @@ public class ServerConnect {
             final Request request = new Request.Builder().url(url).post(body).build();
             ServerCall c = new ServerCall(client, request);
             ExecutorService e = newFixedThreadPool(1);
-            Response r = (Response) e.submit(c).get();
-            return r;
+            return (Response) e.submit(c).get();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,8 +100,7 @@ public class ServerConnect {
 
             ServerCall c = new ServerCall(client, request);
             ExecutorService e = newFixedThreadPool(1);
-            Response r = (Response) e.submit(c).get();
-            return r;
+            return (Response) e.submit(c).get();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,6 +138,21 @@ public class ServerConnect {
             builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
             builder.hostnameVerifier((hostname, session) -> true);
             builder.connectTimeout(3, TimeUnit.SECONDS);
+            builder.cookieJar(new CookieJar() {
+                private final HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
+
+                @Override
+                public void saveFromResponse(@NotNull HttpUrl url, @NotNull List<Cookie> cookies) {
+                    cookieStore.put(url, cookies);
+                }
+
+                @NotNull
+                @Override
+                public List<Cookie> loadForRequest(@NotNull HttpUrl url) {
+                    List<Cookie> cookies = cookieStore.get(url);
+                    return cookies != null ? cookies : new ArrayList<>();
+                }
+            });
 
             return builder.build();
         } catch (Exception e) {
