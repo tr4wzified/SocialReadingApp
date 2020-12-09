@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 public class BookCollection {
-    private String name;
+    private final String name;
     private int id = 0;
-    private List<Book> bookList;
+    private final List<Book> bookList;
 
     public BookCollection(String name) {
         this.name = name;

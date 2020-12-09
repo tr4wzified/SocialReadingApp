@@ -13,16 +13,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
-
-import java.io.IOException;
-
-import okhttp3.Response;
 
 public class SearchFragment extends Fragment {
 
@@ -37,9 +31,7 @@ public class SearchFragment extends Fragment {
         bookName = root.findViewById(R.id.bookName);
         getBook = root.findViewById(R.id.searchBook);
         bookUserInput = root.findViewById(R.id.bookSearchQuery);
-        getBook.setOnClickListener(v -> {
-            bookName.setText(getBookName());
-        });
+        getBook.setOnClickListener(v -> bookName.setText(getBookName()));
         return root;
     }
 
