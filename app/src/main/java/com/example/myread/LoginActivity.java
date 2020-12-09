@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
         System.out.println(response.response);
 
         if (response.successful) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            startActivity(new Intent(LoginActivity.this, listviewtest.class));
             runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
         }
         else if (response.response == "Unable to reach server")
