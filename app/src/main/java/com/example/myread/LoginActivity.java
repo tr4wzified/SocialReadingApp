@@ -1,6 +1,7 @@
 package com.example.myread;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -33,7 +34,7 @@ import okhttp3.Response;
 public class LoginActivity extends AppCompatActivity {
     private EditText username, password;
     private String trim_username, trim_password;
-
+    SharedPreferences pref;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,14 +44,26 @@ public class LoginActivity extends AppCompatActivity {
         TextView registertext = findViewById(R.id.register_txt);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
+        pref = getSharedPreferences("user_details",MODE_PRIVATE);
         login_btn.setOnClickListener(v -> login());
         registertext.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
     private void login() {
         getEditString();
-        if (validateUsername() && validatePassword()){
-            sendPost();
+        if (validateUsername() && validatePassword()) {
+            ServerConnect.Response response = sendPost();
+
+            if (response.successful) {
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("username",trim_username);
+                editor.apply();
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
+            } else if (response.response.equals("Unable to reach server"))
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
+            else
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login unsuccessful.", Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -79,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void sendPost() {
+    private ServerConnect.Response sendPost() {
         final RequestBody formBody = new FormBody.Builder()
                 .add("name", trim_username)
                 .add("pass", trim_password)
@@ -87,14 +100,6 @@ public class LoginActivity extends AppCompatActivity {
 
         ServerConnect.Response response = ServerConnect.sendPost("/login", formBody);
         System.out.println(response.response);
-
-        if (response.successful) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
-        }
-        else if (response.response == "Unable to reach server")
-            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
-        else
-            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login unsuccessful.", Toast.LENGTH_SHORT).show());
+        return response;
     }
 }
