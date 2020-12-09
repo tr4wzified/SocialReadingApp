@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,7 +26,6 @@ import okhttp3.Response;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
 public class ServerConnect {
-
     public static class Response {
         public Response(boolean successful, String response, String responseString) {
             this.successful = successful;
@@ -113,23 +113,22 @@ public class ServerConnect {
         return sendGet("book/" + id);
     }
 
+    public static Response getBookList(String id) {
+        return sendGet("booklist/" + id);
+    }
+
     private static OkHttpClient getUnsafeOkHttpClient() {
         try {
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                        }
-
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
                         @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                        }
-
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
                         @Override
                         public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                             return new java.security.cert.X509Certificate[]{};
-                        }
-                    }};
+                        }}};
 
             final SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
