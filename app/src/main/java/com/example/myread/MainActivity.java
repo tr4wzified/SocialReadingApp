@@ -17,7 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    SharedPreferences prf;
+    private SharedPreferences prf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
