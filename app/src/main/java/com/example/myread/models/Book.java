@@ -12,10 +12,10 @@ public class Book {
     private List<String> subjects;
     private String publishDate;
     private String authorWiki;
-    private int isbn;
-    private int rating;
+    private String isbn;
+    private String rating;
 
-    public Book(String title, String author, String cover, String description, List<String> subjects, String publishDate, String authorWiki, int isbn, int rating) {
+    public Book(String title, String author, String cover, String description, List<String> subjects, String publishDate, String authorWiki, String isbn, String rating) {
         id++;
         this.title = title;
         this.author = author;
