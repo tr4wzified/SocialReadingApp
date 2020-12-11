@@ -37,7 +37,7 @@ public class SearchFragment extends Fragment {
 
     private String getBookName() {
         String bookID = bookUserInput.getEditText().getText().toString();
-        ServerConnect.Response getResponse = ServerConnect.getBook(bookID);
+        ServerConnect.Response getResponse = ServerConnect.getInstance().getBook(bookID);
         String jsonString = getResponse.responseString;
         String bookName = "Not found";
         try {
