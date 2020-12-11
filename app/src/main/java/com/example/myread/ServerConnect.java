@@ -120,33 +120,19 @@ public class ServerConnect {
             try {
                 Response r = getBookCollections(user.name);
                 jsonArray = new JSONArray(r.responseString);
-
                 for (int i = 0; i < jsonArray.length(); i++) {
                     user.addBookCollection(new BookCollection(jsonArray.getJSONObject(i).getString("name")));
                 }
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
             try {
                 int i = 0;
-
                 for (BookCollection bc : user.getCollectionList()) {
-                    System.out.println("i:" + i);
-
-                    String book_id = "";
                     JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
                     for (int b = 0; b < bookArray.length(); b++) {
-                        System.out.println("b:" + b);
-                        String object = bookArray.get(b).toString();
-                        System.out.println(object);
-                    }
-//                    String bookid = jsonArray["books"][0];
-                    if (!book_id.isEmpty()) {
-                        bc.addBook(getBook(book_id));
-
+                        bc.addBook(getBook(bookArray.get(b).toString()));
+                        System.out.println(bookArray.get(b).toString());
                     }
                     i++;
                 }
@@ -158,13 +144,22 @@ public class ServerConnect {
     }
 
     public static Book getBook(String id) {
-        Response response = sendGet("/book/" + id);
-        JSONObject jsonObject = null;
+        Response response = sendGet("/Petertje/book/" + id);
+        JSONObject jsonObject;
         List<String> subjects = new ArrayList<>();
-        Book book = null;
+        Book book = new Book("","","","",subjects,"","","","");
         try {
              jsonObject = new JSONObject(response.responseString);
-             book = new Book(jsonObject.getString("title"), jsonObject.getString("author"), "" , jsonObject.getString("description"), subjects, jsonObject.getString("publishDate"), jsonObject.getString("authorWiki"), jsonObject.getString("isbn"), jsonObject.getString("rating"));
+             book.title = jsonObject.getString("title");
+             book.author = jsonObject.getString("author");
+             book.cover = "";
+             book.description = jsonObject.getString("description");
+             book.subjects = subjects;
+             book.publishDate = jsonObject.getString("publishDate");
+             book.authorWiki = jsonObject.getString("authorWiki");
+             book.isbn = jsonObject.getString("isbn");
+             book.rating = jsonObject.getString("rating");
+//             book = new Book(jsonObject.getString("title"), jsonObject.getString("author"), "" , jsonObject.getString("description"), subjects, jsonObject.getString("publishDate"), jsonObject.getString("authorWiki"), jsonObject.getString("isbn"), jsonObject.getString("rating"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
