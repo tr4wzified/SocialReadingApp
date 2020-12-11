@@ -4,44 +4,54 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.example.myread.models.Book;
 import com.example.myread.models.BookCollection;
+import com.example.myread.models.User;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class listviewtest extends AppCompatActivity {
-    private ConstraintLayout constraintLayout;
     private LinearLayout linearLayout;
+    private LinearLayout booklistcomp;
+    private LayoutInflater layoutInflater;
+    private User user;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listviewtest);
-        constraintLayout = (ConstraintLayout) findViewById(R.id.booklist);
-        linearLayout = (LinearLayout)findViewById(R.id.booklist_linear);
+        linearLayout = (LinearLayout)findViewById(R.id.bookScroll);
+        booklistcomp = (LinearLayout)findViewById(R.id.booklistScroll);
 
-        List<View> views = new ArrayList();
         List<String> subjects = new ArrayList<String>();
         BookCollection bookCollection = new BookCollection("Joop");
+//        this.user = new User("Geert");
 
-        bookCollection.addBook("Joost", "Michael", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
-        bookCollection.addBook("Title", "author", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
-        bookCollection.addBook("Title", "author", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
-        bookCollection.addBook("Laatste", "Willem", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
+        user.getCollectionList().add(bookCollection);
+        user.getCollectionList().add(bookCollection);
+        user.getCollectionList().add(bookCollection);
 
-        LayoutInflater layoutInflater = (LayoutInflater)
+//        bookCollection.addBook("Joost", "Michael", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
+//        bookCollection.addBook("Title", "author", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
+//        bookCollection.addBook("Title", "author", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
+//        bookCollection.addBook("Laatste", "Willem", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
+//
+        layoutInflater = (LayoutInflater)
                 this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+//        initBookItem(user.getBookCollections());
+//        initBookList(user);
+    }
+
+    private void initBookItem(BookCollection bookCollection) {
         for (Book boek : bookCollection.getBookList()) {
             View rowView = layoutInflater.inflate(R.layout.listitem, null);
             TextView book_title = (TextView) rowView.findViewById(R.id.bookTitle);
@@ -49,11 +59,17 @@ public class listviewtest extends AppCompatActivity {
             book_title.setText(boek.title);
             book_author.setText(boek.author);
             linearLayout.addView(rowView, (linearLayout.getChildCount() -1));
-
-//            views.add(rowView);
         }
-//        for (int i = 0; i < views.size(); i++) {
-//            linearLayout.addView(views.get(i));
-//        }
+    }
+
+    private void initBookList(User user) {
+        for (BookCollection bc : user.getCollectionList()){
+            View listRow = layoutInflater.inflate(R.layout.booklist_component, null);
+            TextView listName = (TextView) listRow.findViewById(R.id.list_title);
+            TextView bookAmount = (TextView) listRow.findViewById(R.id.book_amount);
+            listName.setText(bc.name);
+            bookAmount.setText(Integer.toString(bc.length()));
+            booklistcomp.addView(listRow, (booklistcomp.getChildCount() - 1) );
+        }
     }
 }
