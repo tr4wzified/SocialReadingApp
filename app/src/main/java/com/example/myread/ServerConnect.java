@@ -1,5 +1,17 @@
 package com.example.myread;
 
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -26,7 +38,24 @@ import okhttp3.RequestBody;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
-public class ServerConnect {
+public class ServerConnect extends AppCompatActivity {
+
+    private static ServerConnect s = null;
+    private OkHttpClient client = null;
+
+    private ServerConnect()
+    {
+        client = getUnsafeOkHttpClient();
+    }
+    //static method to create an instance of the Singleton class
+// we can also create a method with the same name as the class name
+    public static ServerConnect getInstance()
+    {
+        if (s == null)
+            s = new ServerConnect();
+        return s;
+    }
+
     public static class Response {
         public Response(boolean successful, String response, String responseString) {
             this.successful = successful;
@@ -62,7 +91,7 @@ public class ServerConnect {
         }
     }
 
-    public static Response sendPost(String page, RequestBody body) {
+    public Response sendPost(String page, RequestBody body) {
         try {
             URL url = null;
             try {
@@ -72,7 +101,6 @@ public class ServerConnect {
             }
             assert url != null;
 
-            OkHttpClient client = getUnsafeOkHttpClient();
             final Request request = new Request.Builder().url(url).post(body).build();
             ServerCall c = new ServerCall(client, request);
             ExecutorService e = newFixedThreadPool(1);
@@ -84,7 +112,7 @@ public class ServerConnect {
         return new Response(false, "", "");
     }
 
-    public static Response sendGet(String page) {
+    public Response sendGet(String page) {
         try {
             URL url = null;
             try {
@@ -93,8 +121,6 @@ public class ServerConnect {
                 e.printStackTrace();
             }
             assert url != null;
-
-            OkHttpClient client = getUnsafeOkHttpClient();
 
             final Request request = new Request.Builder().url(url).build();
 
@@ -109,15 +135,15 @@ public class ServerConnect {
     }
 
     //TODO: Expand regex
-    public static Response getBook(String id) {
+    public Response getBook(String id) {
         return sendGet("book/" + id.replaceAll("[/.]", ""));
     }
 
-    public static Response getBookList(String id) {
+    public Response getBookList(String id) {
         return sendGet("booklist/" + id);
     }
 
-    private static OkHttpClient getUnsafeOkHttpClient() {
+    private OkHttpClient getUnsafeOkHttpClient() {
         try {
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
@@ -139,21 +165,10 @@ public class ServerConnect {
             builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
             builder.hostnameVerifier((hostname, session) -> true);
             builder.connectTimeout(3, TimeUnit.SECONDS);
-            builder.cookieJar(new CookieJar() {
-                private final HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
 
-                @Override
-                public void saveFromResponse(@NotNull HttpUrl url, @NotNull List<Cookie> cookies) {
-                    cookieStore.put(url, cookies);
-                }
-
-                @NotNull
-                @Override
-                public List<Cookie> loadForRequest(@NotNull HttpUrl url) {
-                    List<Cookie> cookies = cookieStore.get(url);
-                    return cookies != null ? cookies : new ArrayList<>();
-                }
-            });
+            ClearableCookieJar cookieJar =
+                    new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(GlobalApplication.getAppContext()));
+            builder.cookieJar(cookieJar);
 
             return builder.build();
         } catch (Exception e) {
