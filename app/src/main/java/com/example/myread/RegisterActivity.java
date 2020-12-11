@@ -24,6 +24,7 @@ import okhttp3.RequestBody;
 public class RegisterActivity extends AppCompatActivity {
     private EditText username, password, confirm_password;
     private TextView logintext;
+    private Button register_btn;
     SharedPreferences pref;
 
     @Override
@@ -32,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (pref.contains("username")) {
             System.out.println("Account already detected, going to main");
             startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+            finish();
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
@@ -39,11 +41,14 @@ public class RegisterActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         confirm_password = findViewById(R.id.confirm_password);
-        Button register_btn = findViewById(R.id.register_btn);
+        register_btn = findViewById(R.id.register_btn);
         logintext = findViewById(R.id.login_txt);
 
         register_btn.setOnClickListener(v -> registerUser(username.getText().toString().trim(), password.getText().toString().trim(), confirm_password.getText().toString().trim()));
-        logintext.setOnClickListener(v -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
+        logintext.setOnClickListener(v -> {
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            finish();
+        });
     }
 
     private void sendPost(String name, String password) {
@@ -53,8 +58,6 @@ public class RegisterActivity extends AppCompatActivity {
                 .build();
 
         ServerConnect.Response response = ServerConnect.sendPost("/register", formBody);
-        System.out.println(response.response);
-
         if (response.successful) {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show());
@@ -64,14 +67,6 @@ public class RegisterActivity extends AppCompatActivity {
         else
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration unsuccessful.", Toast.LENGTH_SHORT).show());
     }
-
-
-
-//    private void getEditString() {
-//        trim_username = username.getText().toString().trim();
-//        trim_password = password.getText().toString().trim();
-//        trim_confirm_password = confirm_password.getText().toString().trim();
-//    }
 
     private Boolean validateUsername(String reg_username) {
         if (TextUtils.isEmpty(reg_username)) {

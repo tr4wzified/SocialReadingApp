@@ -108,8 +108,9 @@ public class ServerConnect {
         return new Response(false, "", "");
     }
 
+    //TODO: Expand regex
     public static Response getBook(String id) {
-        return sendGet("book/" + id);
+        return sendGet("book/" + id.replaceAll("[/.]", ""));
     }
 
     public static Response getBookList(String id) {

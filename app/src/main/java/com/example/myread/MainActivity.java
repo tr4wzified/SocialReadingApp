@@ -1,11 +1,14 @@
 package com.example.myread;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -51,5 +54,13 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void logout(MenuItem item) {
+        SharedPreferences.Editor editor = prf.edit();
+        editor.clear();
+        editor.apply();
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        finish();
     }
 }
