@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity" />
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_main" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.MyRead.NoActionBar" />
