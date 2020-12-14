@@ -25,6 +25,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getUser() throws JSONException {
-        User user = ServerConnect.getUser("Petertje");
+        user = ServerConnect.getUser("Petertje"); // hier bij naam moet de username uit de cookie/session gehaald worden
     }
 
     @Override
