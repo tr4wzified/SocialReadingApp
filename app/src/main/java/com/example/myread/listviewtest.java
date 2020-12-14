@@ -15,6 +15,8 @@ import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
 
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,24 +33,42 @@ public class listviewtest extends AppCompatActivity {
         linearLayout = (LinearLayout)findViewById(R.id.bookScroll);
         booklistcomp = (LinearLayout)findViewById(R.id.booklistScroll);
 
-        List<String> subjects = new ArrayList<String>();
-        BookCollection bookCollection = new BookCollection("Joop");
+        layoutInflater = (LayoutInflater)
+                this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        try {
+            user = ServerConnect.getUser("Petertje");
+
+            getUser();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+//        List<String> subjects = new ArrayList<String>();
+//        BookCollection bookCollection = new BookCollection("Joop");
 //        this.user = new User("Geert");
 
-        user.getCollectionList().add(bookCollection);
-        user.getCollectionList().add(bookCollection);
-        user.getCollectionList().add(bookCollection);
+//        user.getCollectionList().add(bookCollection);
+//        user.getCollectionList().add(bookCollection);
+//        user.getCollectionList().add(bookCollection);
 
 //        bookCollection.addBook("Joost", "Michael", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
 //        bookCollection.addBook("Title", "author", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
 //        bookCollection.addBook("Title", "author", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
 //        bookCollection.addBook("Laatste", "Willem", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
 //
-        layoutInflater = (LayoutInflater)
-                this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
 //        initBookItem(user.getBookCollections());
 //        initBookList(user);
+    }
+
+    private void getUser() throws JSONException {
+//        user = ServerConnect.getUser("Petertje");
+
+        if (user != null) {
+            initBookList(user);
+//            initBookItem(user.get);
+        }
     }
 
     private void initBookItem(BookCollection bookCollection) {
@@ -69,6 +89,7 @@ public class listviewtest extends AppCompatActivity {
             TextView bookAmount = (TextView) listRow.findViewById(R.id.book_amount);
             listName.setText(bc.name);
             bookAmount.setText(Integer.toString(bc.length()));
+            initBookItem(bc);
             booklistcomp.addView(listRow, (booklistcomp.getChildCount() - 1) );
         }
     }
