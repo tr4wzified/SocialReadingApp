@@ -6,11 +6,10 @@ import androidx.lifecycle.ViewModel;
 
 public class SettingsViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    private final MutableLiveData<String> mText;
 
     public SettingsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("Change settings here");
     }
 
     public LiveData<String> getText() {

@@ -4,12 +4,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name="com.example.myread.GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label=""
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyRead">
+        android:theme="@style/Theme.MyRead"
+        android:fullBackupContent="@xml/backup_descriptor">
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_main" >
@@ -23,10 +25,12 @@
             android:name=".LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_main" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.MyRead.NoActionBar" />
