@@ -53,4 +53,11 @@
     <string name="author_static">Author</string>
     <string name="search_books">Search books</string>
     <string name="menu_logout">Log out</string>
+
+<!--    library-->
+    <string name="library">Library</string>
+    <string name="book_collections">Book collections</string>
+    <string name="new_collection">Create your new collection</string>
+    <string name="add_collection_btn">Add</string>
+    <string name="cancel_collection_btn">Cancel</string>
 </resources>

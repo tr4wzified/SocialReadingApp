@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 //
         List<String> subjects = new ArrayList<String>();
 
-        User user = new User("Petertje");
+//        User user = new User("Petertje");
         user.addBookCollection(new BookCollection("Hoost_en"));
         user.addBookCollection(new BookCollection("WIllem"));
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getUser() throws JSONException {
-        user = ServerConnect.getInstance().getUser("Petertje"); // hier bij naam moet de username uit de cookie/session gehaald worden
+//        user = ServerConnect.getInstance().getUser("Petertje"); // hier bij naam moet de username uit de cookie/session gehaald worden
     }
 
     @Override

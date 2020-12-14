@@ -1,74 +1,63 @@
 package com.example.myread;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.myread.models.Book;
 import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
 
-
 import org.json.JSONException;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class listviewtest extends AppCompatActivity {
+public class LibraryActivity extends AppCompatActivity implements BookCollectionDialog.NoticeDialogListener {
     private LinearLayout linearLayout;
     private LinearLayout booklistcomp;
     private LayoutInflater layoutInflater;
     private User user;
+    private SharedPreferences pref;
+
+    private Button bookcollection_btn;
+    private EditText inputCollectionName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.listviewtest);
+        setContentView(R.layout.activity_library);
         linearLayout = (LinearLayout)findViewById(R.id.bookScroll);
         booklistcomp = (LinearLayout)findViewById(R.id.booklistScroll);
+        bookcollection_btn = (Button)findViewById(R.id.bookCollectionButton);
+        inputCollectionName = (EditText)findViewById(R.id.collection_name);
+
 
         layoutInflater = (LayoutInflater)
                 this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        try {
-//            user = ServerConnect.getInstance().getUser("Petertje");
+        pref = getSharedPreferences("user_details", MODE_PRIVATE);
+        user = User.getInstance();
+//        user.name = pref.getString("username", "");
 
-            getUser();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        initBookList(user);
 
+        bookcollection_btn.setOnClickListener(v -> {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            BookCollectionDialog bookCollectionDialog = new BookCollectionDialog();
+            bookCollectionDialog.show(fragmentManager, "dialog");
+        });
 
-//        List<String> subjects = new ArrayList<String>();
-//        BookCollection bookCollection = new BookCollection("Joop");
-//        this.user = new User("Geert");
-
-//        user.getCollectionList().add(bookCollection);
-//        user.getCollectionList().add(bookCollection);
-//        user.getCollectionList().add(bookCollection);
-
-//        bookCollection.addBook("Joost", "Michael", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
-//        bookCollection.addBook("Title", "author", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
-//        bookCollection.addBook("Title", "author", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
-//        bookCollection.addBook("Laatste", "Willem", "cover", "description", subjects, "9-12-2020", "Willem", 9, 3);
-//
-//        initBookItem(user.getBookCollections());
-//        initBookList(user);
-    }
-
-    private void getUser() throws JSONException {
-//        user = ServerConnect.getUser("Petertje");
-
-        if (user != null) {
-            initBookList(user);
-//            initBookItem(user.get);
-        }
     }
 
     private void initBookItem(BookCollection bookCollection) {
@@ -89,8 +78,15 @@ public class listviewtest extends AppCompatActivity {
             TextView bookAmount = (TextView) listRow.findViewById(R.id.book_amount);
             listName.setText(bc.name);
             bookAmount.setText(Integer.toString(bc.length()));
-            initBookItem(bc);
+//            initBookItem(bc);
             booklistcomp.addView(listRow, (booklistcomp.getChildCount() - 1) );
         }
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+//        View dialogComp = layoutInflater.inflate(R.layout.dialog_bookcollection, null);
+        String name = inputCollectionName.getText().toString();
+        user.addBookCollection(new BookCollection(name));
     }
 }

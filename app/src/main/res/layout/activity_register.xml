@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:text="@string/username"
-        app:layout_constraintBottom_toTopOf="@+id/username"
+        app:layout_constraintBottom_toTopOf="@+id/collection_name"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -35,7 +35,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/collection_name"
         android:layout_width="288dp"
         android:layout_height="50dp"
         android:inputType="text"

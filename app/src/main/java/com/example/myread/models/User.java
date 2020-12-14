@@ -9,12 +9,18 @@ import okhttp3.FormBody;
 import okhttp3.RequestBody;
 
 public class User {
+    private static User u = null;
     public String name;
     private List<BookCollection> collectionList;
 
-    public User(String name) {
-        this.name = name;
+    private User() {
         this.collectionList = new ArrayList<>();
+    }
+
+    public static User getInstance() {
+        if (u == null)
+            u = new User();
+        return u;
     }
 
     public List<BookCollection> getCollectionList() {
