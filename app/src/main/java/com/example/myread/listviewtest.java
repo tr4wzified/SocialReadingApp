@@ -37,7 +37,7 @@ public class listviewtest extends AppCompatActivity {
                 this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         try {
-            user = ServerConnect.getUser("Petertje");
+            user = ServerConnect.getInstance().getUser("Petertje");
 
             getUser();
         } catch (JSONException e) {

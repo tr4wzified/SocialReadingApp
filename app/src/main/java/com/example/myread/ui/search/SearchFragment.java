@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
+import com.example.myread.models.Book;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
@@ -37,16 +38,7 @@ public class SearchFragment extends Fragment {
 
     private String getBookName() {
         String bookID = bookUserInput.getEditText().getText().toString();
-        ServerConnect.Response getResponse = ServerConnect.getInstance().getBook(bookID);
-        String jsonString = getResponse.responseString;
-        String bookName = "Not found";
-        try {
-            JSONObject jsonObject = new JSONObject(jsonString);
-            bookName = jsonObject.getString("title");
-        } catch (JSONException e) {
-            System.out.println("Something is wrong with the JSON.");
-            System.out.println("Json parse error: " + e.getMessage());
-        }
-        return bookName;
+        Book book = ServerConnect.getInstance().getBook(bookID);
+        return book.title;
     }
 }

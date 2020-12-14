@@ -35,7 +35,7 @@ public class User {
                 .build();
 
         collectionList.add(bookCollection);
-        ServerConnect.addBookCollectionServer(name, bookCollection.name);
+        ServerConnect.getInstance().addBookCollectionServer(name, bookCollection.name);
 //        ServerConnect.postBookCollection(name, formBody);
     }
 }

@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 //        NavigationUI.setupWithNavController(navigationView, navController);
 //
-        Button get_book = findViewById(R.id.get_book);
 //
         List<String> subjects = new ArrayList<String>();
 
@@ -71,23 +70,14 @@ public class MainActivity extends AppCompatActivity {
         user.getBookCollection(1).addBook(user.name, "OL26586969M", "Joost", "Soup", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
         user.getBookCollection(1).addBook(user.name, "OL26586969M","Willom", "Soep", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
         user.getBookCollection(1).addBook(user.name, "OL26586969M","Hank", "Bee", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
-
-        get_book.setOnClickListener(v -> {
-            try {
-                getUser();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-        
     }
 
     private void getBook() {
-        Book response = ServerConnect.getBook("OL26586969M");
+        Book response = ServerConnect.getInstance().getBook("OL26586969M");
     }
 
     private void getUser() throws JSONException {
-        user = ServerConnect.getUser("Petertje"); // hier bij naam moet de username uit de cookie/session gehaald worden
+        user = ServerConnect.getInstance().getUser("Petertje"); // hier bij naam moet de username uit de cookie/session gehaald worden
     }
 
     @Override
