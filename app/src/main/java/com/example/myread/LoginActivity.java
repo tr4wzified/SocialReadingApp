@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                 .add("pass", trim_password)
                 .build();
 
-        ServerConnect.Response response = ServerConnect.sendPost("/login", formBody);
+        ServerConnect.Response response = ServerConnect.getInstance().sendPost("/login", formBody);
         System.out.println(response.response);
         return response;
     }
