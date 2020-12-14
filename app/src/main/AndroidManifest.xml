@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name="com.example.myread.GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label=""
@@ -20,7 +21,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity" />
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_main" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.MyRead.NoActionBar" />

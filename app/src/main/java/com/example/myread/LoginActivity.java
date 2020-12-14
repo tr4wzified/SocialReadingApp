@@ -18,7 +18,7 @@ import okhttp3.RequestBody;
 public class LoginActivity extends AppCompatActivity {
     private EditText username, password;
     private String trim_username, trim_password;
-    SharedPreferences pref;
+    SharedPreferences prf;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView registertext = findViewById(R.id.register_txt);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
-        pref = getSharedPreferences("user_details",MODE_PRIVATE);
+        prf = getSharedPreferences("user_details",MODE_PRIVATE);
         login_btn.setOnClickListener(v -> login());
         registertext.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
@@ -39,10 +39,11 @@ public class LoginActivity extends AppCompatActivity {
             ServerConnect.Response response = sendPost();
 
             if (response.successful) {
-                SharedPreferences.Editor editor = pref.edit();
+                SharedPreferences.Editor editor = prf.edit();
                 editor.putString("username",trim_username);
                 editor.apply();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
                 runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
             } else if (response.response.equals("Unable to reach server"))
                 runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
@@ -82,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                 .add("pass", trim_password)
                 .build();
 
-        ServerConnect.Response response = ServerConnect.sendPost("/login", formBody);
+        ServerConnect.Response response = ServerConnect.getInstance().sendPost("/login", formBody);
         System.out.println(response.response);
         return response;
     }
