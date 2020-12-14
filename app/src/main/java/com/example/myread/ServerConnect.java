@@ -37,7 +37,7 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
 public class ServerConnect extends AppCompatActivity {
 
     private static ServerConnect s = null;
-    private OkHttpClient client = null;
+    private OkHttpClient client;
 
     private ServerConnect() {
         client = getUnsafeOkHttpClient();
@@ -132,12 +132,12 @@ public class ServerConnect extends AppCompatActivity {
         return new Response(false, "", "");
     }
 
-    public User getUser(String name) throws JSONException {
-        User user = null;
+    public void initUser(String name) throws JSONException {
+        User user = User.getInstance();
         Response response = sendGet("/user/" + name);
         JSONArray jsonArray = new JSONArray();
         if (response.successful) {
-            user = new User(name);
+            user = User.getInstance();
             try {
                 Response r = getBookCollections(user.name);
                 jsonArray = new JSONArray(r.responseString);
@@ -161,7 +161,6 @@ public class ServerConnect extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        return user;
     }
 
     //TODO: Expand regex

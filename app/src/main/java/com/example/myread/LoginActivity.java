@@ -12,6 +12,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myread.models.User;
+
+import org.json.JSONException;
+
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 
@@ -26,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Button login_btn = findViewById(R.id.login_btn);
         TextView registertext = findViewById(R.id.register_txt);
-        username = findViewById(R.id.username);
+        username = findViewById(R.id.collection_name);
         password = findViewById(R.id.password);
         prf = getSharedPreferences("user_details",MODE_PRIVATE);
         login_btn.setOnClickListener(v -> login());
@@ -37,12 +41,21 @@ public class LoginActivity extends AppCompatActivity {
         getEditString();
         if (validateUsername() && validatePassword()) {
             ServerConnect.Response response = sendPost();
-
             if (response.successful) {
+//                User user = User.getInstance();
                 SharedPreferences.Editor editor = prf.edit();
                 editor.putString("username",trim_username);
                 editor.apply();
-                startActivity(new Intent(LoginActivity.this, listviewtest.class));
+                User user = User.getInstance();
+                user.name = prf.getString("username", "");
+                try {
+                    ServerConnect.getInstance().initUser(prf.getString("username", ""));
+//                    User user = ServerConnect.getInstance().getUser(prf.getString("username", ""));
+//                    user.name = prf.getString("username", "");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                startActivity(new Intent(LoginActivity.this, LibraryActivity.class));
                 finish();
                 runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
             } else if (response.response.equals("Unable to reach server"))

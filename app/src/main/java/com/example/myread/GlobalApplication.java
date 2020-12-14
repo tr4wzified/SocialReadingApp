@@ -3,6 +3,8 @@ package com.example.myread;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.myread.models.User;
+
 public class GlobalApplication extends Application {
 
     private static Context appContext;
