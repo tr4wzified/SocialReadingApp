@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .add("pass", password)
                 .build();
 
-        ServerConnect.Response response = ServerConnect.sendPost("/register", formBody);
+        ServerConnect.Response response = ServerConnect.getInstance().sendPost("/register", formBody);
         if (response.successful) {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show());
