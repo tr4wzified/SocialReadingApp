@@ -1,31 +1,24 @@
 package com.example.myread;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.myread.models.Book;
 import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
-import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -35,17 +28,6 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -57,21 +39,20 @@ public class ServerConnect extends AppCompatActivity {
     private static ServerConnect s = null;
     private OkHttpClient client = null;
 
-    private ServerConnect()
-    {
+    private ServerConnect() {
         client = getUnsafeOkHttpClient();
     }
+
     //static method to create an instance of the Singleton class
 // we can also create a method with the same name as the class name
-    public static ServerConnect getInstance()
-    {
+    public static ServerConnect getInstance() {
         if (s == null)
             s = new ServerConnect();
         return s;
     }
 
     public static class Response {
-      
+
         public Response(boolean successful, String response, String responseString) {
             this.successful = successful;
             this.response = response;
@@ -92,16 +73,16 @@ public class ServerConnect extends AppCompatActivity {
             this.request = request;
         }
 
-    @Override
-    public Response call() {
-        try (okhttp3.Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                return new Response(true, response.toString(), response.body().string());
-            } else {
-                return new Response(false, response.toString(), response.body().string());
-            }
-        } catch (IOException e) {
-            return new Response(false, "Unable to reach server", "");
+        @Override
+        public Response call() {
+            try (okhttp3.Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    return new Response(true, response.toString(), response.body().string());
+                } else {
+                    return new Response(false, response.toString(), response.body().string());
+                }
+            } catch (IOException e) {
+                return new Response(false, "Unable to reach server", "");
             } catch (NullPointerException e) {
                 return new Response(false, "No body in request", "");
             }
@@ -151,7 +132,7 @@ public class ServerConnect extends AppCompatActivity {
         return new Response(false, "", "");
     }
 
-    public static User getUser(String name) throws JSONException {
+    public User getUser(String name) throws JSONException {
         User user = null;
         Response response = sendGet("/user/" + name);
         JSONArray jsonArray = new JSONArray();
@@ -182,16 +163,16 @@ public class ServerConnect extends AppCompatActivity {
         }
         return user;
     }
-  
+
     //TODO: Expand regex
-    public static Book getBook(String id) {
+    public Book getBook(String id) {
         Response response = sendGet("/Petertje/book/" + id.replaceAll("[/.]", ""));
         JSONObject jsonObject;
         List<String> subjects = new ArrayList<>();
         Book book = null;
 //        Book book = new Book("","","","",subjects,"","","","");
         try {
-             jsonObject = new JSONObject(response.responseString);
+            jsonObject = new JSONObject(response.responseString);
 //             book.title = jsonObject.optString("title", null);
 //             book.author = jsonObject.optString("author", null);
 //             book.cover = "";
@@ -201,28 +182,26 @@ public class ServerConnect extends AppCompatActivity {
 //             book.authorWiki = jsonObject.optString("authorWiki", null);
 //             book.isbn = jsonObject.optString("isbn", null);
 //             book.rating = jsonObject.optString("rating", null);
-             book = new Book(jsonObject.optString("title", null), jsonObject.optString("author", null), "" , jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+            book = new Book(jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return book;
     }
 
-    //TODO: Expand regex
-
     public Response getBookList(String id) {
         return sendGet("booklist/" + id);
     }
 
-    public static Response getBookCollections(String name) {
+    public Response getBookCollections(String name) {
         return sendGet("/user/" + name + "/book_collections");
     }
 
-    public static Response addBookCollectionServer(String name, String collection_name) {
+    public Response addBookCollectionServer(String name, String collection_name) {
         return sendGet("/user/" + name + "/add_book_collection/" + collection_name);
     }
 
-    public static Response addBookToCollectionServer(String name, String collection_name, String book_id){
+    public Response addBookToCollectionServer(String name, String collection_name, String book_id) {
         return sendGet("/user/" + name + "/add_book_to_collection/" + collection_name + "/" + book_id);
     }
 

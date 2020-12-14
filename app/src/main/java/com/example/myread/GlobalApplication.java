@@ -12,7 +12,7 @@ public class GlobalApplication extends Application {
         super.onCreate();
         appContext = getApplicationContext();
 
-        /* If you has other classes that need context object to initialize when application is created,
+        /* If you have other classes that need context object to initialize when application is created,
          you can use the appContext here to process. */
     }
 

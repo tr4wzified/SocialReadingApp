@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = prf.edit();
                 editor.putString("username",trim_username);
                 editor.apply();
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                startActivity(new Intent(LoginActivity.this, listviewtest.class));
                 finish();
                 runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
             } else if (response.response.equals("Unable to reach server"))
