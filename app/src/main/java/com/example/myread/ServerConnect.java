@@ -3,6 +3,19 @@ package com.example.myread;
 import com.example.myread.models.Book;
 import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -12,6 +25,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.HashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -26,12 +43,36 @@ import okhttp3.RequestBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
-public class ServerConnect {
+public class ServerConnect extends AppCompatActivity {
+
+    private static ServerConnect s = null;
+    private OkHttpClient client = null;
+
+    private ServerConnect()
+    {
+        client = getUnsafeOkHttpClient();
+    }
+    //static method to create an instance of the Singleton class
+// we can also create a method with the same name as the class name
+    public static ServerConnect getInstance()
+    {
+        if (s == null)
+            s = new ServerConnect();
+        return s;
+    }
+
     public static class Response {
-        public Response(boolean successful, String response, String responseString){
+      
+        public Response(boolean successful, String response, String responseString) {
             this.successful = successful;
             this.response = response;
             this.responseString = responseString;
@@ -46,43 +87,41 @@ public class ServerConnect {
         private final OkHttpClient client;
         private final Request request;
 
-        public ServerCall(OkHttpClient client, Request request)
-        {
+        public ServerCall(OkHttpClient client, Request request) {
             this.client = client;
             this.request = request;
         }
 
-        @Override
-        public Response call() throws Exception {
-                try (okhttp3.Response response = client.newCall(request).execute()) {
-                    if (response.isSuccessful()) {
-                        return new Response(true, response.toString(), response.body().string());
-                    } else {
-                        return new Response(false, response.toString(), response.body().string());
-                    }
-                } catch (IOException e) {
-                    return new Response(false, "Unable to reach server", "");
-                }
+    @Override
+    public Response call() {
+        try (okhttp3.Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                return new Response(true, response.toString(), response.body().string());
+            } else {
+                return new Response(false, response.toString(), response.body().string());
+            }
+        } catch (IOException e) {
+            return new Response(false, "Unable to reach server", "");
+            } catch (NullPointerException e) {
+                return new Response(false, "No body in request", "");
+            }
         }
     }
 
-    public static Response sendPost(String page, RequestBody body) {
+    public Response sendPost(String page, RequestBody body) {
         try {
             URL url = null;
             try {
-                url = new URL("https://10.0.2.2:2048" + page);
+                url = new URL("https://10.0.2.2:2048/" + page);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
             assert url != null;
 
-            OkHttpClient client = getUnsafeOkHttpClient();
-
             final Request request = new Request.Builder().url(url).post(body).build();
-
+            ServerCall c = new ServerCall(client, request);
             ExecutorService e = newFixedThreadPool(1);
-            Response r = (Response) e.submit(new ServerCall(client, request)).get();
-            return r;
+            return (Response) e.submit(c).get();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,23 +129,23 @@ public class ServerConnect {
         return new Response(false, "", "");
     }
 
-    public static Response sendGet(String page) {
+    public Response sendGet(String page) {
         try {
             URL url = null;
             try {
-                url = new URL("https://10.0.2.2:2048" + page);
+                url = new URL("https://10.0.2.2:2048/" + page);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-            assert  url != null;
-
-            OkHttpClient client = getUnsafeOkHttpClient();
+            assert url != null;
 
             final Request request = new Request.Builder().url(url).build();
+
+            ServerCall c = new ServerCall(client, request);
             ExecutorService e = newFixedThreadPool(1);
-            Response r = (Response) e.submit(new ServerCall(client, request)).get();
-            return r;
-        } catch (InterruptedException | ExecutionException e) {
+            return (Response) e.submit(c).get();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return new Response(false, "", "");
@@ -143,9 +182,10 @@ public class ServerConnect {
         }
         return user;
     }
-
+  
+    //TODO: Expand regex
     public static Book getBook(String id) {
-        Response response = sendGet("/Petertje/book/" + id);
+        Response response = sendGet("/Petertje/book/" + id.replaceAll("[/.]", ""));
         JSONObject jsonObject;
         List<String> subjects = new ArrayList<>();
         Book book = null;
@@ -168,8 +208,10 @@ public class ServerConnect {
         return book;
     }
 
-    public static Response getBookList(String id) {
-        return sendGet("/booklist/" + id);
+    //TODO: Expand regex
+
+    public Response getBookList(String id) {
+        return sendGet("booklist/" + id);
     }
 
     public static Response getBookCollections(String name) {
@@ -189,18 +231,23 @@ public class ServerConnect {
 //    }
 
 
-    private static OkHttpClient getUnsafeOkHttpClient() {
+    private OkHttpClient getUnsafeOkHttpClient() {
         try {
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                        }
+
                         @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                        }
+
                         @Override
                         public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                             return new java.security.cert.X509Certificate[]{};
-                        }}};
+                        }
+                    }};
 
             final SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
@@ -209,8 +256,12 @@ public class ServerConnect {
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-
             builder.hostnameVerifier((hostname, session) -> true);
+            builder.connectTimeout(3, TimeUnit.SECONDS);
+
+            ClearableCookieJar cookieJar =
+                    new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(GlobalApplication.getAppContext()));
+            builder.cookieJar(cookieJar);
 
             return builder.build();
         } catch (Exception e) {

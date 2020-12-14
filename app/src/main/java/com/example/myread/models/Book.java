@@ -5,15 +5,15 @@ import java.util.List;
 
 public class Book {
     private int id = 0;
-    public String title;
-    public String author;
-    public String cover;
-    public String description;
-    public List<String> subjects;
-    public String publishDate;
-    public String authorWiki;
-    public String isbn;
-    public String rating;
+    private final String title;
+    private final String author;
+    private final String cover;
+    private final String description;
+    private final List<String> subjects;
+    private final Date publishDate;
+    private final String authorWiki;
+    private final int isbn;
+    private final int rating;
 
     public Book(String title, String author, String cover, String description, List<String> subjects, String publishDate, String authorWiki, String isbn, String rating) {
         id++;

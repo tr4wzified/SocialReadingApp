@@ -15,25 +15,6 @@ public class User {
     public User(String name) {
         this.name = name;
         this.collectionList = new ArrayList<>();
-
-//        init();
-    }
-
-//    private void init() {
-//        index();
-//    }
-
-//    private void index() {
-//        ServerConnect.Response response = ServerConnect.getUser(name);
-//        this.name = response.
-//    }
-
-    private void store() {
-
-    }
-
-    private void update() {
-
     }
 
     public List<BookCollection> getCollectionList() {
