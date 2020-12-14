@@ -44,6 +44,13 @@
     <string name="searchbar_hint">Book name:</string>
     <string name="already_account_txt">Already have an account?</string>
     <string name="no_account_txt">Don\'t have an account yet?</string>
+
+<!--    Listviewtest-->
+    <string name="book_title">Snow White Must Die</string>
+    <string name="author_name">Noie Neuhaus</string>
+    <string name="cover_static">Cover</string>
+    <string name="title_static">Title</string>
+    <string name="author_static">Author</string>
     <string name="search_books">Search books</string>
     <string name="menu_logout">Log out</string>
 </resources>

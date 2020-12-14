@@ -15,6 +15,14 @@
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_main" >
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -26,6 +34,9 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.MyRead.NoActionBar" />
+        <activity
+            android:name=".listviewtest"
+        />
     </application>
 
 </manifest>

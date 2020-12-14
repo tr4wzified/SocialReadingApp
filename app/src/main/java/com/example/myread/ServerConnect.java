@@ -1,5 +1,8 @@
 package com.example.myread;
 
+import com.example.myread.models.Book;
+import com.example.myread.models.BookCollection;
+import com.example.myread.models.User;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -18,8 +21,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +35,14 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
@@ -57,6 +71,7 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public static class Response {
+      
         public Response(boolean successful, String response, String responseString) {
             this.successful = successful;
             this.response = response;
@@ -77,16 +92,16 @@ public class ServerConnect extends AppCompatActivity {
             this.request = request;
         }
 
-        @Override
-        public Response call() {
-            try (okhttp3.Response response = client.newCall(request).execute()) {
-                if (response.isSuccessful()) {
-                    return new Response(true, response.toString(), response.body().string());
-                } else {
-                    return new Response(false, response.toString(), response.body().string());
-                }
-            } catch (IOException e) {
-                return new Response(false, "Unable to reach server", "");
+    @Override
+    public Response call() {
+        try (okhttp3.Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                return new Response(true, response.toString(), response.body().string());
+            } else {
+                return new Response(false, response.toString(), response.body().string());
+            }
+        } catch (IOException e) {
+            return new Response(false, "Unable to reach server", "");
             } catch (NullPointerException e) {
                 return new Response(false, "No body in request", "");
             }
@@ -136,14 +151,85 @@ public class ServerConnect extends AppCompatActivity {
         return new Response(false, "", "");
     }
 
-    //TODO: Expand regex
-    public Response getBook(String id) {
-        return sendGet("book/" + id.replaceAll("[/.]", ""));
+    public static User getUser(String name) throws JSONException {
+        User user = null;
+        Response response = sendGet("/user/" + name);
+        JSONArray jsonArray = new JSONArray();
+        if (response.successful) {
+            user = new User(name);
+            try {
+                Response r = getBookCollections(user.name);
+                jsonArray = new JSONArray(r.responseString);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    user.addBookCollection(new BookCollection(jsonArray.getJSONObject(i).getString("name")));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                int i = 0;
+                for (BookCollection bc : user.getCollectionList()) {
+                    JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
+                    for (int b = 0; b < bookArray.length(); b++) {
+                        bc.addBook(getBook(bookArray.get(b).toString()));
+                        System.out.println(bookArray.get(b).toString());
+                    }
+                    i++;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
     }
+  
+    //TODO: Expand regex
+    public static Book getBook(String id) {
+        Response response = sendGet("/Petertje/book/" + id.replaceAll("[/.]", ""));
+        JSONObject jsonObject;
+        List<String> subjects = new ArrayList<>();
+        Book book = null;
+//        Book book = new Book("","","","",subjects,"","","","");
+        try {
+             jsonObject = new JSONObject(response.responseString);
+//             book.title = jsonObject.optString("title", null);
+//             book.author = jsonObject.optString("author", null);
+//             book.cover = "";
+//             book.description = jsonObject.optString("description", null);
+//             book.subjects = subjects;
+//             book.publishDate = jsonObject.optString("publishDate", null);
+//             book.authorWiki = jsonObject.optString("authorWiki", null);
+//             book.isbn = jsonObject.optString("isbn", null);
+//             book.rating = jsonObject.optString("rating", null);
+             book = new Book(jsonObject.optString("title", null), jsonObject.optString("author", null), "" , jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return book;
+    }
+
+    //TODO: Expand regex
 
     public Response getBookList(String id) {
         return sendGet("booklist/" + id);
     }
+
+    public static Response getBookCollections(String name) {
+        return sendGet("/user/" + name + "/book_collections");
+    }
+
+    public static Response addBookCollectionServer(String name, String collection_name) {
+        return sendGet("/user/" + name + "/add_book_collection/" + collection_name);
+    }
+
+    public static Response addBookToCollectionServer(String name, String collection_name, String book_id){
+        return sendGet("/user/" + name + "/add_book_to_collection/" + collection_name + "/" + book_id);
+    }
+
+//    public static Response postBookCollection(String name, RequestBody body) {
+//        return sendPost("/user/" + name + "/add_book_collection", body);
+//    }
+
 
     private OkHttpClient getUnsafeOkHttpClient() {
         try {
