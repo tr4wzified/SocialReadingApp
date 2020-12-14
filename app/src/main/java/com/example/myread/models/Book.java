@@ -15,7 +15,7 @@ public class Book {
     private final int isbn;
     private final int rating;
 
-    public Book(String title, String author, String cover, String description, List<String> subjects, Date publishDate, String authorWiki, int isbn, int rating) {
+    public Book(String title, String author, String cover, String description, List<String> subjects, String publishDate, String authorWiki, String isbn, String rating) {
         id++;
         this.title = title;
         this.author = author;

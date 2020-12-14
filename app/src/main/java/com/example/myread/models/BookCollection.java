@@ -1,11 +1,12 @@
 package com.example.myread.models;
 
+import com.example.myread.ServerConnect;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class BookCollection {
-    private final String name;
+    public String name;
     private int id = 0;
     private final List<Book> bookList;
 
@@ -23,7 +24,16 @@ public class BookCollection {
         this.bookList.add(book);
     }
 
-    public void addBook(String title, String author, String cover, String description, List<String> subjects, Date publishDate, String authorWiki, int isbn, int rating) {
+    public void addBook(String user_name, String book_id, String title, String author, String cover, String description, List<String> subjects, String publishDate, String authorWiki, String isbn, String rating) {
         this.bookList.add(new Book(title, author, cover, description, subjects, publishDate, authorWiki, isbn, rating));
+//        ServerConnect.addBookToCollectionServer(user_name, name, book_id);
+    }
+
+    public int length() {
+        return bookList.size();
+    }
+
+    public Book at(int number) {
+        return bookList.get(number);
     }
 }
