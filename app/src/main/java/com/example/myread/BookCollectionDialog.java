@@ -24,7 +24,9 @@ public class BookCollectionDialog extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
         builder.setView(inflater.inflate(R.layout.dialog_bookcollection, null))
-                .setPositiveButton(R.string.add_collection_btn, (dialog, which) -> listener.onDialogPositiveClick(BookCollectionDialog.this))
+                .setPositiveButton(R.string.add_collection_btn, (dialog, which) -> {
+                    listener.onDialogPositiveClick(BookCollectionDialog.this);
+                })
                 .setNegativeButton(R.string.cancel_collection_btn, (dialog, which) -> BookCollectionDialog.this.getDialog().cancel());
         return builder.create();
     }
