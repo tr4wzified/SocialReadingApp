@@ -10,7 +10,7 @@
         android:text="@string/new_collection" />
 
     <EditText
-        android:id="@+id/collection_name"
+        android:id="@+id/newCollectionName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
