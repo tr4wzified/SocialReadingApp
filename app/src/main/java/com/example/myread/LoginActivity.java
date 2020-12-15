@@ -26,13 +26,23 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        prf = getSharedPreferences("user_details",MODE_PRIVATE);
+        if (prf.contains("username")) {
+            System.out.println("Account already detected, going to main");
+            try {
+                ServerConnect.getInstance().initUser(prf.getString("username", ""));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Button login_btn = findViewById(R.id.login_btn);
         TextView registertext = findViewById(R.id.register_txt);
         username = findViewById(R.id.collection_name);
         password = findViewById(R.id.password);
-        prf = getSharedPreferences("user_details",MODE_PRIVATE);
         login_btn.setOnClickListener(v -> login());
         registertext.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
@@ -42,16 +52,12 @@ public class LoginActivity extends AppCompatActivity {
         if (validateUsername() && validatePassword()) {
             ServerConnect.Response response = sendPost();
             if (response.successful) {
-//                User user = User.getInstance();
                 SharedPreferences.Editor editor = prf.edit();
                 editor.putString("username",trim_username);
                 editor.apply();
                 User user = User.getInstance();
-                user.name = prf.getString("username", "");
                 try {
                     ServerConnect.getInstance().initUser(prf.getString("username", ""));
-//                    User user = ServerConnect.getInstance().getUser(prf.getString("username", ""));
-//                    user.name = prf.getString("username", "");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
