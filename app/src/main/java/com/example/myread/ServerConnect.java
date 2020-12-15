@@ -134,10 +134,10 @@ public class ServerConnect extends AppCompatActivity {
 
     public void initUser(String name) throws JSONException {
         User user = User.getInstance();
-        Response response = sendGet("/user/" + name);
+        user.name = name;
+        Response response = sendGet("user/" + name);
         JSONArray jsonArray = new JSONArray();
         if (response.successful) {
-            user = User.getInstance();
             try {
                 Response r = getBookCollections(user.name);
                 jsonArray = new JSONArray(r.responseString);

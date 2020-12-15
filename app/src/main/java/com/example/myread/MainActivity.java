@@ -28,7 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private User user;
+    private User user = User.getInstance();
     private SharedPreferences prf;
 
     @Override
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 //        NavigationUI.setupWithNavController(navigationView, navController);
 //
 //
-        List<String> subjects = new ArrayList<String>();
+        List<String> subjects = new ArrayList<>();
 
 //        User user = new User("Petertje");
         user.addBookCollection(new BookCollection("Hoost_en"));
