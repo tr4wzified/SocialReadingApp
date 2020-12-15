@@ -1,5 +1,6 @@
 package com.example.myread;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,7 +32,7 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
     private SharedPreferences pref;
 
     private Button bookcollection_btn;
-    private EditText inputCollectionName;
+//    private EditText inputCollectionName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
         linearLayout = (LinearLayout)findViewById(R.id.bookScroll);
         booklistcomp = (LinearLayout)findViewById(R.id.booklistScroll);
         bookcollection_btn = (Button)findViewById(R.id.bookCollectionButton);
-        inputCollectionName = (EditText)findViewById(R.id.collection_name);
+//        inputCollectionName = (EditText)findViewById(R.id.newCollectionName);
 
 
         layoutInflater = (LayoutInflater)
@@ -86,6 +87,9 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
 //        View dialogComp = layoutInflater.inflate(R.layout.dialog_bookcollection, null);
+        Dialog dialogView = dialog.getDialog();
+        assert dialogView != null;
+        EditText inputCollectionName = dialogView.findViewById(R.id.newCollectionName);
         String name = inputCollectionName.getText().toString();
         user.addBookCollection(new BookCollection(name));
     }
