@@ -42,6 +42,7 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
 //    private SharedPreferences pref;
 //
     private Button bookcollection_btn;
+    private EditText inputCollectionName;
     private Button deleteCollection_btn;
 ////    private EditText inputCollectionName;
 
@@ -61,6 +62,21 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
 
         initRecyclerView();
         initCards();
+//        linearLayout = (LinearLayout)findViewById(R.id.bookScroll);
+//        booklistcomp = (LinearLayout)findViewById(R.id.booklistScroll);
+        bookcollection_btn = (Button)findViewById(R.id.bookCollectionButton);
+        inputCollectionName = (EditText)findViewById(R.id.newCollectionName);
+//
+//
+//        layoutInflater = (LayoutInflater)
+//                this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//
+//        pref = getSharedPreferences("user_details", MODE_PRIVATE);
+//        user = User.getInstance();
+//        user.name = pref.getString("username", "");
+//
+//        initBookList(user);
+//
 
         bookcollection_btn = (Button)findViewById(R.id.bookCollectionButton);
         bookcollection_btn.setOnClickListener(v -> {
@@ -68,11 +84,6 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
             BookCollectionDialog bookCollectionDialog = new BookCollectionDialog();
             bookCollectionDialog.show(fragmentManager, "dialog");
         });
-//        deleteCollection_btn = findViewById(R.id.delete_bookcollection);
-//        deleteCollection_btn.setOnClickListener(v -> {
-//            deleteCard();
-//        });
-
     }
 
     private void initCards() {
