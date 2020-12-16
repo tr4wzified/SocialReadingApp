@@ -31,6 +31,13 @@ public class User {
         return collectionList.get(index);
     }
 
+    public List<Book> getBookCollection(String name) {
+        for (BookCollection bc : collectionList) {
+            if (bc.name.equals(name)) return bc.getBookList();
+        }
+        return null;
+    }
+
     public void addBookList(String name) {
         collectionList.add(new BookCollection(name));
     }
