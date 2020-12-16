@@ -41,8 +41,8 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
 //    private User user;
 //    private SharedPreferences pref;
 //
-//    private Button bookcollection_btn;
-////    private EditText inputCollectionName;
+    private Button bookcollection_btn;
+    private EditText inputCollectionName;
 
     protected RecyclerView mRecyclerView;
     protected LibraryAdapter mAdapter;
@@ -62,8 +62,8 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
         initCards();
 //        linearLayout = (LinearLayout)findViewById(R.id.bookScroll);
 //        booklistcomp = (LinearLayout)findViewById(R.id.booklistScroll);
-//        bookcollection_btn = (Button)findViewById(R.id.bookCollectionButton);
-//        inputCollectionName = (EditText)findViewById(R.id.newCollectionName);
+        bookcollection_btn = (Button)findViewById(R.id.bookCollectionButton);
+        inputCollectionName = (EditText)findViewById(R.id.newCollectionName);
 //
 //
 //        layoutInflater = (LayoutInflater)
@@ -75,36 +75,14 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
 //
 //        initBookList(user);
 //
-//        bookcollection_btn.setOnClickListener(v -> {
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            BookCollectionDialog bookCollectionDialog = new BookCollectionDialog();
-//            bookCollectionDialog.show(fragmentManager, "dialog");
-//        });
+        bookcollection_btn.setOnClickListener(v -> {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            BookCollectionDialog bookCollectionDialog = new BookCollectionDialog();
+            bookCollectionDialog.show(fragmentManager, "dialog");
+        });
 
     }
 
-//    private void initBookItem(BookCollection bookCollection) {
-//        for (Book boek : bookCollection.getBookList()) {
-//            View rowView = layoutInflater.inflate(R.layout.listitem, null);
-//            TextView book_title = (TextView) rowView.findViewById(R.id.bookTitle);
-//            TextView book_author = (TextView) rowView.findViewById(R.id.bookAuthor);
-//            book_title.setText(boek.title);
-//            book_author.setText(boek.author);
-//            linearLayout.addView(rowView, (linearLayout.getChildCount() -1));
-//        }
-//    }
-//
-//    private void initBookList(User user) {
-//        for (BookCollection bc : user.getCollectionList()){
-//            View listRow = layoutInflater.inflate(R.layout.booklist_component, null);
-//            TextView listName = (TextView) listRow.findViewById(R.id.list_title);
-//            TextView bookAmount = (TextView) listRow.findViewById(R.id.book_amount);
-//            listName.setText(bc.name);
-//            bookAmount.setText(Integer.toString(bc.length()));
-////            initBookItem(bc);
-//            booklistcomp.addView(listRow, (booklistcomp.getChildCount() - 1) );
-//        }
-//    }
     private void initCards() {
         mCards.addAll(user.getCollectionList());
     }
