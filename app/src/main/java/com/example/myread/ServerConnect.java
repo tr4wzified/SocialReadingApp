@@ -152,7 +152,7 @@ public class ServerConnect extends AppCompatActivity {
                 for (BookCollection bc : user.getCollectionList()) {
                     JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
                     for (int b = 0; b < bookArray.length(); b++) {
-                        bc.addBook(getBooks(bookArray.get(b).toString()).get(0));
+                        bc.addBook(getBookByID(bookArray.get(b).toString()));
                         System.out.println(bookArray.get(b).toString());
                     }
                     i++;
@@ -162,7 +162,6 @@ public class ServerConnect extends AppCompatActivity {
             }
         }
     }
-
 
     public Book getBookByID(String id) {
         Response response = sendGet("book/" + id);
