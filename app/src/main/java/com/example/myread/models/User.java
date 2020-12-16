@@ -51,4 +51,9 @@ public class User {
         ServerConnect.getInstance().addBookCollectionServer(name, bookCollection.name);
 //        ServerConnect.postBookCollection(name, formBody);
     }
+
+    public void deleteBookCollection(BookCollection bc) {
+        collectionList.remove(bc);
+        ServerConnect.getInstance().deleteBookCollectionServer(name, bc.name);
+    }
 }
