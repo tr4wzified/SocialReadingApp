@@ -27,7 +27,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/libraryRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="550dp"
         android:orientation="vertical"
         android:padding="5dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
