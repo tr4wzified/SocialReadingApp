@@ -80,6 +80,7 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         bookTitle = mCards.get(position).title;
         Intent intent = new Intent(this, BookActivity.class);
         intent.putExtra("Book", bookTitle);
+        intent.putExtra("Collection", collectionTitle);
         startActivity(intent);
     }
 }

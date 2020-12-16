@@ -34,6 +34,7 @@
         <activity android:name=".listviewtest" />
         <activity android:name=".LibraryActivity" />
         <activity android:name=".CollectionActivity"/>
+        <activity android:name=".BookActivity"/>
     </application>
 
 </manifest>

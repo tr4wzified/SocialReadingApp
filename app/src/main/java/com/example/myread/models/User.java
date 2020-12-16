@@ -38,6 +38,14 @@ public class User {
         return null;
     }
 
+    public Book getBook(String cTitle, String bTitle) {
+        List<Book> bc = getBookCollection(cTitle);
+        for (Book book: bc) {
+            if (book.title.equals(bTitle)) return book;
+        }
+        return null;
+    }
+
     public void addBookList(String name) {
         collectionList.add(new BookCollection(name));
     }
