@@ -41,14 +41,15 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
 //    private User user;
 //    private SharedPreferences pref;
 //
-//    private Button bookcollection_btn;
+    private Button bookcollection_btn;
+    private Button deleteCollection_btn;
 ////    private EditText inputCollectionName;
 
     protected RecyclerView mRecyclerView;
     protected LibraryAdapter mAdapter;
     private List<BookCollection> mCards = new ArrayList<>();
     protected User user;
-    public String clickedCard;
+    public BookCollection clickedCard;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,51 +61,20 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
 
         initRecyclerView();
         initCards();
-//        linearLayout = (LinearLayout)findViewById(R.id.bookScroll);
-//        booklistcomp = (LinearLayout)findViewById(R.id.booklistScroll);
-//        bookcollection_btn = (Button)findViewById(R.id.bookCollectionButton);
-//        inputCollectionName = (EditText)findViewById(R.id.newCollectionName);
-//
-//
-//        layoutInflater = (LayoutInflater)
-//                this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//        pref = getSharedPreferences("user_details", MODE_PRIVATE);
-//        user = User.getInstance();
-//        user.name = pref.getString("username", "");
-//
-//        initBookList(user);
-//
-//        bookcollection_btn.setOnClickListener(v -> {
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            BookCollectionDialog bookCollectionDialog = new BookCollectionDialog();
-//            bookCollectionDialog.show(fragmentManager, "dialog");
+
+        bookcollection_btn = (Button)findViewById(R.id.bookCollectionButton);
+        bookcollection_btn.setOnClickListener(v -> {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            BookCollectionDialog bookCollectionDialog = new BookCollectionDialog();
+            bookCollectionDialog.show(fragmentManager, "dialog");
+        });
+//        deleteCollection_btn = findViewById(R.id.delete_bookcollection);
+//        deleteCollection_btn.setOnClickListener(v -> {
+//            deleteCard();
 //        });
 
     }
 
-//    private void initBookItem(BookCollection bookCollection) {
-//        for (Book boek : bookCollection.getBookList()) {
-//            View rowView = layoutInflater.inflate(R.layout.listitem, null);
-//            TextView book_title = (TextView) rowView.findViewById(R.id.bookTitle);
-//            TextView book_author = (TextView) rowView.findViewById(R.id.bookAuthor);
-//            book_title.setText(boek.title);
-//            book_author.setText(boek.author);
-//            linearLayout.addView(rowView, (linearLayout.getChildCount() -1));
-//        }
-//    }
-//
-//    private void initBookList(User user) {
-//        for (BookCollection bc : user.getCollectionList()){
-//            View listRow = layoutInflater.inflate(R.layout.booklist_component, null);
-//            TextView listName = (TextView) listRow.findViewById(R.id.list_title);
-//            TextView bookAmount = (TextView) listRow.findViewById(R.id.book_amount);
-//            listName.setText(bc.name);
-//            bookAmount.setText(Integer.toString(bc.length()));
-////            initBookItem(bc);
-//            booklistcomp.addView(listRow, (booklistcomp.getChildCount() - 1) );
-//        }
-//    }
     private void initCards() {
         mCards.addAll(user.getCollectionList());
     }
@@ -126,20 +96,28 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
         EditText inputCollectionName = dialogView.findViewById(R.id.newCollectionName);
         String name = inputCollectionName.getText().toString();
         user.addBookCollection(new BookCollection(name));
+        mCards.add(new BookCollection(name));
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void OnCardClick(int position) {
-        clickedCard = mCards.get(position).name;
+        clickedCard = mCards.get(position);
         Intent intent = new Intent(this, CollectionActivity.class);
-        intent.putExtra("collectiontitle", clickedCard);
+        intent.putExtra("collectiontitle", clickedCard.name);
         startActivity(intent);
     }
 
-    private void deleteCard(BookCollection bc) {
-        mCards.remove(bc);
-        mAdapter.notifyDataSetChanged();
+    @Override
+    public void OnButtonClick(int position) {
+        deleteCard(position);
+    }
 
+    private void deleteCard(int position) {
+        BookCollection bookcollection = mCards.get(position);
+        mCards.remove(bookcollection);
+        user.deleteBookCollection(bookcollection);
+        mAdapter.notifyDataSetChanged();
     }
 
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -150,7 +128,8 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            deleteCard(mCards.get(viewHolder.getAdapterPosition()));
+//            deleteCard(mCards.get(viewHolder.getAdapterPosition()));
+
         }
     };
 }
