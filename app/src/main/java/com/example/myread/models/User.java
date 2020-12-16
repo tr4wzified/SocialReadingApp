@@ -31,6 +31,13 @@ public class User {
         return collectionList.get(index);
     }
 
+    public List<Book> getBookCollection(String name) {
+        for (BookCollection bc : collectionList) {
+            if (bc.name.equals(name)) return bc.getBookList();
+        }
+        return null;
+    }
+
     public void addBookList(String name) {
         collectionList.add(new BookCollection(name));
     }
@@ -43,5 +50,10 @@ public class User {
         collectionList.add(bookCollection);
         ServerConnect.getInstance().addBookCollectionServer(name, bookCollection.name);
 //        ServerConnect.postBookCollection(name, formBody);
+    }
+
+    public void deleteBookCollection(BookCollection bc) {
+        collectionList.remove(bc);
+        ServerConnect.getInstance().deleteBookCollectionServer(name, bc.name);
     }
 }
