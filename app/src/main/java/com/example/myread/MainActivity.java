@@ -11,7 +11,6 @@ import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getBook() {
-        Book response = ServerConnect.getInstance().getBook("OL26586969M");
+        Book response = ServerConnect.getInstance().getBookByID("OL26586969M");
     }
 
     private void getUser() throws JSONException {

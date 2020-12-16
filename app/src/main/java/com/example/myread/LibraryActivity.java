@@ -4,8 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,14 +20,12 @@ import com.example.myread.models.Book;
 import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
 
-import org.json.JSONException;
-
 public class LibraryActivity extends AppCompatActivity implements BookCollectionDialog.NoticeDialogListener {
     private LinearLayout linearLayout;
     private LinearLayout booklistcomp;
     private LayoutInflater layoutInflater;
     private User user;
-    private SharedPreferences pref;
+    private SharedPreferences prf;
 
     private Button bookcollection_btn;
 //    private EditText inputCollectionName;
@@ -47,7 +43,7 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
         layoutInflater = (LayoutInflater)
                 this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        pref = getSharedPreferences("user_details", MODE_PRIVATE);
+        prf = getSharedPreferences("user_details", MODE_PRIVATE);
         user = User.getInstance();
 //        user.name = pref.getString("username", "");
 
