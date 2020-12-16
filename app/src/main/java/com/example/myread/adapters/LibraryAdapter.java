@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,6 +48,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView listName, bookAmount;
+        private final Button deleteBtn;
         OnCardListener onCardListener;
 
         public ViewHolder(View view, OnCardListener onCardListener) {
@@ -59,9 +61,16 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
 
             listName = view.findViewById(R.id.list_title);
             bookAmount = view.findViewById(R.id.book_amount);
+            deleteBtn = view.findViewById(R.id.delete_bookcollection);
             this.onCardListener = onCardListener;
 
             view.setOnClickListener(this);
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onCardListener.OnButtonClick(getAdapterPosition());
+                }
+            });
         }
 
         public TextView getListName() {
@@ -76,9 +85,11 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         public void onClick(View v) {
             onCardListener.OnCardClick(getAdapterPosition());
         }
+
     }
 
     public interface OnCardListener {
         void OnCardClick(int position);
+        void OnButtonClick(int position);
     }
 }
