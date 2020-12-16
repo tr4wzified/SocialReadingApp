@@ -60,4 +60,9 @@
     <string name="new_collection">Create your new collection</string>
     <string name="add_collection_btn">Add</string>
     <string name="cancel_collection_btn">Cancel</string>
+
+<!--    Collection-->
+    <string name="book_collection">Book collection</string>
+    <string name="books">Books</string>
+
 </resources>
