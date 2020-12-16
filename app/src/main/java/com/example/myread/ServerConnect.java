@@ -152,7 +152,7 @@ public class ServerConnect extends AppCompatActivity {
                 for (BookCollection bc : user.getCollectionList()) {
                     JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
                     for (int b = 0; b < bookArray.length(); b++) {
-                        bc.addBook(getBook(bookArray.get(b).toString()));
+                        bc.addBook(getBooks(bookArray.get(b).toString()).get(0));
                         System.out.println(bookArray.get(b).toString());
                     }
                     i++;
@@ -163,29 +163,49 @@ public class ServerConnect extends AppCompatActivity {
         }
     }
 
-    //TODO: Expand regex
-    public Book getBook(String id) {
-        Response response = sendGet("/Petertje/book/" + id.replaceAll("[/.]", ""));
-        JSONObject jsonObject;
+
+    public Book getBookByID(String id) {
+        Response response = sendGet("book/" + id);
         List<String> subjects = new ArrayList<>();
-        Book book = null;
-//        Book book = new Book("","","","",subjects,"","","","");
+        JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(response.responseString);
-//             book.title = jsonObject.optString("title", null);
-//             book.author = jsonObject.optString("author", null);
-//             book.cover = "";
-//             book.description = jsonObject.optString("description", null);
-//             book.subjects = subjects;
-//             book.publishDate = jsonObject.optString("publishDate", null);
-//             book.authorWiki = jsonObject.optString("authorWiki", null);
-//             book.isbn = jsonObject.optString("isbn", null);
-//             book.rating = jsonObject.optString("rating", null);
-            book = new Book(jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+            JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
+            for (int j = 0; j < subjectsArray.length(); j++) {
+                subjects.add(subjectsArray.getString(j));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+    }
+
+    public List<Book> getBooks(String bookName) {
+        Response response = sendGet("search_book/" + bookName.replaceAll("[/.]", ""));
+        JSONArray jsonArray;
+        List<Book> books = new ArrayList<>();
+        try {
+            jsonArray = new JSONArray(response.responseString);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                List<String> subjects = new ArrayList<>();
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                try {
+                    JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
+                    for (int j = 0; j < subjectsArray.length(); j++) {
+                        subjects.add(subjectsArray.getString(j));
+                    }
+                } catch (JSONException e) {
+                    System.out.println("Json error (possible empty subjects): " + e.getMessage());
+                }
+
+                Book book = new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+                books.add(book);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return book;
+        return books;
     }
 
     public Response getBookList(String id) {
@@ -193,15 +213,19 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public Response getBookCollections(String name) {
-        return sendGet("/user/" + name + "/book_collections");
+        return sendGet("user/" + name + "/book_collections");
     }
 
     public Response addBookCollectionServer(String name, String collection_name) {
-        return sendGet("/user/" + name + "/add_book_collection/" + collection_name);
+        return sendGet("user/" + name + "/add_book_collection/" + collection_name);
+    }
+
+    public Response deleteBookCollectionServer(String name, String collection_name) {
+        return sendGet("/user/" + name + "/del_book_collection/" + collection_name);
     }
 
     public Response addBookToCollectionServer(String name, String collection_name, String book_id) {
-        return sendGet("/user/" + name + "/add_book_to_collection/" + collection_name + "/" + book_id);
+        return sendGet("user/" + name + "/add_book_to_collection/" + collection_name + "/" + book_id);
     }
 
 //    public static Response postBookCollection(String name, RequestBody body) {

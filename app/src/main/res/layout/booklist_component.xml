@@ -41,7 +41,16 @@
             android:layout_width="78dp"
             android:layout_height="100dp"
             android:layout_gravity="bottom|end"
+            android:layout_marginRight="50dp"
             android:src="@drawable/ic_book" />
+
+        <Button
+            android:id="@+id/delete_bookcollection"
+            android:layout_width="35dp"
+            android:layout_height="50dp"
+            android:text="X"
+            android:layout_gravity="end|center"
+            android:textAlignment="center" />
 
     </androidx.cardview.widget.CardView>
 </LinearLayout>

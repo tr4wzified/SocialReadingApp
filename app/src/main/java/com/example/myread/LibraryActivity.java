@@ -43,12 +43,14 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
 //
     private Button bookcollection_btn;
     private EditText inputCollectionName;
+    private Button deleteCollection_btn;
+////    private EditText inputCollectionName;
 
     protected RecyclerView mRecyclerView;
     protected LibraryAdapter mAdapter;
     private List<BookCollection> mCards = new ArrayList<>();
     protected User user;
-    public String clickedCard;
+    public BookCollection clickedCard;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,12 +77,13 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
 //
 //        initBookList(user);
 //
+
+        bookcollection_btn = (Button)findViewById(R.id.bookCollectionButton);
         bookcollection_btn.setOnClickListener(v -> {
             FragmentManager fragmentManager = getSupportFragmentManager();
             BookCollectionDialog bookCollectionDialog = new BookCollectionDialog();
             bookCollectionDialog.show(fragmentManager, "dialog");
         });
-
     }
 
     private void initCards() {
@@ -104,20 +107,28 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
         EditText inputCollectionName = dialogView.findViewById(R.id.newCollectionName);
         String name = inputCollectionName.getText().toString();
         user.addBookCollection(new BookCollection(name));
+        mCards.add(new BookCollection(name));
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void OnCardClick(int position) {
-        clickedCard = mCards.get(position).name;
+        clickedCard = mCards.get(position);
         Intent intent = new Intent(this, CollectionActivity.class);
-        intent.putExtra("collectiontitle", clickedCard);
+        intent.putExtra("collectiontitle", clickedCard.name);
         startActivity(intent);
     }
 
-    private void deleteCard(BookCollection bc) {
-        mCards.remove(bc);
-        mAdapter.notifyDataSetChanged();
+    @Override
+    public void OnButtonClick(int position) {
+        deleteCard(position);
+    }
 
+    private void deleteCard(int position) {
+        BookCollection bookcollection = mCards.get(position);
+        mCards.remove(bookcollection);
+        user.deleteBookCollection(bookcollection);
+        mAdapter.notifyDataSetChanged();
     }
 
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -128,7 +139,8 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            deleteCard(mCards.get(viewHolder.getAdapterPosition()));
+//            deleteCard(mCards.get(viewHolder.getAdapterPosition()));
+
         }
     };
 }
