@@ -28,7 +28,7 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
     private List<Book> mCards = new ArrayList<>();
     protected User user;
     private String collectionTitle;
-    private String bookTitle;
+    private Book tempBook;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,10 +77,11 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
 
     @Override
     public void OnCardClick(int position) {
-        bookTitle = mCards.get(position).title;
+        tempBook = mCards.get(position);
+        user.setTempBook(tempBook);
         Intent intent = new Intent(this, BookActivity.class);
-        intent.putExtra("Book", bookTitle);
-        intent.putExtra("Collection", collectionTitle);
+//        intent.putExtra("Book", bookTitle);
+//        intent.putExtra("Collection", collectionTitle);
         startActivity(intent);
     }
 }

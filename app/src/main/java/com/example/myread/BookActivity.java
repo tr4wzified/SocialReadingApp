@@ -29,7 +29,8 @@ public class BookActivity extends AppCompatActivity {
         book_year = findViewById(R.id.book_year);
 
 
-        currentBook = user.getBook(collectionTitle, bookTitle);
+//        currentBook = user.getBook(collectionTitle, bookTitle);
+        currentBook = user.getTempBook();
 
         initBook();
     }
