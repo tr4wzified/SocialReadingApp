@@ -63,12 +63,12 @@ public class MainActivity extends AppCompatActivity {
         List<String> subjects = new ArrayList<>();
 
 //        User user = new User("Petertje");
-        user.addBookCollection(new BookCollection("Hoost_en"));
-        user.addBookCollection(new BookCollection("WIllem"));
+        //user.addBookCollection(new BookCollection("Hoost_en"));
+        //user.addBookCollection(new BookCollection("WIllem"));
 
-        user.getBookCollection(1).addBook(user.name, "OL26586969M", "Joost", "Soup", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
-        user.getBookCollection(1).addBook(user.name, "OL26586969M","Willom", "Soep", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
-        user.getBookCollection(1).addBook(user.name, "OL26586969M","Hank", "Bee", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
+        //user.getBookCollection(1).addBook(user.name, "OL26586969M", "Joost", "Soup", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
+        //user.getBookCollection(1).addBook(user.name, "OL26586969M","Willom", "Soep", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
+        //user.getBookCollection(1).addBook(user.name, "OL26586969M","Hank", "Bee", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
     }
 
     private void getBook() {
