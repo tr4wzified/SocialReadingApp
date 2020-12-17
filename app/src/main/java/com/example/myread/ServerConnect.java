@@ -152,7 +152,7 @@ public class ServerConnect extends AppCompatActivity {
                 for (BookCollection bc : user.getCollectionList()) {
                     JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
                     for (int b = 0; b < bookArray.length(); b++) {
-                        bc.addBook(getBook(bookArray.get(b).toString()));
+                        bc.addBook(getBookByID(bookArray.get(b).toString()));
                         System.out.println(bookArray.get(b).toString());
                     }
                     i++;
@@ -161,6 +161,23 @@ public class ServerConnect extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public Book getBookByID(String id) {
+        Response response = sendGet("book/" + id);
+        List<String> subjects = new ArrayList<>();
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(response.responseString);
+            JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
+            for (int j = 0; j < subjectsArray.length(); j++) {
+                subjects.add(subjectsArray.getString(j));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
     }
 
     //TODO: Expand regex
