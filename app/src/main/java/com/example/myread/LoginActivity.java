@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                startActivity(new Intent(LoginActivity.this, LibraryActivity.class));
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
                 runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
             } else if (response.response.equals("Unable to reach server"))
