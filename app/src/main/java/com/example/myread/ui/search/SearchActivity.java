@@ -80,10 +80,10 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
 
     @Override
     public void OnCardClick(int position) {
-//        Book book = mCards.get(position);
-        bookTitle = mCards.get(position).title;
+        user.setTempBook(mCards.get(position));
+//        bookTitle = mCards.get(position).title;
         Intent intent = new Intent(this, BookActivity.class);
-        intent.putExtra("Book", bookTitle);
+//        intent.putExtra("Book", bookTitle);
         startActivity(intent);
     }
 }
