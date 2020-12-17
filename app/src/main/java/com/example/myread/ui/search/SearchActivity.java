@@ -1,87 +1,89 @@
-package com.example.myread;
+package com.example.myread.ui.search;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.EditText;
+import android.os.Parcelable;
+import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myread.BookActivity;
+import com.example.myread.R;
+import com.example.myread.ServerConnect;
 import com.example.myread.adapters.CollectionAdapter;
 import com.example.myread.models.Book;
-import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
+import com.google.android.material.textfield.TextInputLayout;
 
-import org.w3c.dom.Text;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollectionActivity extends AppCompatActivity implements CollectionAdapter.OnCardListener {
+public class SearchActivity extends AppCompatActivity implements CollectionAdapter.OnCardListener {
     protected RecyclerView mRecyclerView;
     protected CollectionAdapter mAdapter;
     private List<Book> mCards = new ArrayList<>();
     protected User user;
     private String collectionTitle;
-    private Book tempBook;
+    private String bookTitle;
+
+    //    TextView bookName;
+    Button getBook;
+    TextInputLayout bookUserInput;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collection);
-        mRecyclerView = findViewById(R.id.collectionRecyclerView);
+        setContentView(R.layout.fragment_search);
+        mRecyclerView = findViewById(R.id.searchRecyclerView);
         user = User.getInstance();
         collectionTitle = getIntent().getStringExtra("collectiontitle");
 
+//        bookName = findViewById(R.id.bookName);
+        getBook = findViewById(R.id.searchBook);
+        bookUserInput = findViewById(R.id.bookSearchQuery);
+
 
         initRecyclerView();
-        initBooks();
+//        initBooks();
 
+        getBook.setOnClickListener(v -> showBookResults());
     }
 
     private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         mAdapter = new CollectionAdapter(mCards, this);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public void showBookResults() {
+        if (!mCards.isEmpty()) mCards.clear();
+        mCards.addAll(searchBooks());
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private List<Book> searchBooks() {
+        String bookName = bookUserInput.getEditText().getText().toString();
+        return ServerConnect.getInstance().getBooks(bookName);
     }
 
     private void initBooks() {
         mCards.addAll(user.getBookCollection(collectionTitle));
     }
 
-    private void deleteCard(Book b) {
-        mCards.remove(b);
-        mAdapter.notifyDataSetChanged();
-
-    }
-
-    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            deleteCard(mCards.get(viewHolder.getAdapterPosition()));
-        }
-    };
-
     @Override
     public void OnCardClick(int position) {
-        tempBook = mCards.get(position);
-        user.setTempBook(tempBook);
+        user.setTempBook(mCards.get(position));
+//        bookTitle = mCards.get(position).title;
         Intent intent = new Intent(this, BookActivity.class);
 //        intent.putExtra("Book", bookTitle);
-//        intent.putExtra("Collection", collectionTitle);
         startActivity(intent);
     }
 }
