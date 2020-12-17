@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         prf = getSharedPreferences("user_details",MODE_PRIVATE);
         setSupportActionBar(toolbar);
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_library,
                 R.id.nav_home, R.id.nav_search, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
@@ -58,17 +58,7 @@ public class MainActivity extends AppCompatActivity {
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 //        NavigationUI.setupWithNavController(navigationView, navController);
-//
-//
-        List<String> subjects = new ArrayList<>();
 
-//        User user = new User("Petertje");
-        //user.addBookCollection(new BookCollection("Hoost_en"));
-        //user.addBookCollection(new BookCollection("WIllem"));
-
-        //user.getBookCollection(1).addBook(user.name, "OL26586969M", "Joost", "Soup", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
-        //user.getBookCollection(1).addBook(user.name, "OL26586969M","Willom", "Soep", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
-        //user.getBookCollection(1).addBook(user.name, "OL26586969M","Hank", "Bee", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
     }
 
     private void getBook() {

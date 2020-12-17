@@ -12,6 +12,7 @@ public class User {
     private static User u = null;
     public String name;
     private List<BookCollection> collectionList;
+    private Book tempBook;
 
     private User() {
         this.collectionList = new ArrayList<>();
@@ -21,6 +22,14 @@ public class User {
         if (u == null)
             u = new User();
         return u;
+    }
+
+    public void setTempBook(Book book) {
+        this.tempBook = book;
+    }
+
+    public Book getTempBook() {
+        return tempBook;
     }
 
     public List<BookCollection> getCollectionList() {
@@ -34,6 +43,14 @@ public class User {
     public List<Book> getBookCollection(String name) {
         for (BookCollection bc : collectionList) {
             if (bc.name.equals(name)) return bc.getBookList();
+        }
+        return null;
+    }
+
+    public Book getBook(String cTitle, String bTitle) {
+        List<Book> bc = getBookCollection(cTitle);
+        for (Book book: bc) {
+            if (book.title.equals(bTitle)) return book;
         }
         return null;
     }
