@@ -211,37 +211,6 @@ public class ServerConnect extends AppCompatActivity {
         return null;
     }
 
-    public List<Book> getBooks(String bookName) {
-        Response response = sendGet("search_book/" + bookName.replaceAll("[/.]", ""));
-        JSONArray jsonArray;
-        List<Book> books = new ArrayList<>();
-        if (response.successful) {
-            try {
-                System.out.println(response.responseString);
-                jsonArray = new JSONArray(response.responseString);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    List<String> subjects = new ArrayList<>();
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    try {
-                        JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
-                        for (int j = 0; j < subjectsArray.length(); j++) {
-                            subjects.add(subjectsArray.getString(j));
-                        }
-                    } catch (JSONException e) {
-                        System.out.println("Json error (possible empty subjects): " + e.getMessage());
-                    }
-
-                    Book book = new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
-                    books.add(book);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return books;
-        }
-        return null;
-    }
-
     public Response getBookList(String id) {
         return sendGet("booklist/" + id);
     }
