@@ -25,16 +25,11 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText username, password, confirm_password;
     private TextView logintext;
     private Button register_btn;
-    SharedPreferences pref;
+    SharedPreferences prf;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        pref = getSharedPreferences("user_details",MODE_PRIVATE);
-        if (pref.contains("username")) {
-            System.out.println("Account already detected, going to main");
-            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-            finish();
-        }
+        prf = getSharedPreferences("user_details",MODE_PRIVATE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 

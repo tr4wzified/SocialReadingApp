@@ -7,12 +7,10 @@ import java.util.List;
 
 public class BookCollection {
     public String name;
-    private int id = 0;
     private final List<Book> bookList;
 
     public BookCollection(String name) {
         this.name = name;
-        id++;
         this.bookList = new ArrayList<>();
     }
 
