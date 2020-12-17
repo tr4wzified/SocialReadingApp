@@ -12,6 +12,7 @@ public class User {
     private static User u = null;
     public String name;
     private List<BookCollection> collectionList;
+    private Book tempBook;
 
     private User() {
         this.collectionList = new ArrayList<>();
@@ -21,6 +22,14 @@ public class User {
         if (u == null)
             u = new User();
         return u;
+    }
+
+    public void setTempBook(Book book) {
+        this.tempBook = book;
+    }
+
+    public Book getTempBook() {
+        return tempBook;
     }
 
     public List<BookCollection> getCollectionList() {
