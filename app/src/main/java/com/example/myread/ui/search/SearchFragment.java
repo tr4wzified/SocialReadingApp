@@ -29,7 +29,7 @@ public class SearchFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
-        bookName = root.findViewById(R.id.bookName);
+//        bookName = root.findViewById(R.id.bookName);
         getBook = root.findViewById(R.id.searchBook);
         bookUserInput = root.findViewById(R.id.bookSearchQuery);
         getBook.setOnClickListener(v -> bookName.setText(getBookName()));

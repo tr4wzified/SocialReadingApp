@@ -27,6 +27,7 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_search">Search books</string>
     <string name="title_activity_settings2">Settings2Activity</string>
+    <string name="menu_library">Library</string>
 
 
 <!--    Register & login-->

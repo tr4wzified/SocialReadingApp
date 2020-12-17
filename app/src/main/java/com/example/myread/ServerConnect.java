@@ -181,7 +181,7 @@ public class ServerConnect extends AppCompatActivity {
 //             book.authorWiki = jsonObject.optString("authorWiki", null);
 //             book.isbn = jsonObject.optString("isbn", null);
 //             book.rating = jsonObject.optString("rating", null);
-            book = new Book(jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+            book = new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -208,7 +208,7 @@ public class ServerConnect extends AppCompatActivity {
                         System.out.println("Json error (possible empty subjects): " + e.getMessage());
                     }
 
-                    Book book = new Book(jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+                    Book book = new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
                     books.add(book);
                 }
             } catch (JSONException e) {
