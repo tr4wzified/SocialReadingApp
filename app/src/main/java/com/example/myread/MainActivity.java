@@ -11,7 +11,6 @@ import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -28,7 +27,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private User user;
+    private User user = User.getInstance();
     private SharedPreferences prf;
 
     @Override
@@ -59,21 +58,11 @@ public class MainActivity extends AppCompatActivity {
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 //        NavigationUI.setupWithNavController(navigationView, navController);
-//
-//
-//        List<String> subjects = new ArrayList<String>();
 
-//        User user = new User("Petertje");
-//        user.addBookCollection(new BookCollection("Hoost_en"));
-//        user.addBookCollection(new BookCollection("WIllem"));
-//
-//        user.getBookCollection(1).addBook(user.name, "OL26586969M", "Joost", "Soup", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
-//        user.getBookCollection(1).addBook(user.name, "OL26586969M","Willom", "Soep", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
-//        user.getBookCollection(1).addBook(user.name, "OL26586969M","Hank", "Bee", "cover", "description", subjects, "9-12-2020", "Willem", "9", "3");
     }
 
     private void getBook() {
-        Book response = ServerConnect.getInstance().getBook("OL26586969M");
+        Book response = ServerConnect.getInstance().getBookByID("OL26586969M");
     }
 
     private void getUser() throws JSONException {
