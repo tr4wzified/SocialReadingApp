@@ -37,7 +37,8 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
 public class ServerConnect extends AppCompatActivity {
 
     private static ServerConnect s = null;
-    private OkHttpClient client;
+    private final OkHttpClient client;
+    private final String ip = "https://10.0.0.2:2048/";
 
     private ServerConnect() {
         client = getUnsafeOkHttpClient();
@@ -88,19 +89,20 @@ public class ServerConnect extends AppCompatActivity {
             }
         }
     }
-
-    public Response sendPost(String page, RequestBody body) {
+    public Response sendRequest(String page, RequestBody body) {
         try {
             URL url = null;
             try {
-                url = new URL("https://10.0.2.2:2048/" + page);
+                url = new URL(ip + page);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
             assert url != null;
 
-            final Request request = new Request.Builder().url(url).post(body).build();
-            ServerCall c = new ServerCall(client, request);
+            final Request.Builder request = new Request.Builder().url(url);
+            if (body != null) request.post(body);
+
+            ServerCall c = new ServerCall(client, request.build());
             ExecutorService e = newFixedThreadPool(1);
             return (Response) e.submit(c).get();
 
@@ -110,26 +112,12 @@ public class ServerConnect extends AppCompatActivity {
         return new Response(false, "", "");
     }
 
+    public Response sendPost(String page, RequestBody body) {
+        return sendRequest(page,body);
+    }
+
     public Response sendGet(String page) {
-        try {
-            URL url = null;
-            try {
-                url = new URL("https://10.0.2.2:2048/" + page);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            assert url != null;
-
-            final Request request = new Request.Builder().url(url).build();
-
-            ServerCall c = new ServerCall(client, request);
-            ExecutorService e = newFixedThreadPool(1);
-            return (Response) e.submit(c).get();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new Response(false, "", "");
+        return sendRequest(page,null);
     }
 
     public void initUser(String name) throws JSONException {
@@ -141,9 +129,8 @@ public class ServerConnect extends AppCompatActivity {
             try {
                 Response r = getBookCollections(user.name);
                 jsonArray = new JSONArray(r.responseString);
-                for (int i = 0; i < jsonArray.length(); i++) {
+                for (int i = 0; i < jsonArray.length(); i++)
                     user.addBookCollection(new BookCollection(jsonArray.getJSONObject(i).getString("name")));
-                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -170,9 +157,8 @@ public class ServerConnect extends AppCompatActivity {
         try {
             jsonObject = new JSONObject(response.responseString);
             JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
-            for (int j = 0; j < subjectsArray.length(); j++) {
+            for (int j = 0; j < subjectsArray.length(); j++)
                 subjects.add(subjectsArray.getString(j));
-            }
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -184,7 +170,7 @@ public class ServerConnect extends AppCompatActivity {
         Response response = sendGet("search_book/" + bookName.replaceAll("[/.]", ""));
         JSONArray jsonArray;
         List<Book> books = new ArrayList<>();
-        if (response.successful) {
+        if (response.successful)
             try {
                 System.out.println(response.responseString);
                 jsonArray = new JSONArray(response.responseString);
@@ -193,9 +179,8 @@ public class ServerConnect extends AppCompatActivity {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     try {
                         JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
-                        for (int j = 0; j < subjectsArray.length(); j++) {
+                        for (int j = 0; j < subjectsArray.length(); j++)
                             subjects.add(subjectsArray.getString(j));
-                        }
                     } catch (JSONException e) {
                         System.out.println("Json error (possible empty subjects): " + e.getMessage());
                     }
@@ -203,12 +188,12 @@ public class ServerConnect extends AppCompatActivity {
                     Book book = new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
                     books.add(book);
                 }
-            } catch (JSONException e) {
+            }
+            catch (JSONException e)
+            {
                 e.printStackTrace();
             }
-            return books;
-        }
-        return null;
+        return books;
     }
 
     public Response getBookList(String id) {
