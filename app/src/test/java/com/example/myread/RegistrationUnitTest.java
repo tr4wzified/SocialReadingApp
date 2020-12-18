@@ -16,8 +16,8 @@ public class RegistrationUnitTest {
     @Test
     public void validatePasswordTest()
     {
-        // Password is minimally 8 chars long.
-        assertFalse(passwordComplexityTest("Pa0!aaa"));
+        // Password is minimally 9 chars long.
+        assertFalse(passwordComplexityTest("Pa0!aaaa"));
         // Password needs special char
         assertFalse(passwordComplexityTest("Passw0rdwithoutspecial"));
         // Password needs to be 64 chars or less
