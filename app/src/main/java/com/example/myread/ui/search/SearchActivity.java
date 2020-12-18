@@ -86,4 +86,14 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
 //        intent.putExtra("Book", bookTitle);
         startActivity(intent);
     }
+
+    @Override
+    public void OnPositiveButtonClick(int position) {
+
+    }
+
+    @Override
+    public void OnNegativeButtonClick(int position) {
+
+    }
 }
