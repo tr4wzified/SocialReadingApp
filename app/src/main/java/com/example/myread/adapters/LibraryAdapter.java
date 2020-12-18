@@ -65,12 +65,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
             this.onCardListener = onCardListener;
 
             view.setOnClickListener(this);
-            deleteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onCardListener.OnButtonClick(getAdapterPosition());
-                }
-            });
+            deleteBtn.setOnClickListener(v -> onCardListener.OnButtonClick(getAdapterPosition()));
         }
 
         public TextView getListName() {

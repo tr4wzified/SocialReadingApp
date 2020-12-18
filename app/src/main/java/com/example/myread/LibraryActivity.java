@@ -87,7 +87,8 @@ public class LibraryActivity extends AppCompatActivity implements BookCollection
     }
 
     private void initCards() {
-        mCards.addAll(user.getCollectionList());
+        if (mCards.isEmpty()) mCards.addAll(user.getCollectionList());
+        mAdapter.notifyDataSetChanged();
     }
 
     private void initRecyclerView() {

@@ -3,18 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="horizontal">
 
     <androidx.cardview.widget.CardView
         android:layout_width="375dp"
-        android:layout_height="100dp"
+        android:layout_height="match_parent"
         android:layout_margin="4dp"
         app:cardBackgroundColor="#e1e1e1"
         app:cardCornerRadius="15dp"
         app:cardElevation="4dp"
-        app:contentPadding="5dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         tools:layout_editor_absoluteX="18dp"
         tools:layout_editor_absoluteY="85dp">
 
@@ -48,8 +50,9 @@
             android:id="@+id/delete_bookcollection"
             android:layout_width="35dp"
             android:layout_height="50dp"
-            android:text="X"
             android:layout_gravity="end|center"
+            android:text="X"
+            android:layout_margin="8dp"
             android:textAlignment="center" />
 
     </androidx.cardview.widget.CardView>
