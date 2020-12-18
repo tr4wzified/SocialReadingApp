@@ -67,6 +67,7 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
     }
 
     private void initBooks() {
+        mCards.clear();
         mCards.addAll(user.getBookCollection(collectionTitle));
         mAdapter.notifyDataSetChanged();
     }
