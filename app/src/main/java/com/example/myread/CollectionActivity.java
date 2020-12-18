@@ -50,18 +50,13 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         String books = "Books: " + user.getBookCollection(collectionTitle).size();
         bookAmount.setText(books);
 
-
-
         initRecyclerView();
         initBooks();
-
     }
 
     private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-
-//        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         mAdapter = new CollectionAdapter(mCards, this);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -71,26 +66,6 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         mCards.addAll(user.getBookCollection(collectionTitle));
         mAdapter.notifyDataSetChanged();
     }
-
-    private void deleteCard(int position) {
-        BookCollection bc = user.getBookCollectionByName(collectionTitle);
-        Book deletedBook = mCards.get(position);
-        mCards.remove(deletedBook);
-        bc.delete(deletedBook);
-        mAdapter.notifyDataSetChanged();
-    }
-
-//    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-//        @Override
-//        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-//            return false;
-//        }
-//
-//        @Override
-//        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//            deleteCard(mCards.get(viewHolder.getAdapterPosition()));
-//        }
-//    };
 
     @Override
     public void OnCardClick(int position) {
@@ -114,7 +89,11 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
 
     @Override
     public void OnNegativeButtonClick(int position) {
-        deleteCard(position);
+        BookCollection bc = user.getBookCollectionByName(collectionTitle);
+        Book deletedBook = mCards.get(position);
+        mCards.remove(deletedBook);
+        bc.delete(deletedBook);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -122,7 +101,7 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         BookCollection bc = mListItem.get(position);
 //        bc.addBook(clickedBook);
         user.getBookCollection(bc).addBookToServer(clickedBook);
-        addCollectionDialog.cancel();
         mAdapter.notifyDataSetChanged();
+        addCollectionDialog.cancel();
     }
 }
