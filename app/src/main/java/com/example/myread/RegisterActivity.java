@@ -23,8 +23,6 @@ import okhttp3.RequestBody;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText username, password, confirm_password;
-    private TextView logintext;
-    private Button register_btn;
     SharedPreferences prf;
 
     @Override
@@ -36,8 +34,8 @@ public class RegisterActivity extends AppCompatActivity {
         username = findViewById(R.id.collection_name);
         password = findViewById(R.id.password);
         confirm_password = findViewById(R.id.confirm_password);
-        register_btn = findViewById(R.id.register_btn);
-        logintext = findViewById(R.id.login_txt);
+        Button register_btn = findViewById(R.id.register_btn);
+        TextView logintext = findViewById(R.id.login_txt);
 
         register_btn.setOnClickListener(v -> registerUser(username.getText().toString().trim(), password.getText().toString().trim(), confirm_password.getText().toString().trim()));
         logintext.setOnClickListener(v -> {
@@ -46,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void sendPost(String name, String password) {
+    private Boolean sendPost(String name, String password) {
         final RequestBody formBody = new FormBody.Builder()
                 .add("name", name)
                 .add("pass", password)
@@ -56,21 +54,24 @@ public class RegisterActivity extends AppCompatActivity {
         if (response.successful) {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show());
+            return true;
         }
-        else if (response.response.equals("Unable to reach server"))
+
+        if (response.response.equals("Unable to reach server"))
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
         else
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration unsuccessful.", Toast.LENGTH_SHORT).show());
+        return false;
     }
 
     private Boolean validateUsername(String reg_username) {
         if (TextUtils.isEmpty(reg_username)) {
             Toast.makeText(RegisterActivity.this, "Username field is empty.", Toast.LENGTH_SHORT).show();
             return false;
-        } else {
-            username.setError(null);
-            return true;
         }
+
+        username.setError(null);
+        return true;
     }
 
     static Boolean passwordComplexityTest(String reg_password)
@@ -96,58 +97,14 @@ public class RegisterActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(reg_passwordConfirm)) {
             Toast.makeText(RegisterActivity.this, "Confirm Password field is empty.", Toast.LENGTH_SHORT).show();
             return false;
-        } else return reg_passwordConfirm.equals(reg_password);
+        }
+        return reg_passwordConfirm.equals(reg_password);
     }
 
-    public void registerUser(String username, String password, String passwordConfirm) {
-        //        getEditString();
-        if (!validateUsername(username) | !validatePassword(password) | !validatePasswordConfirm(password, passwordConfirm)) {
-            System.out.println("User information failed validation: " + username);
-        } else {
-            sendPost(username, password);
-            System.out.println("User information passed validation: " + username);
-        }
-    }
+    public Boolean registerUser(String username, String password, String passwordConfirm) {
+        if (!validateUsername(username) || !validatePassword(password) || !validatePasswordConfirm(password, passwordConfirm))
+            return false;
 
-    public void registrationTest() {
-        List<String> name = new ArrayList<>();
-        List<String> pass = new ArrayList<>();
-        List<String> pass_con = new ArrayList<>();
-
-        name.add("JaccoKees");
-        name.add("Willem");
-        name.add("Trawzified");
-        name.add("Hendrik");
-        name.add("AltLocky32");
-        name.add("Robin234234");
-        name.add("Jacsquare");
-        name.add("joostvanhengelen");
-
-        pass.add("Kees12aaaa");
-        pass.add("Willem12@3aaaa");
-        pass.add("Trawy987!aaaa");
-        pass.add("wachtwoordaaaa");
-        pass.add("Sperzi3Boonaaaa!");
-        pass.add("RobinXD!3aaa");
-        pass.add("squarielolaa3");
-        pass.add("Hengelenmaaraaalol");
-
-        pass_con.add("Kees12aaaa");
-        pass_con.add("Willem12@3aaaa");
-        pass_con.add("Trawy987!aaaa");
-        pass_con.add("wachtwoordaaaa");
-        pass_con.add("Sperzi3Boonaaaa!");
-        pass_con.add("RobinXD!33aaa");
-        pass_con.add("squarielolaa3");
-        pass_con.add("Hengelenmaaraaalol");
-
-        for (int i = 0; i < name.size(); i++) {
-            String username = name.get(i);
-            String password = pass.get(i);
-            String pass_confirm = pass_con.get(i);
-            registerUser(username, password, pass_confirm);
-
-            System.out.println();
-        }
+        return sendPost(username, password);
     }
 }
