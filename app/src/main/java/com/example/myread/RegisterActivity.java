@@ -73,20 +73,23 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private Boolean validatePassword(String reg_password) {
+    static Boolean passwordComplexityTest(String reg_password)
+    {
         Matcher matcher = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{9,64})").matcher(reg_password);
+        return matcher.matches();
+    }
 
+    private Boolean validatePassword(String reg_password) {
         if (TextUtils.isEmpty(reg_password)) {
             Toast.makeText(RegisterActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (!matcher.matches()) {
+        }
+        if (!passwordComplexityTest(reg_password)) {
             password.setError("Password must contain 8 characters with at least 1 number, 1 lower case letter, 1 upper case letter and 1 special character");
             return false;
-        } else {
-            password.setError(null);
-            return true;
-//            password.setErrorEnabled(false);
         }
+        password.setError(null);
+        return true;
     }
 
     private Boolean validatePasswordConfirm(String reg_password, String reg_passwordConfirm) {
