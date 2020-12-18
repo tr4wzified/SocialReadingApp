@@ -25,4 +25,4 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
     - name: Run Junit tests
-      run: ./gradle test
+      run: gradle test
