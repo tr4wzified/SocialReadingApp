@@ -27,8 +27,8 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
     protected CollectionAdapter mAdapter;
     private List<Book> mCards = new ArrayList<>();
     protected User user;
-    private String collectionTitle;
     private Book tempBook;
+    String collectionTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +37,12 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         mRecyclerView = findViewById(R.id.collectionRecyclerView);
         user = User.getInstance();
         collectionTitle = getIntent().getStringExtra("collectiontitle");
+        TextView bookAmount = findViewById(R.id.book_collections);
+        TextView editText = findViewById(R.id.book_collection);
+        editText.setText(collectionTitle);
+        String books = "Books: " + user.getBookCollection(collectionTitle).size();
+        bookAmount.setText(books);
+
 
 
         initRecyclerView();
@@ -83,5 +89,15 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
 //        intent.putExtra("Book", bookTitle);
 //        intent.putExtra("Collection", collectionTitle);
         startActivity(intent);
+    }
+
+    @Override
+    public void OnPositiveButtonClick(int position) {
+
+    }
+
+    @Override
+    public void OnNegativeButtonClick(int position) {
+
     }
 }
