@@ -6,23 +6,19 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.myread.models.Book;
-import com.example.myread.models.BookCollection;
-import com.example.myread.models.User;
-import com.google.android.material.navigation.NavigationView;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+
+import com.example.myread.models.Book;
+import com.example.myread.models.User;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        prf = getSharedPreferences("user_details",MODE_PRIVATE);
+        prf = GlobalApplication.getEncryptedSharedPreferences();
+        //prf = getSharedPreferences("user_details",MODE_PRIVATE);
         setSupportActionBar(toolbar);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_library,

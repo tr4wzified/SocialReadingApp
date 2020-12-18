@@ -100,9 +100,7 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
     }
 
     @Override
-    public void OnNegativeButtonClick(int position) {
-//        user.getBookCollection(collectionTitle).remove(mCards.get(position));
-    }
+    public void OnNegativeButtonClick(int position) { }
 
     @Override
     public void OnListItemClick(int position) {
