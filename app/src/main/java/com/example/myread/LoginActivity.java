@@ -12,8 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myread.models.User;
-
 import org.json.JSONException;
 
 import okhttp3.FormBody;
@@ -26,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        prf = getSharedPreferences("user_details",MODE_PRIVATE);
+        prf = GlobalApplication.getEncryptedSharedPreferences();
         if (prf.contains("username")) {
             System.out.println("Account already detected, going to main");
             try {
@@ -53,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             ServerConnect.Response response = sendPost();
             if (response.successful) {
                 SharedPreferences.Editor editor = prf.edit();
-                editor.putString("username",trim_username);
+                editor.putString("username", trim_username);
                 editor.apply();
                 try {
                     ServerConnect.getInstance().initUser(prf.getString("username", ""));

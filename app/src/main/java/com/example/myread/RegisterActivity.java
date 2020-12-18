@@ -27,7 +27,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        prf = getSharedPreferences("user_details",MODE_PRIVATE);
+        prf = GlobalApplication.getEncryptedSharedPreferences();
+        //prf = getSharedPreferences("user_details",MODE_PRIVATE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
