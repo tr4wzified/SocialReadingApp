@@ -29,7 +29,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        prf = getSharedPreferences("user_details",MODE_PRIVATE);
+        prf = GlobalApplication.getEncryptedSharedPreferences();
+        //prf = getSharedPreferences("user_details",MODE_PRIVATE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
@@ -98,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void registerUser(String username, String password, String passwordConfirm) {
         //        getEditString();
-        if (!validateUsername(username) | !validatePassword(password) | !validatePasswordConfirm(password, passwordConfirm)) {
+        if (!validateUsername(username) || !validatePassword(password) || !validatePasswordConfirm(password, passwordConfirm)) {
             System.out.println("User information failed validation: " + username);
         } else {
             sendPost(username, password);
