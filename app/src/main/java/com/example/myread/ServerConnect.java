@@ -231,6 +231,10 @@ public class ServerConnect extends AppCompatActivity {
         return sendGet("user/" + name + "/add_book_to_collection/" + collection_name + "/" + book_id);
     }
 
+    public Response deleteBookFromCollectionServer(String name, String collection_name, String book_id) {
+        return sendGet("user/" + name + "/del_book_from_collection/" + collection_name + "/" + book_id);
+    }
+
 //    public static Response postBookCollection(String name, RequestBody body) {
 //        return sendPost("/user/" + name + "/add_book_collection", body);
 //    }

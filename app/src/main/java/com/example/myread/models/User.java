@@ -40,9 +40,23 @@ public class User {
         return collectionList.get(index);
     }
 
+    public BookCollection getBookCollection(BookCollection bookCollection) {
+        for (BookCollection bc : collectionList) {
+            if (bc.equals(bookCollection)) return bc;
+        }
+        return null;
+    }
+
     public List<Book> getBookCollection(String name) {
         for (BookCollection bc : collectionList) {
             if (bc.name.equals(name)) return bc.getBookList();
+        }
+        return null;
+    }
+
+    public BookCollection getBookCollectionByName(String name) {
+        for (BookCollection bc : collectionList) {
+            if (bc.name.equals(name)) return bc;
         }
         return null;
     }

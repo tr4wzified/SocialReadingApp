@@ -1,5 +1,7 @@
 package com.example.myread;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.adapters.CollectionAdapter;
+import com.example.myread.adapters.CollectionListAdapter;
 import com.example.myread.models.Book;
 import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
@@ -20,14 +23,18 @@ import com.example.myread.models.User;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class CollectionActivity extends AppCompatActivity implements CollectionAdapter.OnCardListener {
+public class CollectionActivity extends AppCompatActivity implements CollectionAdapter.OnCardListener, CollectionListAdapter.OnCardListener {
     protected RecyclerView mRecyclerView;
     protected CollectionAdapter mAdapter;
     private List<Book> mCards = new ArrayList<>();
     protected User user;
     private Book tempBook;
+    private Book clickedBook;
+    private AddCollectionDialog addCollectionDialog;
+    private List<BookCollection> mListItem;
     String collectionTitle;
 
     @Override
@@ -54,32 +61,35 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+//        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         mAdapter = new CollectionAdapter(mCards, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
     private void initBooks() {
         mCards.addAll(user.getBookCollection(collectionTitle));
-    }
-
-    private void deleteCard(Book b) {
-        mCards.remove(b);
         mAdapter.notifyDataSetChanged();
-
     }
 
-    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
+    private void deleteCard(int position) {
+        BookCollection bc = user.getBookCollectionByName(collectionTitle);
+        Book deletedBook = mCards.get(position);
+        mCards.remove(deletedBook);
+        bc.delete(deletedBook);
+        mAdapter.notifyDataSetChanged();
+    }
 
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            deleteCard(mCards.get(viewHolder.getAdapterPosition()));
-        }
-    };
+//    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+//        @Override
+//        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+//            return false;
+//        }
+//
+//        @Override
+//        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//            deleteCard(mCards.get(viewHolder.getAdapterPosition()));
+//        }
+//    };
 
     @Override
     public void OnCardClick(int position) {
@@ -93,11 +103,25 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
 
     @Override
     public void OnPositiveButtonClick(int position) {
-
+        clickedBook = mCards.get(position);
+        mListItem = user.getCollectionList();
+        CollectionListAdapter collectionListAdapter = new CollectionListAdapter(mListItem, this);
+        addCollectionDialog = new AddCollectionDialog(this, collectionListAdapter);
+        addCollectionDialog.show();
+        addCollectionDialog.setCanceledOnTouchOutside(true);
     }
 
     @Override
     public void OnNegativeButtonClick(int position) {
+        deleteCard(position);
+    }
 
+    @Override
+    public void OnListItemClick(int position) {
+        BookCollection bc = mListItem.get(position);
+//        bc.addBook(clickedBook);
+        user.getBookCollection(bc).addBookToServer(clickedBook);
+        addCollectionDialog.cancel();
+        mAdapter.notifyDataSetChanged();
     }
 }

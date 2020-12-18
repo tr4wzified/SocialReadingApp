@@ -12,11 +12,14 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myread.AddCollectionDialog;
 import com.example.myread.BookActivity;
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
 import com.example.myread.adapters.CollectionAdapter;
+import com.example.myread.adapters.CollectionListAdapter;
 import com.example.myread.models.Book;
+import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -24,12 +27,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity implements CollectionAdapter.OnCardListener {
+public class SearchActivity extends AppCompatActivity implements CollectionAdapter.OnCardListener, CollectionListAdapter.OnCardListener {
     protected RecyclerView mRecyclerView;
     protected CollectionAdapter mAdapter;
     private List<Book> mCards = new ArrayList<>();
     protected User user;
     private String collectionTitle;
+    private Book clickedBook;
+    private AddCollectionDialog addCollectionDialog;
+    private List<BookCollection> mListItem;
     private String bookTitle;
 
     //    TextView bookName;
@@ -74,10 +80,6 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
         return ServerConnect.getInstance().getBooks(bookName);
     }
 
-    private void initBooks() {
-        mCards.addAll(user.getBookCollection(collectionTitle));
-    }
-
     @Override
     public void OnCardClick(int position) {
         user.setTempBook(mCards.get(position));
@@ -85,5 +87,28 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
         Intent intent = new Intent(this, BookActivity.class);
 //        intent.putExtra("Book", bookTitle);
         startActivity(intent);
+    }
+
+    @Override
+    public void OnPositiveButtonClick(int position) {
+        clickedBook = mCards.get(position);
+        mListItem = user.getCollectionList();
+        CollectionListAdapter collectionListAdapter = new CollectionListAdapter(mListItem, this);
+        addCollectionDialog = new AddCollectionDialog(this, collectionListAdapter);
+        addCollectionDialog.show();
+        addCollectionDialog.setCanceledOnTouchOutside(true);
+    }
+
+    @Override
+    public void OnNegativeButtonClick(int position) {
+//        user.getBookCollection(collectionTitle).remove(mCards.get(position));
+    }
+
+    @Override
+    public void OnListItemClick(int position) {
+        BookCollection bc = mListItem.get(position);
+        bc.addBookToServer(clickedBook);
+        addCollectionDialog.cancel();
+        mAdapter.notifyDataSetChanged();
     }
 }
