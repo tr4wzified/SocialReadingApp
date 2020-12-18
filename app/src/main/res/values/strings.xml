@@ -65,5 +65,6 @@
 <!--    Collection-->
     <string name="book_collection">Book collection</string>
     <string name="books">Books</string>
+    <string name="add_to_collection">Add to collection</string>
 
 </resources>
