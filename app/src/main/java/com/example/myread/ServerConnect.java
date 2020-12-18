@@ -38,7 +38,7 @@ public class ServerConnect extends AppCompatActivity {
 
     private static ServerConnect s = null;
     private final OkHttpClient client;
-    private final String ip = "https://10.0.0.2:2048/";
+    private final String ip = "@string/ip";
 
     private ServerConnect() {
         client = getUnsafeOkHttpClient();

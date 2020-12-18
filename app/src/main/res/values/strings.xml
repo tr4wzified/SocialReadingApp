@@ -65,5 +65,8 @@
 <!--    Collection-->
     <string name="book_collection">Book collection</string>
     <string name="books">Books</string>
+    <string name="textview">TextView</string>
 
+    <!-- IP -->
+    <string name="ip">https://10.0.0.2:2048/</string>
 </resources>
