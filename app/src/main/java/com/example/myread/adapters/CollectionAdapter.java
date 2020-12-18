@@ -3,6 +3,7 @@ package com.example.myread.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,6 +47,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView bookTitle, bookAuthor;
         OnCardListener onCardListener;
+        private Button buttonAdd, buttonDelete;
 
         public ViewHolder(View view, OnCardListener onCardListener) {
             super(view);
@@ -57,9 +59,14 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
             // book cover
             bookTitle = view.findViewById(R.id.bookTitle);
             bookAuthor = view.findViewById(R.id.bookAuthor);
+            buttonAdd = view.findViewById(R.id.button_add);
+            buttonDelete = view.findViewById(R.id.button_delete);
             this.onCardListener = onCardListener;
 
             view.setOnClickListener(this);
+
+            buttonAdd.setOnClickListener(v -> onCardListener.OnPositiveButtonClick(getAdapterPosition()));
+            buttonDelete.setOnClickListener(v -> onCardListener.OnNegativeButtonClick(getAdapterPosition()));
         }
 
         public TextView getBookTitle() {
@@ -78,5 +85,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
 
     public interface OnCardListener {
         void OnCardClick(int position);
+        void OnPositiveButtonClick(int position);
+        void OnNegativeButtonClick(int position);
     }
 }

@@ -22,45 +22,80 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="375dp"
-        android:layout_height="125dp"
+        android:layout_height="120dp"
+        android:orientation="horizontal"
         app:cardBackgroundColor="#e1e1e1"
         app:cardCornerRadius="15dp"
         app:cardElevation="4dp"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteX="18dp"
-        tools:layout_editor_absoluteY="85dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/list_title"
-            android:layout_width="105dp"
-            android:layout_height="61dp"
-            android:gravity="center"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textSize="18dp"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/book_amount"
-            android:layout_width="105dp"
-            android:layout_height="104dp"
-            android:gravity="center"
-            android:text="TextView"
-            android:textAlignment="center" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="8dp">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="78dp"
-            android:layout_height="127dp"
-            android:layout_gravity="end"
-            android:src="@drawable/ic_book" />
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="78dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_book" />
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end |center"
-            android:text="Button" />
+            <LinearLayout
+                android:layout_width="175dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/list_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="52dp"
+                    android:gravity="bottom"
+                    android:text="TextView"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/book_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="top"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Button" />
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Button" />
+            </LinearLayout>
+        </LinearLayout>
+
 
     </androidx.cardview.widget.CardView>
 
