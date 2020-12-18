@@ -46,7 +46,12 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         collectionTitle = getIntent().getStringExtra("collectiontitle");
         TextView bookAmount = findViewById(R.id.book_collections);
         TextView editText = findViewById(R.id.book_collection);
-        editText.setText(collectionTitle);
+        if (collectionTitle.length() > 20) {
+            editText.setText(collectionTitle.substring(0,24).concat("..."));
+        }
+        else {
+            editText.setText(collectionTitle);
+        }
         String books = "Books: " + user.getBookCollection(collectionTitle).size();
         bookAmount.setText(books);
 

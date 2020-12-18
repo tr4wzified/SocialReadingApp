@@ -1,5 +1,7 @@
 package com.example.myread;
 
+import android.content.SharedPreferences;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myread.models.Book;
@@ -39,6 +41,7 @@ public class ServerConnect extends AppCompatActivity {
     private static ServerConnect s = null;
     private final OkHttpClient client;
     private final String ip = GlobalApplication.getAppContext().getString(R.string.ip);
+    private SharedPreferences prf = GlobalApplication.getEncryptedSharedPreferences();
 
     private ServerConnect() {
         client = getUnsafeOkHttpClient();
@@ -89,6 +92,18 @@ public class ServerConnect extends AppCompatActivity {
             }
         }
     }
+
+    public boolean checkSession() {
+        Response response = sendGet("user/" + prf.getString("username", ""));
+        if (response.successful) {
+            return true;
+        }
+        else {
+            System.out.println("Session expired");
+            return false;
+        }
+    }
+
     public Response sendRequest(String page, RequestBody body) {
         try {
             URL url = null;
