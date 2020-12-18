@@ -70,7 +70,7 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
     }
 
     public void showBookResults() {
-        if (!mCards.isEmpty()) mCards.clear();
+        mCards.clear();
         mCards.addAll(searchBooks());
         mAdapter.notifyDataSetChanged();
     }
