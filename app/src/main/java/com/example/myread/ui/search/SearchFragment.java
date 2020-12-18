@@ -20,13 +20,11 @@ import java.util.List;
 
 public class SearchFragment extends Fragment {
 
-    private SearchViewModel searchViewModel;
     TextView bookName;
     Button getBook;
     TextInputLayout bookUserInput;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
 //        bookName = root.findViewById(R.id.bookName);
         getBook = root.findViewById(R.id.searchBook);
