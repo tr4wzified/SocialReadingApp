@@ -25,25 +25,6 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
         this.mOnCardListener = onCardListener;
     }
 
-    @NonNull
-    @Override
-    public CollectionAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem, parent, false);
-        return new ViewHolder(view, mOnCardListener);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // book cover
-        holder.getBookTitle().setText(mCards.get(position).title);
-        holder.getBookAuthor().setText(mCards.get(position).author);
-    }
-
-    @Override
-    public int getItemCount() {
-        return mCards.size();
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView bookTitle, bookAuthor;
         OnCardListener onCardListener;
@@ -81,6 +62,25 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
         public void onClick(View v) {
             onCardListener.OnCardClick(getAdapterPosition());
         }
+    }
+
+    @NonNull
+    @Override
+    public CollectionAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem, parent, false);
+        return new ViewHolder(view, mOnCardListener);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // book cover
+        holder.getBookTitle().setText(mCards.get(position).title);
+        holder.getBookAuthor().setText(mCards.get(position).author);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mCards.size();
     }
 
     public interface OnCardListener {
