@@ -50,14 +50,18 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         bookAmount = findViewById(R.id.book_collections);
         editText = findViewById(R.id.book_collection);
 
-
         updateData();
         initRecyclerView();
         initBooks();
     }
 
     private void updateData() {
-        editText.setText(collectionTitle);
+        if (collectionTitle.length() > 20) {
+            editText.setText(collectionTitle.substring(0,24).concat("..."));
+        }
+        else {
+            editText.setText(collectionTitle);
+        }
         String books = "Books: " + user.getBookCollection(collectionTitle).size();
         bookAmount.setText(books);
     }

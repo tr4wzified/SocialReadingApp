@@ -74,17 +74,23 @@ public class User {
     }
 
     public void addBookCollection(BookCollection bookCollection) {
-        final RequestBody formBody = new FormBody.Builder()
-                .add("collection_name", bookCollection.name)
-                .build();
-
-        collectionList.add(bookCollection);
-        ServerConnect.getInstance().addBookCollectionServer(name, bookCollection.name);
-//        ServerConnect.postBookCollection(name, formBody);
+        ServerConnect.Response r = ServerConnect.getInstance().addBookCollectionServer(name, bookCollection.name);
+        if (r.successful) {
+            collectionList.add(bookCollection);
+            System.out.println("Succesfully added book collection");
+            return;
+        }
+        System.out.println("Adding book collection failed");
+//      ServerConnect.postBookCollection(name, formBody);
     }
 
     public void deleteBookCollection(BookCollection bc) {
-        collectionList.remove(bc);
-        ServerConnect.getInstance().deleteBookCollectionServer(name, bc.name);
+        ServerConnect.Response r = ServerConnect.getInstance().deleteBookCollectionServer(name, bc.name);
+        if (r.successful) {
+            collectionList.remove(bc);
+            System.out.println("Succesfully removed book collection");
+            return;
+        }
+        System.out.println("Removing book collection failed");
     }
 }

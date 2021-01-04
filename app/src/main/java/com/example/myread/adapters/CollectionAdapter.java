@@ -73,8 +73,13 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        if (mCards.get(position).title.length() > 20) {
+            holder.getBookTitle().setText(mCards.get(position).title.substring(0,24).concat("..."));
+        }
+        else {
+            holder.getBookTitle().setText(mCards.get(position).title);
+        }
         // book cover
-        holder.getBookTitle().setText(mCards.get(position).title);
         holder.getBookAuthor().setText(mCards.get(position).author);
     }
 

@@ -26,14 +26,16 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         prf = GlobalApplication.getEncryptedSharedPreferences();
         if (prf.contains("username")) {
-            System.out.println("Account already detected, going to main");
-            try {
-                ServerConnect.getInstance().initUser(prf.getString("username", ""));
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if (ServerConnect.getInstance().checkSession()) {
+                System.out.println("Account already detected, going to main");
+                try {
+                    ServerConnect.getInstance().initUser(prf.getString("username", ""));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
             }
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
