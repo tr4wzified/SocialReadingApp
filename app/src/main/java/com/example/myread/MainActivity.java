@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         editor.clear();
         editor.apply();
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        user = null;
         finish();
     }
 }
