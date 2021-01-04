@@ -24,13 +24,24 @@ public class BookCollection {
     }
 
     public void delete(Book book) {
-        bookList.remove(book);
-        ServerConnect.getInstance().deleteBookFromCollectionServer(user.name, name, book.id);
+        ServerConnect.Response r = ServerConnect.getInstance().deleteBookFromCollectionServer(user.name, name, book.id);
+        if (r.successful) {
+            bookList.remove(book);
+            System.out.println("Succesfully removed book from collection");
+            return;
+        }
+        System.out.println("Removing book from collection failed");
+
     }
 
     public void addBookToServer(Book book) {
-        this.bookList.add(book);
-        ServerConnect.getInstance().addBookToCollectionServer(user.name, name, book.id);
+        ServerConnect.Response r = ServerConnect.getInstance().addBookToCollectionServer(user.name, name, book.id);
+        if (r.successful) {
+            this.bookList.add(book);
+            System.out.println("Succesfully added book to collection");
+            return;
+        }
+        System.out.println("Adding book to collection failed");
     }
 
     public void addBook(String user_name, String book_id, String title, String author, String cover, String description, List<String> subjects, String publishDate, String authorWiki, String isbn, String rating) {
