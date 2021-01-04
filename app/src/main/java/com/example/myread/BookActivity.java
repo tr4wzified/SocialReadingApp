@@ -17,8 +17,8 @@ public class BookActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book);
-        String bookTitle = getIntent().getStringExtra("Book");
-        String collectionTitle = getIntent().getStringExtra("Collection");
+//        String bookTitle = getIntent().getStringExtra("Book");
+//        String collectionTitle = getIntent().getStringExtra("Collection");
         User user = User.getInstance();
         book_title = findViewById(R.id.book_title);
         book_author = findViewById(R.id.book_author);
