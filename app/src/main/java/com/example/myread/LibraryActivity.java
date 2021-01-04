@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,6 +85,7 @@ public class LibraryActivity extends AppCompatActivity implements NewCollectionD
         String name = inputCollectionName.getText().toString();
         user.addBookCollection(new BookCollection(name));
         mCards.add(new BookCollection(name));
+        Toast.makeText(LibraryActivity.this, "Collection: " + name + " has been created.", Toast.LENGTH_SHORT).show();
         mAdapter.notifyDataSetChanged();
     }
 
@@ -104,6 +106,7 @@ public class LibraryActivity extends AppCompatActivity implements NewCollectionD
         BookCollection bookcollection = mCards.get(position);
         mCards.remove(bookcollection);
         user.deleteBookCollection(bookcollection);
+        Toast.makeText(LibraryActivity.this, "Collection: " + bookcollection.name + " has been deleted.", Toast.LENGTH_SHORT).show();
         mAdapter.notifyDataSetChanged();
     }
 

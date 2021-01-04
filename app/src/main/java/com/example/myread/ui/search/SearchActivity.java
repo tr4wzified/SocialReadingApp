@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.AddCollectionDialog;
 import com.example.myread.BookActivity;
+import com.example.myread.CollectionActivity;
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
 import com.example.myread.adapters.CollectionAdapter;
@@ -70,7 +72,7 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
     }
 
     public void showBookResults() {
-        if (!mCards.isEmpty()) mCards.clear();
+        mCards.clear();
         mCards.addAll(searchBooks());
         mAdapter.notifyDataSetChanged();
     }
@@ -106,7 +108,8 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
     public void OnListItemClick(int position) {
         BookCollection bc = mListItem.get(position);
         bc.addBookToServer(clickedBook);
-        addCollectionDialog.cancel();
+        Toast.makeText(SearchActivity.this, clickedBook.title + " has been added to " + bc.name, Toast.LENGTH_SHORT).show();
         mAdapter.notifyDataSetChanged();
+        addCollectionDialog.cancel();
     }
 }

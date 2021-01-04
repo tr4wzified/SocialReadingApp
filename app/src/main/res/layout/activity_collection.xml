@@ -25,6 +25,7 @@
             android:layout_marginLeft="8dp"
             android:text="@string/library"
             android:textAlignment="center"
+            android:gravity="center"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
