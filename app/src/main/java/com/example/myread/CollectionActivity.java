@@ -57,7 +57,7 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
 
     private void updateData() {
         if (collectionTitle.length() > 20) {
-            editText.setText(collectionTitle.substring(0,24).concat("..."));
+            editText.setText(collectionTitle.substring(0,19).concat("..."));
         }
         else {
             editText.setText(collectionTitle);

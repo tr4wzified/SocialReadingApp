@@ -73,6 +73,11 @@ public class User {
         collectionList.add(new BookCollection(name));
     }
 
+    public void initBookCollection(BookCollection bookCollection) {
+        collectionList.add(bookCollection);
+        System.out.println("Succesfully added book collection");
+    }
+
     public void addBookCollection(BookCollection bookCollection) {
         ServerConnect.Response r = ServerConnect.getInstance().addBookCollectionServer(name, bookCollection.name);
         if (r.successful) {

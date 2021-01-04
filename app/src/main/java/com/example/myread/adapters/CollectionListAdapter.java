@@ -36,7 +36,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
     @Override
     public void onBindViewHolder(@NonNull CollectionListAdapter.ViewHolder holder, int position) {
         if (holder.getListName().length() > 20) {
-            holder.getListName().setText(mCards.get(position).name.substring(0,24).concat("..."));
+            holder.getListName().setText(mCards.get(position).name.substring(0,19).concat("..."));
         }
         else {
             holder.getListName().setText(mCards.get(position).name);

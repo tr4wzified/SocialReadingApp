@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myread.AddCollectionDialog;
 import com.example.myread.BookActivity;
 import com.example.myread.CollectionActivity;
+import com.example.myread.LibraryActivity;
+import com.example.myread.LoginActivity;
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
 import com.example.myread.adapters.CollectionAdapter;
@@ -79,7 +81,11 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
 
     private List<Book> searchBooks() {
         String bookName = bookUserInput.getEditText().getText().toString();
-        return ServerConnect.getInstance().getBooks(bookName);
+        List<Book> bookList = ServerConnect.getInstance().getBooks(bookName);
+        if (bookList.isEmpty()) {
+            Toast.makeText(this, "No results found.", Toast.LENGTH_SHORT).show();
+        }
+        return bookList;
     }
 
     @Override
@@ -93,6 +99,10 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
 
     @Override
     public void OnPositiveButtonClick(int position) {
+        if (user.getCollectionList().isEmpty()) {
+            Toast.makeText(this, "No existing collections, try adding a collection first.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         clickedBook = mCards.get(position);
         mListItem = user.getCollectionList();
         CollectionListAdapter collectionListAdapter = new CollectionListAdapter(mListItem, this);
