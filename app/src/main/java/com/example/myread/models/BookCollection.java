@@ -19,7 +19,7 @@ public class BookCollection {
         return bookList;
     }
 
-    public void addBook(Book book) {
+    public void initBook(Book book) {
         this.bookList.add(book);
     }
 
