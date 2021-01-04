@@ -144,14 +144,19 @@ public class ServerConnect extends AppCompatActivity {
             try {
                 Response r = getBookCollections(user.name);
                 jsonArray = new JSONArray(r.responseString);
-                for (int i = 0; i < jsonArray.length(); i++)
+                if (user.getCollectionList().size() != 0) {
+                    user.getCollectionList().clear();
+                }
+                for (int i = 0; i < jsonArray.length(); i++) {
                     user.addBookCollection(new BookCollection(jsonArray.getJSONObject(i).getString("name")));
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             try {
                 int i = 0;
                 for (BookCollection bc : user.getCollectionList()) {
+                    if (bc.getBookList().size() != 0) bc.getBookList().clear();
                     JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
                     for (int b = 0; b < bookArray.length(); b++) {
                         bc.addBook(getBookByID(bookArray.get(b).toString()));
@@ -171,15 +176,23 @@ public class ServerConnect extends AppCompatActivity {
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(response.responseString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        try {
             JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
             for (int j = 0; j < subjectsArray.length(); j++)
                 subjects.add(subjectsArray.getString(j));
         } catch (JSONException e) {
             e.printStackTrace();
-            return null;
         }
+
         return new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+
     }
+
 
     public List<Book> getBooks(String bookName) {
         Response response = sendGet("search_book/" + bookName.replaceAll("[/.]", ""));

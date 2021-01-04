@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +36,8 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
     private Book clickedBook;
     private AddCollectionDialog addCollectionDialog;
     private List<BookCollection> mListItem;
+    private TextView bookAmount;
+    private TextView editText;
     String collectionTitle;
 
     @Override
@@ -44,8 +47,15 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         mRecyclerView = findViewById(R.id.collectionRecyclerView);
         user = User.getInstance();
         collectionTitle = getIntent().getStringExtra("collectiontitle");
-        TextView bookAmount = findViewById(R.id.book_collections);
-        TextView editText = findViewById(R.id.book_collection);
+        bookAmount = findViewById(R.id.book_collections);
+        editText = findViewById(R.id.book_collection);
+
+        updateData();
+        initRecyclerView();
+        initBooks();
+    }
+
+    private void updateData() {
         if (collectionTitle.length() > 20) {
             editText.setText(collectionTitle.substring(0,24).concat("..."));
         }
@@ -54,9 +64,6 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         }
         String books = "Books: " + user.getBookCollection(collectionTitle).size();
         bookAmount.setText(books);
-
-        initRecyclerView();
-        initBooks();
     }
 
     private void initRecyclerView() {
@@ -98,7 +105,9 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         Book deletedBook = mCards.get(position);
         mCards.remove(deletedBook);
         bc.delete(deletedBook);
+        Toast.makeText(CollectionActivity.this, deletedBook.title + " has been removed from " + bc.name, Toast.LENGTH_SHORT).show();
         mAdapter.notifyDataSetChanged();
+        updateData();
     }
 
     @Override
@@ -106,7 +115,12 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
         BookCollection bc = mListItem.get(position);
 //        bc.addBook(clickedBook);
         user.getBookCollection(bc).addBookToServer(clickedBook);
+        if (bc.name.equals(collectionTitle)) {
+            mCards.add(clickedBook);
+        }
+        Toast.makeText(CollectionActivity.this, clickedBook.title + " has been added to " + bc.name, Toast.LENGTH_SHORT).show();
         mAdapter.notifyDataSetChanged();
+        updateData();
         addCollectionDialog.cancel();
     }
 }
