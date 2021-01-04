@@ -35,15 +35,16 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull LibraryAdapter.ViewHolder holder, int position) {
-        if (holder.getListName().length() > 20) {
-            holder.getListName().setText(mCards.get(position).name.substring(0,18).concat("..."));
+        if (mCards.get(position).name.length() > 26) {
+            System.out.println("lol");
+            holder.getListName().setText(mCards.get(position).name.substring(0,25).concat("..."));
         }
         else {
             holder.getListName().setText(mCards.get(position).name);
         }
 //        String as = holder.getListName().getText().toString();
 //        String ad = Integer.toString(user.getBookCollection(as).getBookList().size());
-        holder.getBookAmount().setText("Books: " + Integer.toString(mCards.get(position).length()));
+        holder.getBookAmount().setText("Books: " + mCards.get(position).length());
     }
 
     @Override

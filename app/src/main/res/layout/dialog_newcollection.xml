@@ -17,7 +17,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:hint="@string/username"
+        android:hint="@string/book_collection"
         android:autofillHints="Collection name" />
 
 </LinearLayout>
