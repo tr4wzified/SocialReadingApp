@@ -28,11 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         if (prf.contains("username")) {
             if (ServerConnect.getInstance().checkSession()) {
                 System.out.println("Account already detected, going to main");
-                try {
-                    ServerConnect.getInstance().initUser(prf.getString("username", ""));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                ServerConnect.getInstance().initUser(prf.getString("username", ""));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             }
@@ -55,11 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = prf.edit();
                 editor.putString("username", trim_username);
                 editor.apply();
-                try {
-                    ServerConnect.getInstance().initUser(prf.getString("username", ""));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                ServerConnect.getInstance().initUser(prf.getString("username", ""));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
                 runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
