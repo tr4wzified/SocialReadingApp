@@ -159,7 +159,10 @@ public class ServerConnect extends AppCompatActivity {
                     if (bc.getBookList().size() != 0) bc.getBookList().clear();
                     JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
                     for (int b = 0; b < bookArray.length(); b++) {
-                        bc.initBook(getBookByID(bookArray.get(b).toString()));
+                        Book book = getBookByID(bookArray.get(b).toString());
+                        if (!(book == null)) {
+                            bc.initBook(book);
+                        }
                         System.out.println(bookArray.get(b).toString());
                     }
                     i++;
@@ -172,6 +175,10 @@ public class ServerConnect extends AppCompatActivity {
 
     public Book getBookByID(String id) {
         Response response = sendGet("book/" + id);
+        if (!response.successful) {
+            System.out.println("Response not succesfull");
+            return null;
+        }
         List<String> subjects = new ArrayList<>();
         JSONObject jsonObject;
         try {
