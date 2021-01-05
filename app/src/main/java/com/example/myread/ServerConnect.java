@@ -1,5 +1,6 @@
 package com.example.myread;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -80,11 +81,10 @@ public class ServerConnect extends AppCompatActivity {
         @Override
         public Response call() {
             try (okhttp3.Response response = client.newCall(request).execute()) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful())
                     return new Response(true, response.toString(), response.body().string());
-                } else {
-                    return new Response(false, response.toString(), response.body().string());
-                }
+                return new Response(false, response.toString(), response.body().string());
+
             } catch (IOException e) {
                 return new Response(false, "Unable to reach server", "");
             } catch (NullPointerException e) {
@@ -95,13 +95,9 @@ public class ServerConnect extends AppCompatActivity {
 
     public boolean checkSession() {
         Response response = sendGet("user/" + prf.getString("username", ""));
-        if (response.successful) {
-            return true;
-        }
-        else {
-            System.out.println("Session expired");
-            return false;
-        }
+        if (response.successful) return true;
+        System.out.println("Session expired");
+        return false;
     }
 
     public Response sendRequest(String page, RequestBody body) {
@@ -135,7 +131,7 @@ public class ServerConnect extends AppCompatActivity {
         return sendRequest(page,null);
     }
 
-    public void initUser(String name) throws JSONException {
+    public void initUser(String name) {
         User user = User.getInstance();
         user.name = name;
         Response response = sendGet("user/" + name);
@@ -159,11 +155,12 @@ public class ServerConnect extends AppCompatActivity {
                     if (bc.getBookList().size() != 0) bc.getBookList().clear();
                     JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
                     for (int b = 0; b < bookArray.length(); b++) {
-                        Book book = getBookByID(bookArray.get(b).toString());
+                        String bookString = bookArray.get(b).toString();
+                        Book book = getBookByID(bookString);
                         if (!(book == null)) {
                             bc.initBook(book);
                         }
-                        System.out.println(bookArray.get(b).toString());
+                        System.out.println(bookString);
                     }
                     i++;
                 }
@@ -203,12 +200,11 @@ public class ServerConnect extends AppCompatActivity {
 
     public List<Book> getBooks(String bookName) {
         Response response = sendGet("search_book/" + bookName.replaceAll("[/.]", ""));
-        JSONArray jsonArray;
         List<Book> books = new ArrayList<>();
         if (response.successful)
             try {
                 System.out.println(response.responseString);
-                jsonArray = new JSONArray(response.responseString);
+                JSONArray jsonArray = new JSONArray(response.responseString);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     List<String> subjects = new ArrayList<>();
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -255,19 +251,16 @@ public class ServerConnect extends AppCompatActivity {
         return sendGet("user/" + name + "/del_book_from_collection/" + collection_name + "/" + book_id);
     }
 
-//    public static Response postBookCollection(String name, RequestBody body) {
-//        return sendPost("/user/" + name + "/add_book_collection", body);
-//    }
-
-
     private OkHttpClient getUnsafeOkHttpClient() {
         try {
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
+                        @SuppressLint("TrustAllX509TrustManager")
                         @Override
                         public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
                         }
 
+                        @SuppressLint("TrustAllX509TrustManager")
                         @Override
                         public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
                         }

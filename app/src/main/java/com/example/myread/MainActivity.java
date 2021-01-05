@@ -58,14 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void getBook() {
-        Book response = ServerConnect.getInstance().getBookByID("OL26586969M");
-    }
-
-    private void getUser() throws JSONException {
-//        user = ServerConnect.getInstance().getUser("Petertje"); // hier bij naam moet de username uit de cookie/session gehaald worden
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
