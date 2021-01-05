@@ -81,11 +81,10 @@ public class ServerConnect extends AppCompatActivity {
         @Override
         public Response call() {
             try (okhttp3.Response response = client.newCall(request).execute()) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful())
                     return new Response(true, response.toString(), response.body().string());
-                } else {
-                    return new Response(false, response.toString(), response.body().string());
-                }
+                return new Response(false, response.toString(), response.body().string());
+
             } catch (IOException e) {
                 return new Response(false, "Unable to reach server", "");
             } catch (NullPointerException e) {
@@ -96,13 +95,9 @@ public class ServerConnect extends AppCompatActivity {
 
     public boolean checkSession() {
         Response response = sendGet("user/" + prf.getString("username", ""));
-        if (response.successful) {
-            return true;
-        }
-        else {
-            System.out.println("Session expired");
-            return false;
-        }
+        if (response.successful) return true;
+        System.out.println("Session expired");
+        return false;
     }
 
     public Response sendRequest(String page, RequestBody body) {
@@ -136,7 +131,7 @@ public class ServerConnect extends AppCompatActivity {
         return sendRequest(page,null);
     }
 
-    public void initUser(String name) throws JSONException {
+    public void initUser(String name) {
         User user = User.getInstance();
         user.name = name;
         Response response = sendGet("user/" + name);
