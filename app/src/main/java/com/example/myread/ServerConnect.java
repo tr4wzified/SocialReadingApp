@@ -173,7 +173,7 @@ public class ServerConnect extends AppCompatActivity {
     public Book getBookByID(String id) {
         Response response = sendGet("book/" + id);
         if (!response.successful) {
-            System.out.println("Response not succesfull");
+            System.out.println("Response not successful");
             return null;
         }
         List<String> subjects = new ArrayList<>();
@@ -201,6 +201,7 @@ public class ServerConnect extends AppCompatActivity {
     public List<Book> getBooks(String bookName) {
         Response response = sendGet("search_book/" + bookName.replaceAll("[/.]", ""));
         List<Book> books = new ArrayList<>();
+        JSONArray subjectsArray = null;
         if (response.successful)
             try {
                 System.out.println(response.responseString);
@@ -209,13 +210,14 @@ public class ServerConnect extends AppCompatActivity {
                     List<String> subjects = new ArrayList<>();
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     try {
-                        JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
-                        for (int j = 0; j < subjectsArray.length(); j++)
-                            subjects.add(subjectsArray.getString(j));
+                        if (jsonObject.toString().contains("subjects")) {
+                            subjectsArray = jsonObject.getJSONArray("subjects");
+                            for (int j = 0; j < subjectsArray.length(); j++)
+                                subjects.add(subjectsArray.getString(j));
+                        }
                     } catch (JSONException e) {
-                        System.out.println("Json error (possible empty subjects): " + e.getMessage());
+                        e.printStackTrace();
                     }
-
                     Book book = new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
                     books.add(book);
                 }

@@ -8,6 +8,7 @@
     android:orientation="horizontal">
 
     <androidx.cardview.widget.CardView
+        style="@style/CardColor"
         android:layout_width="375dp"
         android:layout_height="125dp"
         android:layout_margin="4dp"
