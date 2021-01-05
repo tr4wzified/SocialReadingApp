@@ -155,8 +155,9 @@ public class ServerConnect extends AppCompatActivity {
                     if (bc.getBookList().size() != 0) bc.getBookList().clear();
                     JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
                     for (int b = 0; b < bookArray.length(); b++) {
-                        bc.initBook(getBookByID(bookArray.get(b).toString()));
-                        System.out.println(bookArray.get(b).toString());
+                        String bookString = bookArray.get(b).toString();
+                        bc.initBook(getBookByID(bookString));
+                        System.out.println(bookString);
                     }
                     i++;
                 }
@@ -192,12 +193,11 @@ public class ServerConnect extends AppCompatActivity {
 
     public List<Book> getBooks(String bookName) {
         Response response = sendGet("search_book/" + bookName.replaceAll("[/.]", ""));
-        JSONArray jsonArray;
         List<Book> books = new ArrayList<>();
         if (response.successful)
             try {
                 System.out.println(response.responseString);
-                jsonArray = new JSONArray(response.responseString);
+                JSONArray jsonArray = new JSONArray(response.responseString);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     List<String> subjects = new ArrayList<>();
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -243,11 +243,6 @@ public class ServerConnect extends AppCompatActivity {
     public Response deleteBookFromCollectionServer(String name, String collection_name, String book_id) {
         return sendGet("user/" + name + "/del_book_from_collection/" + collection_name + "/" + book_id);
     }
-
-//    public static Response postBookCollection(String name, RequestBody body) {
-//        return sendPost("/user/" + name + "/add_book_collection", body);
-//    }
-
 
     private OkHttpClient getUnsafeOkHttpClient() {
         try {
