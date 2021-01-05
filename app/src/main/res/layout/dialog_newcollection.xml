@@ -7,7 +7,12 @@
         android:id="@+id/new_collection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/new_collection" />
+        android:paddingTop="5dp"
+        android:paddingBottom="25dp"
+        android:text="@string/new_collection"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/newCollectionName"

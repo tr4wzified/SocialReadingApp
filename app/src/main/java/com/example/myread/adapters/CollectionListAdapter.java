@@ -29,7 +29,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
     @NonNull
     @Override
     public CollectionListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.booklist_component, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.booklist_component_addingto, parent, false);
         return new ViewHolder(view, mOnCardListener);
     }
 
