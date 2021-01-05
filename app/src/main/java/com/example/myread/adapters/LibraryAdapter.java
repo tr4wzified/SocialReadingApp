@@ -36,7 +36,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull LibraryAdapter.ViewHolder holder, int position) {
         if (mCards.get(position).name.length() > 26) {
-            System.out.println("lol");
             holder.getListName().setText(mCards.get(position).name.substring(0,25).concat("..."));
         }
         else {
