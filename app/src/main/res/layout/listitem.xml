@@ -11,7 +11,6 @@
         android:layout_height="120dp"
         android:orientation="horizontal"
         android:layout_margin="4dp"
-        app:cardBackgroundColor="#e1e1e1"
         app:cardCornerRadius="15dp"
         app:cardElevation="4dp"
         tools:layout_editor_absoluteX="18dp"
