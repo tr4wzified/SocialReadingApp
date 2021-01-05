@@ -1,13 +1,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/textview14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_to_collection" />
+        android:paddingBottom="15dp"
+        android:text="@string/select_a_collection"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/addDialogRecyclerView"

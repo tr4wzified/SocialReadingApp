@@ -83,15 +83,17 @@ public class LibraryActivity extends AppCompatActivity implements NewCollectionD
         assert dialogView != null;
         EditText inputCollectionName = dialogView.findViewById(R.id.newCollectionName);
         String name = inputCollectionName.getText().toString();
-        if(!GlobalFunctions.asciip(name))
-        {
+        if (!GlobalFunctions.asciip(name)) {
             Toast.makeText(LibraryActivity.this, "Please only use ASCII characters in the library name.", Toast.LENGTH_SHORT).show();
             return;
         }
-        user.addBookCollection(new BookCollection(name));
-        mCards.add(new BookCollection(name));
-        Toast.makeText(LibraryActivity.this, "Collection: " + name + " has been created.", Toast.LENGTH_SHORT).show();
-        mAdapter.notifyDataSetChanged();
+        if (user.addBookCollection(new BookCollection(name))) {
+            mCards.add(new BookCollection(name));
+            Toast.makeText(LibraryActivity.this, "Collection: " + name + " has been created.", Toast.LENGTH_SHORT).show();
+            mAdapter.notifyDataSetChanged();
+            return;
+        }
+        Toast.makeText(LibraryActivity.this, "Failed to add collection: " + name + ".", Toast.LENGTH_SHORT).show();
     }
 
     @Override
