@@ -71,4 +71,5 @@
     <string name="ip">https://10.0.2.2:2048/</string>
     <string name="altip">https://192.168.2.13:2048/</string>
     <string name="altaltip">https://172.16.0.213:2048/</string>
+    <string name="book_cover">Book Cover</string>
 </resources>

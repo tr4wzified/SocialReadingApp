@@ -27,11 +27,12 @@
                 android:padding="8dp">
 
                 <ImageView
-                    android:id="@+id/bookCover"
+                    android:id="@+id/book_cover"
                     android:layout_width="78dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
-                    android:src="@drawable/ic_book" />
+                    android:src="@drawable/ic_book"
+                    android:contentDescription="@string/book_cover" />
             </LinearLayout>
 
             <LinearLayout

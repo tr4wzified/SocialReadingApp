@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAdapter.ViewHolder> {
-    private List<BookCollection> mCards = new ArrayList<>();
+    private List<BookCollection> mCards;
     private OnCardListener mOnCardListener;
 
     public CollectionListAdapter(List<BookCollection> cards, OnCardListener onCardListener) {

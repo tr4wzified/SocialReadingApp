@@ -2,8 +2,11 @@ package com.example.myread.ui.search;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Parcelable;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +44,7 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
     private AddCollectionDialog addCollectionDialog;
     private List<BookCollection> mListItem;
     private String bookTitle;
+    private ProgressBar spinner;
 
     //    TextView bookName;
     Button getBook;
@@ -50,6 +54,7 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_search);
+        spinner = (ProgressBar) findViewById(R.id.loadingIconSearch);
         mRecyclerView = findViewById(R.id.searchRecyclerView);
         user = User.getInstance();
         collectionTitle = getIntent().getStringExtra("collectiontitle");
@@ -62,7 +67,12 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
         initRecyclerView();
 //        initBooks();
 
-        getBook.setOnClickListener(v -> showBookResults());
+        getBook.setOnClickListener(v -> new Thread(() -> {
+            runOnUiThread(() -> spinner.setVisibility(View.VISIBLE));
+            Looper.prepare();
+            showBookResults();
+            runOnUiThread(() -> spinner.setVisibility(View.INVISIBLE));
+        }).start());
     }
 
     private void initRecyclerView() {
@@ -76,7 +86,7 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
     public void showBookResults() {
         mCards.clear();
         mCards.addAll(searchBooks());
-        mAdapter.notifyDataSetChanged();
+        runOnUiThread(() -> mAdapter.notifyDataSetChanged());
     }
 
     private List<Book> searchBooks() {

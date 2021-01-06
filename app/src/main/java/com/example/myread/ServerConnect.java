@@ -81,11 +81,13 @@ public class ServerConnect extends AppCompatActivity {
         @Override
         public Response call() {
             try (okhttp3.Response response = client.newCall(request).execute()) {
+                System.out.println("Response: " + response.toString());
                 if (response.isSuccessful())
                     return new Response(true, response.toString(), response.body().string());
                 return new Response(false, response.toString(), response.body().string());
 
             } catch (IOException e) {
+                e.printStackTrace();
                 return new Response(false, "Unable to reach server", "");
             } catch (NullPointerException e) {
                 return new Response(false, "No body in request", "");
@@ -152,7 +154,8 @@ public class ServerConnect extends AppCompatActivity {
             try {
                 int i = 0;
                 for (BookCollection bc : user.getCollectionList()) {
-                    if (bc.getBookList().size() != 0) bc.getBookList().clear();
+                    if (bc.getBookList().size() != 0)
+                        bc.getBookList().clear();
                     JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
                     for (int b = 0; b < bookArray.length(); b++) {
                         String bookString = bookArray.get(b).toString();
@@ -171,54 +174,47 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public Book getBookByID(String id) {
+        JSONObject jsonObject = null;
         Response response = sendGet("book/" + id);
-        if (!response.successful) {
-            System.out.println("Response not successful");
-            return null;
+        if (response.successful) {
+            try {
+                jsonObject = new JSONObject(response.responseString);
+                return new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), jsonObject.optString("cover_img_large", null), jsonObject.optString("description", null), getSubjects(jsonObject), jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        List<String> subjects = new ArrayList<>();
-        JSONObject jsonObject;
-        try {
-            jsonObject = new JSONObject(response.responseString);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        try {
-            JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
-            for (int j = 0; j < subjectsArray.length(); j++)
-                subjects.add(subjectsArray.getString(j));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
-
+        System.out.println("Response not successful");
+        return null;
     }
 
+    private List<String> getSubjects(JSONObject jsonObject) {
+        JSONArray subjectsArray;
+        List<String> subjects = new ArrayList<>();
+        try{
+            if (jsonObject.toString().contains("subjects")) {
+                subjectsArray = jsonObject.getJSONArray("subjects");
+                for (int j = 0; j < subjectsArray.length(); j++)
+                    subjects.add(subjectsArray.getString(j));
+                return subjects;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Something went wrong when adding subjects");
+        return new ArrayList<String>();
+    }
 
     public List<Book> getBooks(String bookName) {
         Response response = sendGet("search_book/" + bookName.replaceAll("[/.]", ""));
         List<Book> books = new ArrayList<>();
-        JSONArray subjectsArray = null;
         if (response.successful)
             try {
                 System.out.println(response.responseString);
                 JSONArray jsonArray = new JSONArray(response.responseString);
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    List<String> subjects = new ArrayList<>();
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    try {
-                        if (jsonObject.toString().contains("subjects")) {
-                            subjectsArray = jsonObject.getJSONArray("subjects");
-                            for (int j = 0; j < subjectsArray.length(); j++)
-                                subjects.add(subjectsArray.getString(j));
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Book book = new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), "", jsonObject.optString("description", null), subjects, jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+                    Book book = new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), jsonObject.optString("cover_img_large", null), jsonObject.optString("description", null), getSubjects(jsonObject), jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
                     books.add(book);
                 }
             }

@@ -71,7 +71,7 @@ public class LibraryActivity extends AppCompatActivity implements NewCollectionD
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+        //new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
         mAdapter = new LibraryAdapter(mCards, this);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -117,6 +117,7 @@ public class LibraryActivity extends AppCompatActivity implements NewCollectionD
         mAdapter.notifyDataSetChanged();
     }
 
+    /*
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -124,9 +125,10 @@ public class LibraryActivity extends AppCompatActivity implements NewCollectionD
         }
 
         @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//            deleteCard(mCards.get(viewHolder.getAdapterPosition()));
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction){}
 
-        }
+
     };
+
+     */
 }
