@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class NewCollectionDialog extends DialogFragment {
+
+    NewCollectionDialog.NoticeDialogListener listener;
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -30,7 +32,6 @@ public class NewCollectionDialog extends DialogFragment {
         public void onDialogPositiveClick(DialogFragment dialog);
 //        public void onDialogNegativeClick(DialogFragment dialog);
     }
-    NewCollectionDialog.NoticeDialogListener listener;
 
     @Override
     public void onAttach(@NonNull Context context) {

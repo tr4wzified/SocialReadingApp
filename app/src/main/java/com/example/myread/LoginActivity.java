@@ -3,16 +3,17 @@ package com.example.myread;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import org.json.JSONException;
 
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
@@ -21,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText username, password;
     private String trim_username, trim_password;
     SharedPreferences prf;
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,11 +37,19 @@ public class LoginActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        spinner = (ProgressBar) findViewById(R.id.loadingIconLogin);
         Button login_btn = findViewById(R.id.login_btn);
         TextView registertext = findViewById(R.id.register_txt);
         username = findViewById(R.id.collection_name);
         password = findViewById(R.id.password);
-        login_btn.setOnClickListener(v -> login());
+        login_btn.setOnClickListener(v -> new Thread(() -> {
+            runOnUiThread(() -> spinner.setVisibility(View.VISIBLE));
+            Looper.prepare();
+            login();
+            runOnUiThread(() -> spinner.setVisibility(View.INVISIBLE));
+        }).start());
+
+
         registertext.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
@@ -69,20 +79,18 @@ public class LoginActivity extends AppCompatActivity {
 
     private Boolean validateUsername() {
         if (TextUtils.isEmpty(trim_username)) {
-            Toast.makeText(LoginActivity.this, "Username field is empty.", Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Username field is empty.", Toast.LENGTH_SHORT).show());
             return false;
         } else {
-            username.setError(null);
             return true;
         }
     }
 
     private Boolean validatePassword() {
         if (TextUtils.isEmpty(trim_password)) {
-            Toast.makeText(LoginActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show());
             return false;
         } else {
-            password.setError(null);
             return true;
         }
     }
