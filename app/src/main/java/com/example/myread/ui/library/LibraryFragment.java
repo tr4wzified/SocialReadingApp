@@ -21,7 +21,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myread.CollectionActivity;
+//import com.example.myread.CollectionActivity;
 import com.example.myread.CollectionFragment;
 import com.example.myread.GlobalFunctions;
 import com.example.myread.NewCollectionDialog;

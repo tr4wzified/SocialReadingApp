@@ -18,7 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.AddCollectionDialog;
-import com.example.myread.BookActivity;
+//import com.example.myread.BookActivity;
+import com.example.myread.BookFragment;
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
 import com.example.myread.adapters.CollectionAdapter;
@@ -83,10 +84,12 @@ public class SearchFragment extends Fragment implements CollectionAdapter.OnCard
     @Override
     public void OnCardClick(int position) {
         user.setTempBook(mCards.get(position));
+        Fragment fragment = new BookFragment();
+        getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
 //        bookTitle = mCards.get(position).title;
-        Intent intent = new Intent(getActivity(), BookActivity.class);
-//        intent.putExtra("Book", bookTitle);
-        startActivity(intent);
+//        Intent intent = new Intent(getActivity(), BookActivity.class);
+////        intent.putExtra("Book", bookTitle);
+//        startActivity(intent);
     }
 
     @Override
