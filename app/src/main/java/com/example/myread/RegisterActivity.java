@@ -12,8 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,16 +21,13 @@ import okhttp3.RequestBody;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText username, password, confirm_password;
-    SharedPreferences prf;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        prf = GlobalApplication.getEncryptedSharedPreferences();
-        //prf = getSharedPreferences("user_details",MODE_PRIVATE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        username = findViewById(R.id.collection_name);
+        username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         confirm_password = findViewById(R.id.confirm_password);
         Button register_btn = findViewById(R.id.register_btn);
@@ -45,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private Boolean sendPost(String name, String password) {
+    private void sendPost(String name, String password) {
         final RequestBody formBody = new FormBody.Builder()
                 .add("name", name)
                 .add("pass", password)
@@ -55,14 +50,13 @@ public class RegisterActivity extends AppCompatActivity {
         if (response.successful) {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show());
-            return true;
+            return;
         }
 
         if (response.response.equals("Unable to reach server"))
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
         else
             runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration unsuccessful.", Toast.LENGTH_SHORT).show());
-        return false;
     }
 
     private Boolean validateUsername(String reg_username) {
@@ -75,8 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-    static Boolean passwordComplexityTest(String reg_password)
-    {
+    static Boolean passwordComplexityTest(String reg_password) {
         Matcher matcher = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{9,64})").matcher(reg_password);
         return matcher.matches();
     }
@@ -102,10 +95,10 @@ public class RegisterActivity extends AppCompatActivity {
         return reg_passwordConfirm.equals(reg_password);
     }
 
-    public Boolean registerUser(String username, String password, String passwordConfirm) {
+    public void registerUser(String username, String password, String passwordConfirm) {
         if (!validateUsername(username) || !validatePassword(password) || !validatePasswordConfirm(password, passwordConfirm))
-            return false;
+            return;
 
-        return sendPost(username, password);
+        sendPost(username, password);
     }
 }

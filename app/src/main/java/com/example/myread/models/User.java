@@ -5,13 +5,10 @@ import com.example.myread.ServerConnect;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.FormBody;
-import okhttp3.RequestBody;
-
 public class User {
     private static User u = null;
     public String name;
-    private List<BookCollection> collectionList;
+    private final List<BookCollection> collectionList;
     private Book tempBook;
 
     private User() {
@@ -63,26 +60,22 @@ public class User {
 
     public Book getBook(String cTitle, String bTitle) {
         List<Book> bc = getBookCollection(cTitle);
-        for (Book book: bc) {
+        for (Book book : bc) {
             if (book.title.equals(bTitle)) return book;
         }
         return null;
     }
 
-    public void addBookList(String name) {
-        collectionList.add(new BookCollection(name));
-    }
-
     public void initBookCollection(BookCollection bookCollection) {
         collectionList.add(bookCollection);
-        System.out.println("Succesfully added book collection");
+        System.out.println("Successfully added book collection");
     }
 
     public boolean addBookCollection(BookCollection bookCollection) {
         ServerConnect.Response r = ServerConnect.getInstance().addBookCollectionServer(name, bookCollection.name);
         if (r.successful) {
             collectionList.add(bookCollection);
-            System.out.println("Succesfully added book collection");
+            System.out.println("Successfully added book collection");
             return true;
         }
         System.out.println("Adding book collection failed");

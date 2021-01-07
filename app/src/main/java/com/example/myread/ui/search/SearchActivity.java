@@ -3,24 +3,18 @@ package com.example.myread.ui.search;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.AddCollectionDialog;
 import com.example.myread.BookActivity;
-import com.example.myread.CollectionActivity;
-import com.example.myread.LibraryActivity;
-import com.example.myread.LoginActivity;
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
 import com.example.myread.adapters.CollectionAdapter;
@@ -30,16 +24,14 @@ import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements CollectionAdapter.OnCardListener, CollectionListAdapter.OnCardListener {
     protected RecyclerView mRecyclerView;
     protected CollectionAdapter mAdapter;
-    private List<Book> mCards = new ArrayList<>();
+    private final List<Book> mCards = new ArrayList<>();
     protected User user;
-    private String collectionTitle;
     private Book clickedBook;
     private AddCollectionDialog addCollectionDialog;
     private List<BookCollection> mListItem;
@@ -57,7 +49,7 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
         spinner = (ProgressBar) findViewById(R.id.loadingIconSearch);
         mRecyclerView = findViewById(R.id.searchRecyclerView);
         user = User.getInstance();
-        collectionTitle = getIntent().getStringExtra("collectiontitle");
+        String collectionTitle = getIntent().getStringExtra("collectiontitle");
 
 //        bookName = findViewById(R.id.bookName);
         getBook = findViewById(R.id.searchBook);
@@ -122,7 +114,8 @@ public class SearchActivity extends AppCompatActivity implements CollectionAdapt
     }
 
     @Override
-    public void OnNegativeButtonClick(int position) { }
+    public void OnNegativeButtonClick(int position) {
+    }
 
     @Override
     public void OnListItemClick(int position) {

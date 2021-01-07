@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment;
 public class NewCollectionDialog extends DialogFragment {
 
     NewCollectionDialog.NoticeDialogListener listener;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -21,15 +22,13 @@ public class NewCollectionDialog extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
         builder.setView(inflater.inflate(R.layout.dialog_newcollection, null))
-                .setPositiveButton(R.string.add_collection_btn, (dialog, which) -> {
-                    listener.onDialogPositiveClick(NewCollectionDialog.this);
-                })
+                .setPositiveButton(R.string.add_collection_btn, (dialog, which) -> listener.onDialogPositiveClick(NewCollectionDialog.this))
                 .setNegativeButton(R.string.cancel_collection_btn, (dialog, which) -> NewCollectionDialog.this.getDialog().cancel());
         return builder.create();
     }
 
     public interface NoticeDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog);
+        void onDialogPositiveClick(DialogFragment dialog);
 //        public void onDialogNegativeClick(DialogFragment dialog);
     }
 

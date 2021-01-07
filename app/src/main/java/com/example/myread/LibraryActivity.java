@@ -7,12 +7,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,20 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryActivity extends AppCompatActivity implements NewCollectionDialog.NoticeDialogListener, LibraryAdapter.OnCardListener {
-//    private LinearLayout linearLayout;
-//    private LinearLayout booklistcomp;
-//    private LayoutInflater layoutInflater;
-//    private User user;
-//    private SharedPreferences pref;
-//
-    private Button bookcollection_btn;
-    private EditText inputCollectionName;
-    private Button deleteCollection_btn;
-////    private EditText inputCollectionName;
+    ////    private EditText inputCollectionName;
 
     protected RecyclerView mRecyclerView;
     protected LibraryAdapter mAdapter;
-    private List<BookCollection> mCards = new ArrayList<>();
+    private final List<BookCollection> mCards = new ArrayList<>();
     protected User user;
     public BookCollection clickedCard;
 
@@ -51,9 +40,15 @@ public class LibraryActivity extends AppCompatActivity implements NewCollectionD
         initRecyclerView();
         initCards();
 
-        bookcollection_btn = (Button)findViewById(R.id.bookCollectionButton);
-        inputCollectionName = (EditText)findViewById(R.id.newCollectionName);
-        bookcollection_btn = (Button)findViewById(R.id.bookCollectionButton);
+        //    private LinearLayout linearLayout;
+        //    private LinearLayout booklistcomp;
+        //    private LayoutInflater layoutInflater;
+        //    private User user;
+        //    private SharedPreferences pref;
+        //
+        Button bookcollection_btn;
+        EditText inputCollectionName = (EditText) findViewById(R.id.newCollectionName);
+        bookcollection_btn = (Button) findViewById(R.id.bookCollectionButton);
         bookcollection_btn.setOnClickListener(v -> {
             FragmentManager fragmentManager = getSupportFragmentManager();
             NewCollectionDialog newCollectionDialog = new NewCollectionDialog();

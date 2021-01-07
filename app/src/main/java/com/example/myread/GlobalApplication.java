@@ -9,8 +9,6 @@ import android.security.keystore.KeyProperties;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 
-import com.example.myread.models.User;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 

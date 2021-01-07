@@ -3,7 +3,6 @@ package com.example.myread;
 import org.junit.Test;
 
 import static com.example.myread.RegisterActivity.passwordComplexityTest;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -14,8 +13,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class RegistrationUnitTest {
     @Test
-    public void validatePasswordTest()
-    {
+    public void validatePasswordTest() {
         // Password is minimally 9 chars long.
         assertFalse(passwordComplexityTest("Pa0!aaaa"));
         // Password needs special char

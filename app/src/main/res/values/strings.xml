@@ -1,42 +1,22 @@
 <resources>
     <string name="app_name">MyRead</string>
-    <string name="title_activity_settings">Settings</string>
-
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_main">MyRead</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">[Name]</string>
-    <string name="nav_header_subtitle">[Email]</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_search">Search books</string>
-    <string name="title_activity_settings2">Settings2Activity</string>
     <string name="menu_library">Library</string>
 
 
-<!--    Register & login-->
+    <!--    Register & login-->
     <string name="register">Register</string>
     <string name="login">Log in</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="getBook">Get booklet</string>
 
     <string name="datasaverswitch_desc">A switch to turn on the data saver</string>
     <string name="datasaverswitch_text">Data Saver</string>
@@ -46,23 +26,17 @@
     <string name="already_account_txt">Already have an account?</string>
     <string name="no_account_txt">Don\'t have an account yet?</string>
 
-<!--    Listviewtest-->
-    <string name="book_title">Snow White Must Die</string>
-    <string name="author_name">Noie Neuhaus</string>
-    <string name="cover_static">Cover</string>
-    <string name="title_static">Title</string>
-    <string name="author_static">Author</string>
     <string name="search_books">Search books</string>
     <string name="menu_logout">Log out</string>
 
-<!--    library-->
+    <!--    library-->
     <string name="library">Library</string>
     <string name="book_collections">Book collections</string>
     <string name="new_collection">Create your new collection</string>
     <string name="add_collection_btn">Add</string>
     <string name="cancel_collection_btn">Cancel</string>
 
-<!--    Collection-->
+    <!--    Collection-->
     <string name="book_collection">Book collection</string>
     <string name="books">Books</string>
     <string name="select_a_collection">Select a collection</string>
@@ -72,4 +46,22 @@
     <string name="altip">https://192.168.2.13:2048/</string>
     <string name="altaltip">https://172.16.0.213:2048/</string>
     <string name="book_cover">Book Cover</string>
+    <string name="book_cover_image_description">Book cover image</string>
+    <string name="book_icon_description">book icon</string>
+    <string name="rating">rating</string>
+    <string name="book_author">book_author</string>
+    <string name="book_year">book_year</string>
+    <string name="book_genre">book_genre</string>
+    <string name="isbn">isbn</string>
+    <string name="year">Year</string>
+    <string name="book_title">book_title</string>
+    <string name="description">Description</string>
+    <string name="buy">Buy</string>
+    <string name="more_information">More information</string>
+    <string name="genre">Genre</string>
+    <string name="plus">+</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="unknown">unknown</string>
+    <string name="count_books">Books: %1$d</string>
 </resources>
