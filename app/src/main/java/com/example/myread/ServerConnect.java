@@ -163,7 +163,6 @@ public class ServerConnect extends AppCompatActivity {
                         if (!(book == null)) {
                             bc.initBook(book);
                         }
-                        System.out.println(bookString);
                     }
                     i++;
                 }
@@ -193,15 +192,16 @@ public class ServerConnect extends AppCompatActivity {
         List<String> subjects = new ArrayList<>();
         try {
             if (jsonObject.toString().contains("subjects")) {
-                subjectsArray = jsonObject.getJSONArray("subjects");
-                for (int j = 0; j < subjectsArray.length(); j++)
-                    subjects.add(subjectsArray.getString(j));
-                return subjects;
+                if (!jsonObject.get("subjects").equals("")) {
+                    subjectsArray = jsonObject.getJSONArray("subjects");
+                    for (int j = 0; j < subjectsArray.length(); j++)
+                        subjects.add(subjectsArray.getString(j));
+                    return subjects;
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println("Something went wrong when adding subjects");
         return new ArrayList<>();
     }
 
@@ -210,7 +210,6 @@ public class ServerConnect extends AppCompatActivity {
         List<Book> books = new ArrayList<>();
         if (response.successful)
             try {
-                System.out.println(response.responseString);
                 JSONArray jsonArray = new JSONArray(response.responseString);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);

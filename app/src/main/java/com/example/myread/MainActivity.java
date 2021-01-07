@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        System.out.println(prf.getString("username", ""));
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
