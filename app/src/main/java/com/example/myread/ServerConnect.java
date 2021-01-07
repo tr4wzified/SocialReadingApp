@@ -270,7 +270,7 @@ public class ServerConnect extends AppCompatActivity {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
             builder.hostnameVerifier((hostname, session) -> true);
-            builder.connectTimeout(3, TimeUnit.SECONDS);
+            builder.readTimeout(60, TimeUnit.SECONDS);
 
             ClearableCookieJar cookieJar =
                     new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(GlobalApplication.getAppContext()));
