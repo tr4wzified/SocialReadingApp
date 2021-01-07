@@ -1,23 +1,30 @@
 package com.example.myread;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.myread.models.Book;
+import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
+import com.example.myread.ui.library.LibraryFragment;
 import com.google.android.material.navigation.NavigationView;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity {
@@ -80,4 +87,6 @@ public class MainActivity extends AppCompatActivity {
         user = null;
         finish();
     }
+
+//    public void onDialogPositiveClick(@NotNull DialogFragment dialog) {    }
 }

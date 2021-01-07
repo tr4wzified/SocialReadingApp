@@ -1,50 +1,119 @@
 package com.example.myread.ui.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myread.AddCollectionDialog;
+import com.example.myread.BookActivity;
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
+import com.example.myread.adapters.CollectionAdapter;
+import com.example.myread.adapters.CollectionListAdapter;
 import com.example.myread.models.Book;
+import com.example.myread.models.BookCollection;
+import com.example.myread.models.User;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SearchFragment extends Fragment {
-
-    TextView bookName;
-    Button getBook;
-    TextInputLayout bookUserInput;
+public class SearchFragment extends Fragment implements CollectionAdapter.OnCardListener, CollectionListAdapter.OnCardListener {
+    private List<Book> mCards = new ArrayList<>();
+    private CollectionAdapter mAdapter;
+    protected User user = User.getInstance();
+    private TextInputLayout bookUserInput;
+    private List<BookCollection> mListItem;
+    private Book clickedBook;
+    private AddCollectionDialog addCollectionDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_search, container, false);
-//        bookName = root.findViewById(R.id.bookName);
-        getBook = root.findViewById(R.id.searchBook);
-        bookUserInput = root.findViewById(R.id.bookSearchQuery);
-        getBook.setOnClickListener(v -> showBookResults());
-        return root;
+        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        final FragmentActivity c = getActivity();
+        final RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.searchRecyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(c);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        Button searchBookBtn = rootView.findViewById(R.id.searchBook);
+        bookUserInput = rootView.findViewById(R.id.bookSearchQuery);
+
+        new Thread(() -> {
+            mAdapter = new CollectionAdapter(mCards, SearchFragment.this);
+            mRecyclerView.setAdapter(mAdapter);
+        }).start();
+
+//        new Thread(() -> {
+//            mAdapter = new CollectionAdapter(mCards, SearchFragment.this);
+//            c.runOnUiThread(() -> mRecyclerView.setAdapter(mAdapter));
+//        }).start();
+
+        searchBookBtn.setOnClickListener(v -> showBookResults());
+
+        return rootView;
     }
 
-    //TODO: Only shows in console for now, let it show on screen :)
     public void showBookResults() {
-        for (Book book : searchBooks()) {
-            System.out.println("Title: " + book.title);
-            if (!(book.subjects.size() == 0))
-                System.out.println("First subject: " + book.subjects.get(0));
-            System.out.println(".");
-        }
+        mCards.clear();
+        mCards.addAll(searchBooks());
+        mAdapter.notifyDataSetChanged();
     }
 
     private List<Book> searchBooks() {
         String bookName = bookUserInput.getEditText().getText().toString();
-        return ServerConnect.getInstance().getBooks(bookName);
+        List<Book> bookList = ServerConnect.getInstance().getBooks(bookName);
+        if (bookList.isEmpty()) {
+            Toast.makeText(getActivity(), "No results found.", Toast.LENGTH_SHORT).show();
+        }
+        return bookList;
+    }
+
+    @Override
+    public void OnCardClick(int position) {
+        user.setTempBook(mCards.get(position));
+//        bookTitle = mCards.get(position).title;
+        Intent intent = new Intent(getActivity(), BookActivity.class);
+//        intent.putExtra("Book", bookTitle);
+        startActivity(intent);
+    }
+
+    @Override
+    public void OnPositiveButtonClick(int position) {
+        if (user.getCollectionList().isEmpty()) {
+            Toast.makeText(getActivity(), "No existing collections, try adding a collection first.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        clickedBook = mCards.get(position);
+        mListItem = user.getCollectionList();
+        CollectionListAdapter collectionListAdapter = new CollectionListAdapter(mListItem, this);
+        addCollectionDialog = new AddCollectionDialog(getActivity(), collectionListAdapter);
+        addCollectionDialog.show();
+        addCollectionDialog.setCanceledOnTouchOutside(true);
+    }
+
+    @Override
+    public void OnNegativeButtonClick(int position) {
+
+    }
+
+    @Override
+    public void OnListItemClick(int position) {
+        BookCollection bc = mListItem.get(position);
+        bc.addBookToServer(clickedBook);
+        Toast.makeText(getActivity(), clickedBook.title + " has been added to " + bc.name, Toast.LENGTH_SHORT).show();
+        mAdapter.notifyDataSetChanged();
+        addCollectionDialog.cancel();
     }
 }
