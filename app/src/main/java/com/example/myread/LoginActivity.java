@@ -29,7 +29,6 @@ public class LoginActivity extends AppCompatActivity {
         prf = GlobalApplication.getEncryptedSharedPreferences();
         if (prf.contains("username")) {
             if (ServerConnect.getInstance().checkSession()) {
-                System.out.println("Account already detected, going to main");
                 ServerConnect.getInstance().initUser(prf.getString("username", ""));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
@@ -101,8 +100,6 @@ public class LoginActivity extends AppCompatActivity {
                 .add("pass", trim_password)
                 .build();
 
-        ServerConnect.Response response = ServerConnect.getInstance().sendPost("login", formBody);
-        System.out.println(response.response);
-        return response;
+        return ServerConnect.getInstance().sendPost("login", formBody);
     }
 }

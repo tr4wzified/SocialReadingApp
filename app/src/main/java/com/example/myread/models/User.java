@@ -68,14 +68,12 @@ public class User {
 
     public void initBookCollection(BookCollection bookCollection) {
         collectionList.add(bookCollection);
-        System.out.println("Successfully added book collection");
     }
 
     public boolean addBookCollection(BookCollection bookCollection) {
         ServerConnect.Response r = ServerConnect.getInstance().addBookCollectionServer(name, bookCollection.name);
         if (r.successful) {
             collectionList.add(bookCollection);
-            System.out.println("Successfully added book collection");
             return true;
         }
         System.out.println("Adding book collection failed");
@@ -87,7 +85,6 @@ public class User {
         ServerConnect.Response r = ServerConnect.getInstance().deleteBookCollectionServer(name, bc.name);
         if (r.successful) {
             collectionList.remove(bc);
-            System.out.println("Successfully removed book collection");
             return;
         }
         System.out.println("Removing book collection failed");

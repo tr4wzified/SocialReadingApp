@@ -25,25 +25,8 @@ public class SearchFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_search, container, false);
-//        bookName = root.findViewById(R.id.bookName);
         getBook = root.findViewById(R.id.searchBook);
         bookUserInput = root.findViewById(R.id.bookSearchQuery);
-        getBook.setOnClickListener(v -> showBookResults());
         return root;
-    }
-
-    //TODO: Only shows in console for now, let it show on screen :)
-    public void showBookResults() {
-        for (Book book : searchBooks()) {
-            System.out.println("Title: " + book.title);
-            if (!(book.subjects.size() == 0))
-                System.out.println("First subject: " + book.subjects.get(0));
-            System.out.println(".");
-        }
-    }
-
-    private List<Book> searchBooks() {
-        String bookName = bookUserInput.getEditText().getText().toString();
-        return ServerConnect.getInstance().getBooks(bookName);
     }
 }
