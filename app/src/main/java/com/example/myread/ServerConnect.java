@@ -42,7 +42,7 @@ public class ServerConnect extends AppCompatActivity {
     private static ServerConnect s = null;
     private final OkHttpClient client;
     private final String ip = GlobalApplication.getAppContext().getString(R.string.ip);
-    private SharedPreferences prf = GlobalApplication.getEncryptedSharedPreferences();
+    private final SharedPreferences prf = GlobalApplication.getEncryptedSharedPreferences();
 
     private ServerConnect() {
         client = getUnsafeOkHttpClient();
@@ -64,9 +64,9 @@ public class ServerConnect extends AppCompatActivity {
             this.responseString = responseString;
         }
 
-        public boolean successful;
-        public String response;
-        public String responseString;
+        public final boolean successful;
+        public final String response;
+        public final String responseString;
     }
 
     public static class ServerCall implements Callable {
@@ -126,11 +126,11 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public Response sendPost(String page, RequestBody body) {
-        return sendRequest(page,body);
+        return sendRequest(page, body);
     }
 
     public Response sendGet(String page) {
-        return sendRequest(page,null);
+        return sendRequest(page, null);
     }
 
     public void initUser(String name) {
@@ -174,12 +174,12 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public Book getBookByID(String id) {
-        JSONObject jsonObject = null;
+        JSONObject jsonObject;
         Response response = sendGet("book/" + id);
         if (response.successful) {
             try {
                 jsonObject = new JSONObject(response.responseString);
-                return new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), jsonObject.optString("cover_img_large", null), jsonObject.optString("description", null), getSubjects(jsonObject), jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+                return new Book(jsonObject.optString("id", ""), jsonObject.optString("title", ""), jsonObject.optString("author", ""), jsonObject.optString("cover_img_large", ""), jsonObject.optString("description", ""), getSubjects(jsonObject), jsonObject.optString("publishDate", ""), jsonObject.optString("authorWiki", ""), jsonObject.optString("isbn", ""), jsonObject.optString("rating", ""));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -191,7 +191,7 @@ public class ServerConnect extends AppCompatActivity {
     private List<String> getSubjects(JSONObject jsonObject) {
         JSONArray subjectsArray;
         List<String> subjects = new ArrayList<>();
-        try{
+        try {
             if (jsonObject.toString().contains("subjects")) {
                 subjectsArray = jsonObject.getJSONArray("subjects");
                 for (int j = 0; j < subjectsArray.length(); j++)
@@ -202,7 +202,7 @@ public class ServerConnect extends AppCompatActivity {
             e.printStackTrace();
         }
         System.out.println("Something went wrong when adding subjects");
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     public List<Book> getBooks(String bookName) {
@@ -214,19 +214,13 @@ public class ServerConnect extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray(response.responseString);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Book book = new Book(jsonObject.optString("id", null), jsonObject.optString("title", null), jsonObject.optString("author", null), jsonObject.optString("cover_img_large", null), jsonObject.optString("description", null), getSubjects(jsonObject), jsonObject.optString("publishDate", null), jsonObject.optString("authorWiki", null), jsonObject.optString("isbn", null), jsonObject.optString("rating", null));
+                    Book book = new Book(jsonObject.optString("id", ""), jsonObject.optString("title", ""), jsonObject.optString("author", ""), jsonObject.optString("cover_img_large", ""), jsonObject.optString("description", ""), getSubjects(jsonObject), jsonObject.optString("publishDate", ""), jsonObject.optString("authorWiki", ""), jsonObject.optString("isbn", ""), jsonObject.optString("rating", ""));
                     books.add(book);
                 }
-            }
-            catch (JSONException e)
-            {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         return books;
-    }
-
-    public Response getBookList(String id) {
-        return sendGet("booklist/" + id);
     }
 
     public Response getBookCollections(String name) {

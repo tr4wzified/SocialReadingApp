@@ -8,15 +8,17 @@
 
     <TextView
         android:id="@+id/username_txt"
+        android:labelFor="@id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:text="@string/username"
-        app:layout_constraintBottom_toTopOf="@+id/collection_name"
+        app:layout_constraintBottom_toTopOf="@+id/username"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/password_txt"
+        android:labelFor="@id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
@@ -26,6 +28,7 @@
 
     <TextView
         android:id="@+id/password_confirm_txt"
+        android:labelFor="@id/confirm_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
@@ -35,9 +38,10 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/collection_name"
+        android:id="@+id/username"
         android:layout_width="288dp"
         android:layout_height="50dp"
+        android:autofillHints="username"
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,6 +54,7 @@
         android:id="@+id/password"
         android:layout_width="288dp"
         android:layout_height="50dp"
+        android:autofillHints="password"
         android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,6 +67,7 @@
         android:id="@+id/confirm_password"
         android:layout_width="288dp"
         android:layout_height="50dp"
+        android:autofillHints="confirmpassword"
         android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

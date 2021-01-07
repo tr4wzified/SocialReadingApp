@@ -1,6 +1,5 @@
 package com.example.myread.adapters;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.R;
 import com.example.myread.models.BookCollection;
-import com.example.myread.models.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAdapter.ViewHolder> {
-    private List<BookCollection> mCards;
-    private OnCardListener mOnCardListener;
+    private final List<BookCollection> mCards;
+    private final OnCardListener mOnCardListener;
 
     public CollectionListAdapter(List<BookCollection> cards, OnCardListener onCardListener) {
         this.mCards = cards;
@@ -36,9 +33,8 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
     @Override
     public void onBindViewHolder(@NonNull CollectionListAdapter.ViewHolder holder, int position) {
         if (holder.getListName().length() > 20) {
-            holder.getListName().setText(mCards.get(position).name.substring(0,19).concat("..."));
-        }
-        else {
+            holder.getListName().setText(mCards.get(position).name.substring(0, 19).concat("..."));
+        } else {
             holder.getListName().setText(mCards.get(position).name);
         }
 //        String as = holder.getListName().getText().toString();
@@ -54,14 +50,13 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView listName, bookAmount;
-        private final Button deleteBtn;
-        OnCardListener onCardListener;
+        final OnCardListener onCardListener;
 
         public ViewHolder(View view, OnCardListener onCardListener) {
             super(view);
             listName = view.findViewById(R.id.list_title);
             bookAmount = view.findViewById(R.id.book_amount);
-            deleteBtn = view.findViewById(R.id.delete_bookcollection);
+            Button deleteBtn = view.findViewById(R.id.delete_bookcollection);
             this.onCardListener = onCardListener;
 
             view.setOnClickListener(this);

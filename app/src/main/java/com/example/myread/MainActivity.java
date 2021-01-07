@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,16 +13,12 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.myread.models.Book;
 import com.example.myread.models.User;
 import com.google.android.material.navigation.NavigationView;
-
-import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private User user = User.getInstance();
     private SharedPreferences prf;
 
     @Override
@@ -72,12 +67,12 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    public void logout(MenuItem item) {
+    public void logout() {
         SharedPreferences.Editor editor = prf.edit();
-        editor.clear();
+        editor.remove("username");
         editor.apply();
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        user = null;
+        //TODO clear user object?
         finish();
     }
 }

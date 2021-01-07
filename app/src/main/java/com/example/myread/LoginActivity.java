@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         spinner = (ProgressBar) findViewById(R.id.loadingIconLogin);
         Button login_btn = findViewById(R.id.login_btn);
         TextView registertext = findViewById(R.id.register_txt);
-        username = findViewById(R.id.collection_name);
+        username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         login_btn.setOnClickListener(v -> new Thread(() -> {
             runOnUiThread(() -> spinner.setVisibility(View.VISIBLE));

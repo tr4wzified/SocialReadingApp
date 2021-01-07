@@ -42,11 +42,11 @@ public class BookActivity extends AppCompatActivity {
 
     public void updateField(TextView view, String text) {
         if (text == null) {
-            view.setText("unknown");
+            view.setText(R.string.unknown);
             return;
         }
         if (text.equals("")) {
-            view.setText("unknown");
+            view.setText(R.string.unknown);
             return;
         }
         view.setText(text);

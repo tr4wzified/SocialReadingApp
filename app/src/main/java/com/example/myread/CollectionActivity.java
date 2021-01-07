@@ -1,17 +1,12 @@
 package com.example.myread;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,18 +16,14 @@ import com.example.myread.models.Book;
 import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class CollectionActivity extends AppCompatActivity implements CollectionAdapter.OnCardListener, CollectionListAdapter.OnCardListener {
     protected RecyclerView mRecyclerView;
     protected CollectionAdapter mAdapter;
-    private List<Book> mCards = new ArrayList<>();
+    private final List<Book> mCards = new ArrayList<>();
     protected User user;
-    private Book tempBook;
     private Book clickedBook;
     private AddCollectionDialog addCollectionDialog;
     private List<BookCollection> mListItem;
@@ -57,9 +48,8 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
 
     private void updateData() {
         if (collectionTitle.length() > 20) {
-            editText.setText(collectionTitle.substring(0,19).concat("..."));
-        }
-        else {
+            editText.setText(collectionTitle.substring(0, 19).concat("..."));
+        } else {
             editText.setText(collectionTitle);
         }
         String books = "Books: " + user.getBookCollection(collectionTitle).size();
@@ -81,7 +71,7 @@ public class CollectionActivity extends AppCompatActivity implements CollectionA
 
     @Override
     public void OnCardClick(int position) {
-        tempBook = mCards.get(position);
+        Book tempBook = mCards.get(position);
         user.setTempBook(tempBook);
         Intent intent = new Intent(this, BookActivity.class);
 //        intent.putExtra("Book", bookTitle);

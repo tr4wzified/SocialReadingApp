@@ -11,14 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.R;
 import com.example.myread.models.Book;
-import com.example.myread.models.BookCollection;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolder> {
-    private List<Book> mCards = new ArrayList<>();
-    private OnCardListener mOnCardListener;
+    private List<Book> mCards;
+    private final OnCardListener mOnCardListener;
 
     public CollectionAdapter(List<Book> cards, OnCardListener onCardListener) {
         this.mCards = cards;
@@ -27,8 +26,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView bookTitle, bookAuthor;
-        OnCardListener onCardListener;
-        private Button buttonAdd, buttonDelete;
+        final OnCardListener onCardListener;
 
         public ViewHolder(View view, OnCardListener onCardListener) {
             super(view);
@@ -40,8 +38,8 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
             // book cover
             bookTitle = view.findViewById(R.id.bookTitle);
             bookAuthor = view.findViewById(R.id.bookAuthor);
-            buttonAdd = view.findViewById(R.id.button_add);
-            buttonDelete = view.findViewById(R.id.button_delete);
+            Button buttonAdd = view.findViewById(R.id.button_add);
+            Button buttonDelete = view.findViewById(R.id.button_delete);
             this.onCardListener = onCardListener;
 
             view.setOnClickListener(this);
@@ -74,9 +72,8 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (mCards.get(position).title.length() > 20) {
-            holder.getBookTitle().setText(mCards.get(position).title.substring(0,19).concat("..."));
-        }
-        else {
+            holder.getBookTitle().setText(mCards.get(position).title.substring(0, 19).concat("..."));
+        } else {
             holder.getBookTitle().setText(mCards.get(position).title);
         }
         // book cover
@@ -90,7 +87,9 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
 
     public interface OnCardListener {
         void OnCardClick(int position);
+
         void OnPositiveButtonClick(int position);
+
         void OnNegativeButtonClick(int position);
     }
 }

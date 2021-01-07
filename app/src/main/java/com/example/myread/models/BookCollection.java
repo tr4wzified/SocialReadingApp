@@ -8,7 +8,7 @@ import java.util.List;
 public class BookCollection {
     public String name;
     private final List<Book> bookList;
-    private User user = User.getInstance();
+    private final User user = User.getInstance();
 
     public BookCollection(String name) {
         this.name = name;
@@ -27,7 +27,7 @@ public class BookCollection {
         ServerConnect.Response r = ServerConnect.getInstance().deleteBookFromCollectionServer(user.name, name, book.id);
         if (r.successful) {
             bookList.remove(book);
-            System.out.println("Succesfully removed book from collection");
+            System.out.println("Successfully removed book from collection");
             return;
         }
         System.out.println("Removing book from collection failed");
@@ -38,7 +38,7 @@ public class BookCollection {
         ServerConnect.Response r = ServerConnect.getInstance().addBookToCollectionServer(user.name, name, book.id);
         if (r.successful) {
             this.bookList.add(book);
-            System.out.println("Succesfully added book to collection");
+            System.out.println("Successfully added book to collection");
             return;
         }
         System.out.println("Adding book to collection failed");
@@ -53,7 +53,4 @@ public class BookCollection {
         return bookList.size();
     }
 
-    public Book at(int number) {
-        return bookList.get(number);
-    }
 }

@@ -1,19 +1,18 @@
 package com.example.myread.models;
 
-import java.util.Date;
 import java.util.List;
 
 public class Book {
-    public String id;
-    public String title;
-    public String author;
-    public String cover;
-    public String description;
-    public List<String> subjects;
-    public String publishDate;
-    public String authorWiki;
-    public String isbn;
-    public String rating;
+    public final String id;
+    public final String title;
+    public final String author;
+    public final String cover;
+    public final String description;
+    public final List<String> subjects;
+    public final String publishDate;
+    public final String authorWiki;
+    public final String isbn;
+    public final String rating;
 
     public Book(String id, String title, String author, String cover, String description, List<String> subjects, String publishDate, String authorWiki, String isbn, String rating) {
         this.id = id;
