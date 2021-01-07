@@ -2,11 +2,13 @@ package com.example.myread.ui.search;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,28 +42,31 @@ public class SearchFragment extends Fragment implements CollectionAdapter.OnCard
     private List<BookCollection> mListItem;
     private Book clickedBook;
     private AddCollectionDialog addCollectionDialog;
+    private ProgressBar spinner;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         final FragmentActivity c = getActivity();
-        final RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.searchRecyclerView);
+        final RecyclerView mRecyclerView = rootView.findViewById(R.id.searchRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(c);
         mRecyclerView.setLayoutManager(layoutManager);
 
         Button searchBookBtn = rootView.findViewById(R.id.searchBook);
         bookUserInput = rootView.findViewById(R.id.bookSearchQuery);
+        spinner = (ProgressBar) rootView.findViewById(R.id.loadingIconSearch);
 
         new Thread(() -> {
             mAdapter = new CollectionAdapter(mCards, SearchFragment.this);
             mRecyclerView.setAdapter(mAdapter);
         }).start();
 
-//        new Thread(() -> {
-//            mAdapter = new CollectionAdapter(mCards, SearchFragment.this);
-//            c.runOnUiThread(() -> mRecyclerView.setAdapter(mAdapter));
-//        }).start();
+        searchBookBtn.setOnClickListener(v -> new Thread(() -> {
 
-        searchBookBtn.setOnClickListener(v -> showBookResults());
+            getActivity().runOnUiThread(() -> spinner.setVisibility(View.VISIBLE));
+            Looper.prepare();
+            showBookResults();
+            getActivity().runOnUiThread(() -> spinner.setVisibility(View.INVISIBLE));
+        }).start());
 
         return rootView;
     }
@@ -69,7 +74,7 @@ public class SearchFragment extends Fragment implements CollectionAdapter.OnCard
     public void showBookResults() {
         mCards.clear();
         mCards.addAll(searchBooks());
-        mAdapter.notifyDataSetChanged();
+        getActivity().runOnUiThread(() -> mAdapter.notifyDataSetChanged());
     }
 
     private List<Book> searchBooks() {

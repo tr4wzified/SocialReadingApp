@@ -55,12 +55,18 @@ public class BookFragment extends Fragment {
     public void initBook() {
         if (currentBook.cover.contains("http"))
             Picasso.get().load(currentBook.cover).into(book_cover);
+        else {
+            //TODO load stock image
+        }
         updateField(book_title, currentBook.title);
         updateField(book_author, currentBook.author);
         updateField(book_rating, currentBook.rating);
         updateField(book_description, currentBook.description);
         if (!(currentBook.subjects.size() == 0))
             updateField(book_genre, currentBook.subjects.get(0));
+        else {
+            book_genre.setText(R.string.unknown);
+        }
         updateField(book_isbn, currentBook.isbn);
         updateField(book_year, currentBook.publishDate);
     }

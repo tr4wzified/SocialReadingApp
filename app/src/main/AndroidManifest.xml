@@ -31,10 +31,6 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.MyRead.NoActionBar" />
-        <activity android:name=".LibraryActivity" />
-        <activity android:name=".CollectionActivity"/>
-        <activity android:name=".BookActivity"/>
-        <activity android:name=".ui.search.SearchActivity"/>
     </application>
 
 </manifest>
