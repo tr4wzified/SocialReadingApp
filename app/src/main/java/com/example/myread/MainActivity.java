@@ -9,12 +9,15 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -47,20 +50,20 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_home, R.id.nav_search, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navController = getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+    }
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-//        mAppBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.nav_home, R.id.nav_search, R.id.nav_settings)
-//                .setDrawerLayout(drawer)
-//                .build();
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-//        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-//        NavigationUI.setupWithNavController(navigationView, navController);
-
+    // workaround for https://issuetracker.google.com/issues/142847973 ty google https://stackoverflow.com/questions/59275009/fragmentcontainerview-using-findnavcontroller
+    @NonNull
+    private NavController getNavController() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        if (!(fragment instanceof NavHostFragment)) {
+            throw new IllegalStateException("Activity " + this
+                    + " does not have a NavHostFragment");
+        }
+        return ((NavHostFragment) fragment).getNavController();
     }
 
     @Override
@@ -84,5 +87,18 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
         //TODO clear user object?
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            super.onBackPressed();
+        }
+//        else if(getSupportFragmentManager().getBackStackEntryCount() == 1) {
+//            moveTaskToBack(false);
+//        }
+        else {
+            getSupportFragmentManager().popBackStack();
+        }
     }
 }
