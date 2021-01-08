@@ -115,6 +115,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
+        style="@style/coverimage"
         android:id="@+id/book_cover_page"
         android:layout_width="fill_parent"
         android:layout_height="300dp"
@@ -124,8 +125,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/book_title"
