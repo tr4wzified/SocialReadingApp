@@ -82,7 +82,7 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
 
         Fragment fragment = new CollectionFragment();
         fragment.setArguments(bundle);
-        getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
+        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
 
 //        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
     }
