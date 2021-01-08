@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -82,7 +84,16 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
 
         Fragment fragment = new CollectionFragment();
         fragment.setArguments(bundle);
-        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        System.out.println(fragmentManager.getFragments().toString());
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
+        fragmentTransaction.commit();
+        System.out.println("Lib: " + getActivity().getSupportFragmentManager().getBackStackEntryCount());
+
+
+//        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
 
 //        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
     }
