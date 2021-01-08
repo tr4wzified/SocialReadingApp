@@ -19,12 +19,10 @@ import com.example.myread.models.Book;
 import com.example.myread.models.User;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-
 public class BookFragment extends Fragment {
     private TextView book_title, book_author, book_rating, book_description, book_genre, book_isbn, book_year;
     private User user = User.getInstance();
-    private ImageView book_cover;
+    private ImageView large_book_cover;
     private Book currentBook;
     private Button wikiBtn;
 
@@ -33,7 +31,7 @@ public class BookFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_book, container, false);
 
-        book_cover = rootView.findViewById(R.id.book_cover_page);
+        large_book_cover = rootView.findViewById(R.id.large_book_cover_page);
         book_title = rootView.findViewById(R.id.book_title);
         book_author = rootView.findViewById(R.id.book_author);
         book_rating = rootView.findViewById(R.id.book_rating);
@@ -69,8 +67,8 @@ public class BookFragment extends Fragment {
 
     public void initBook() {
         //Picasso.get().load(R.drawable.nocover_dark).into(book_cover);
-        if (currentBook.cover.contains("http"))
-            Picasso.get().load(currentBook.cover).into(book_cover);
+        if (currentBook.largecover.contains("http"))
+            Picasso.get().load(currentBook.largecover).into(large_book_cover);
         updateField(book_title, currentBook.title);
         updateField(book_author, currentBook.author);
         updateField(book_rating, currentBook.rating);

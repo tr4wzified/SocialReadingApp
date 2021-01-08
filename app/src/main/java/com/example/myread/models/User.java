@@ -81,6 +81,12 @@ public class User {
 //      ServerConnect.postBookCollection(name, formBody);
     }
 
+    public void destroy() {
+        name = "";
+        collectionList.clear();
+        tempBook = null;
+    }
+
     public void deleteBookCollection(BookCollection bc) {
         ServerConnect.Response r = ServerConnect.getInstance().deleteBookCollectionServer(name, bc.name);
         if (r.successful) {
