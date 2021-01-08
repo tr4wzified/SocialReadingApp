@@ -178,7 +178,7 @@ public class ServerConnect extends AppCompatActivity {
         if (response.successful) {
             try {
                 jsonObject = new JSONObject(response.responseString);
-                return new Book(jsonObject.optString("id", ""), jsonObject.optString("title", ""), jsonObject.optString("author", ""), jsonObject.optString("cover_img_large", ""), jsonObject.optString("description", ""), getSubjects(jsonObject), jsonObject.optString("publishDate", ""), jsonObject.optString("authorWiki", ""), jsonObject.optString("isbn", ""), jsonObject.optString("rating", ""));
+                return new Book(jsonObject.optString("id", ""), jsonObject.optString("title", ""), jsonObject.optString("author", ""), jsonObject.optString("cover_img_large", ""), jsonObject.optString("description", ""), getSubjects(jsonObject), jsonObject.optString("publish_date", ""), jsonObject.optString("book_wiki", ""), jsonObject.optString("isbn", ""), jsonObject.optString("rating", ""));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -213,7 +213,7 @@ public class ServerConnect extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray(response.responseString);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Book book = new Book(jsonObject.optString("id", ""), jsonObject.optString("title", ""), jsonObject.optString("author", ""), jsonObject.optString("cover_img_large", ""), jsonObject.optString("description", ""), getSubjects(jsonObject), jsonObject.optString("publishDate", ""), jsonObject.optString("authorWiki", ""), jsonObject.optString("isbn", ""), jsonObject.optString("rating", ""));
+                    Book book = new Book(jsonObject.optString("id", ""), jsonObject.optString("title", ""), jsonObject.optString("author", ""), jsonObject.optString("cover_img_large", ""), jsonObject.optString("description", ""), getSubjects(jsonObject), jsonObject.optString("publish_date", ""), jsonObject.optString("book_wiki", ""), jsonObject.optString("isbn", ""), jsonObject.optString("rating", ""));
                     books.add(book);
                 }
             } catch (JSONException e) {

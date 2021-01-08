@@ -1,21 +1,17 @@
 package com.example.myread.ui.search;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -119,7 +115,7 @@ public class SearchFragment extends Fragment implements CollectionAdapter.OnCard
     @Override
     public void OnListItemClick(int position) {
         BookCollection bc = mListItem.get(position);
-        bc.addBookToServer(clickedBook);
+        bc.add(clickedBook);
         Toast.makeText(getActivity(), clickedBook.title + " has been added to " + bc.name, Toast.LENGTH_SHORT).show();
         mAdapter.notifyDataSetChanged();
         addCollectionDialog.cancel();

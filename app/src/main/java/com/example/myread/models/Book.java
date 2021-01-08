@@ -10,11 +10,11 @@ public class Book {
     public final String description;
     public final List<String> subjects;
     public final String publishDate;
-    public final String authorWiki;
+    public final String bookWiki;
     public final String isbn;
     public final String rating;
 
-    public Book(String id, String title, String author, String cover, String description, List<String> subjects, String publishDate, String authorWiki, String isbn, String rating) {
+    public Book(String id, String title, String author, String cover, String description, List<String> subjects, String publishDate, String bookWiki, String isbn, String rating) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -22,7 +22,7 @@ public class Book {
         this.description = description;
         this.subjects = subjects;
         this.publishDate = publishDate;
-        this.authorWiki = authorWiki;
+        this.bookWiki = bookWiki;
         this.isbn = isbn;
         this.rating = rating;
     }
