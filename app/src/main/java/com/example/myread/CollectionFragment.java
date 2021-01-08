@@ -80,7 +80,7 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
         Book tempBook = mCards.get(position);
         user.setTempBook(tempBook);
         Fragment fragment = new BookFragment();
-        getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
+        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
 
 //        Intent intent = new Intent(getActivity(), BookActivity.class);
 ////        intent.putExtra("Book", bookTitle);
