@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.myread.models.Book;
 import com.example.myread.models.User;
@@ -39,6 +40,8 @@ public class BookFragment extends Fragment {
         book_genre = rootView.findViewById(R.id.book_genre);
         book_isbn = rootView.findViewById(R.id.book_isbn);
         book_year = rootView.findViewById(R.id.book_year);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        System.out.println(fragmentManager.getFragments().toString());
 
         currentBook = user.getTempBook();
         wikiBtn = rootView.findViewById(R.id.wiki_btn);
