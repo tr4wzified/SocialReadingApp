@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         editor.remove("username");
         editor.apply();
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        //TODO clear user object?
+        User.getInstance().destroy();
         finish();
     }
 }

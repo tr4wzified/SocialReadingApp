@@ -16,12 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.AddCollectionDialog;
-//import com.example.myread.BookActivity;
 import com.example.myread.BookFragment;
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
-import com.example.myread.adapters.CollectionAdapter;
 import com.example.myread.adapters.CollectionListAdapter;
+import com.example.myread.adapters.CollectionSearchAdapter;
 import com.example.myread.models.Book;
 import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
@@ -30,9 +29,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchFragment extends Fragment implements CollectionAdapter.OnCardListener, CollectionListAdapter.OnCardListener {
+public class SearchFragment extends Fragment implements CollectionSearchAdapter.OnCardListener, CollectionListAdapter.OnCardListener {
     private List<Book> mCards = new ArrayList<>();
-    private CollectionAdapter mAdapter;
+    private CollectionSearchAdapter mAdapter;
     protected User user = User.getInstance();
     private TextInputLayout bookUserInput;
     private List<BookCollection> mListItem;
@@ -52,7 +51,7 @@ public class SearchFragment extends Fragment implements CollectionAdapter.OnCard
         spinner = (ProgressBar) rootView.findViewById(R.id.loadingIconSearch);
 
         new Thread(() -> {
-            mAdapter = new CollectionAdapter(mCards, SearchFragment.this);
+            mAdapter = new CollectionSearchAdapter(mCards, SearchFragment.this);
             mRecyclerView.setAdapter(mAdapter);
         }).start();
 
@@ -105,11 +104,6 @@ public class SearchFragment extends Fragment implements CollectionAdapter.OnCard
         addCollectionDialog = new AddCollectionDialog(getActivity(), collectionListAdapter);
         addCollectionDialog.show();
         addCollectionDialog.setCanceledOnTouchOutside(true);
-    }
-
-    @Override
-    public void OnNegativeButtonClick(int position) {
-
     }
 
     @Override
