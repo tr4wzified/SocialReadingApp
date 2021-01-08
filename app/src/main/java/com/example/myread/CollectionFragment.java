@@ -88,7 +88,6 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
         fragmentTransaction.commit();
-        System.out.println("Col: " + getActivity().getSupportFragmentManager().getBackStackEntryCount());
 
 
 //        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
