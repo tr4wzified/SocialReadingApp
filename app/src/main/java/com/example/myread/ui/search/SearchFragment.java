@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -86,11 +88,12 @@ public class SearchFragment extends Fragment implements CollectionAdapter.OnCard
     public void OnCardClick(int position) {
         user.setTempBook(mCards.get(position));
         Fragment fragment = new BookFragment();
-        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
-//        bookTitle = mCards.get(position).title;
-//        Intent intent = new Intent(getActivity(), BookActivity.class);
-////        intent.putExtra("Book", bookTitle);
-//        startActivity(intent);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        System.out.println(fragmentManager.getFragments().toString());
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
+        fragmentTransaction.commit();
+
     }
 
     @Override
