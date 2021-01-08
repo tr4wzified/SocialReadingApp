@@ -40,7 +40,6 @@
     <string name="book_collection">Book collection</string>
     <string name="books">Books</string>
     <string name="select_a_collection">Select a collection</string>
-    <string name="textview">TextView</string>
     <!-- IP -->
     <string name="ip">https://10.0.2.2:2048/</string>
     <string name="altip">https://192.168.2.13:2048/</string>
@@ -56,7 +55,7 @@
     <string name="year">Year</string>
     <string name="book_title">book_title</string>
     <string name="description">Description</string>
-    <string name="buy">Buy</string>
+    <string name="wiki">Wiki</string>
     <string name="more_information">More information</string>
     <string name="genre">Genre</string>
     <string name="plus">+</string>

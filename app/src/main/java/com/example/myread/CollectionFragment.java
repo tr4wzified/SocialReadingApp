@@ -112,7 +112,7 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
     @Override
     public void OnListItemClick(int position) {
         BookCollection bc = mListItem.get(position);
-        user.getBookCollection(bc).addBookToServer(clickedBook);
+        user.getBookCollection(bc).add(clickedBook);
         if (bc.name.equals(collectionTitle)) {
             mCards.add(clickedBook);
         }
