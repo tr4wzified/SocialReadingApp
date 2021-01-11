@@ -231,7 +231,7 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public Response deleteBookCollectionServer(String name, String collection_name) {
-        return sendGet("/user/" + name + "/del_book_collection/" + collection_name);
+        return sendGet("user/" + name + "/del_book_collection/" + collection_name);
     }
 
     public Response addBookToCollectionServer(String name, String collection_name, String book_id) {
