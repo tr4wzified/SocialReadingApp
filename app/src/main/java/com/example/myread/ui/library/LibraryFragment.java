@@ -17,6 +17,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,6 +47,12 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_library, container, false);
+
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+
+
         final FragmentActivity c = getActivity();
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.libraryRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(c);
@@ -76,21 +85,22 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
     @Override
     public void OnCardClick(int position) {
         clickedCard = mCards.get(position);
-//        Intent intent = new Intent(getActivity(), CollectionFragment.class);
-//        intent.putExtra("collectiontitle", clickedCard.name);
-//        startActivity(intent);
         Bundle bundle = new Bundle();
         bundle.putString("collectiontitle", clickedCard.name);
 
         Fragment fragment = new CollectionFragment();
         fragment.setArguments(bundle);
 
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        System.out.println(fragmentManager.getFragments().toString());
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
-        fragmentTransaction.commit();
-        System.out.println("Lib: " + getActivity().getSupportFragmentManager().getBackStackEntryCount());
+        User.getInstance().setTempTitle(clickedCard.name);
+
+        Navigation.findNavController(getView()).navigate(R.id.action_nav_library_to_collectionFragment);
+
+//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//        System.out.println(fragmentManager.getFragments().toString());
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
+////        fragmentTransaction.remove(this);
+//        fragmentTransaction.commit();
 
 
 //        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();

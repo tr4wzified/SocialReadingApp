@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,7 +48,8 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new CollectionAdapter(mCards, CollectionFragment.this);
         user = User.getInstance();
-        collectionTitle = getArguments().getString("collectiontitle");
+//        collectionTitle = getArguments().getString("collectiontitle");
+        collectionTitle = User.getInstance().getTempTitle();
         bookAmount = rootView.findViewById(R.id.book_collections);
         editText = rootView.findViewById(R.id.book_collection);
 
@@ -73,7 +75,7 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
 
     private void initBooks() {
         mCards.clear();
-        mCards.addAll(user.getBookCollection(collectionTitle));
+        mCards.addAll(user.getBookCollection("Favourites"));
         mAdapter.notifyDataSetChanged();
     }
 
@@ -81,22 +83,7 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
     public void OnCardClick(int position) {
         Book tempBook = mCards.get(position);
         user.setTempBook(tempBook);
-        Fragment fragment = new BookFragment();
-
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        System.out.println(fragmentManager.getFragments().toString());
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
-        fragmentTransaction.commit();
-
-
-//        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
-//        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
-
-//        Intent intent = new Intent(getActivity(), BookActivity.class);
-////        intent.putExtra("Book", bookTitle);
-////        intent.putExtra("Collection", collectionTitle);
-//        startActivity(intent);
+        Navigation.findNavController(getView()).navigate(R.id.action_collectionFragment_to_bookFragment);
     }
 
     @Override
