@@ -75,7 +75,7 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
 
     private void initBooks() {
         mCards.clear();
-        mCards.addAll(user.getBookCollection("Favourites"));
+        mCards.addAll(user.getBookCollection(collectionTitle));
         mAdapter.notifyDataSetChanged();
     }
 

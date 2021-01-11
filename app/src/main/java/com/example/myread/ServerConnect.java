@@ -2,6 +2,7 @@ package com.example.myread;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.util.JsonReader;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -41,7 +42,7 @@ public class ServerConnect extends AppCompatActivity {
 
     private static ServerConnect s = null;
     private final OkHttpClient client;
-    private final String ip = GlobalApplication.getAppContext().getString(R.string.ip);
+    private final String ip = GlobalApplication.getAppContext().getString(R.string.altaltip);
     private final SharedPreferences prf = GlobalApplication.getEncryptedSharedPreferences();
 
     private ServerConnect() {
@@ -133,42 +134,58 @@ public class ServerConnect extends AppCompatActivity {
         return sendRequest(page, null);
     }
 
+    public JSONArray loadBookCollections(User user) {
+        Response r = getBookCollections(user.name);
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(r.responseString);
+
+            if (user.getCollectionList().size() != 0) user.getCollectionList().clear();
+
+            for (int i = 0; i < jsonArray.length(); i++)
+                user.initBookCollection(new BookCollection(jsonArray.getJSONObject(i).getString("name")));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
+    }
+
+    public void loadBooks(User user, JSONArray jsonArray) {
+        try {
+            for (int i = 0; i < user.getCollectionList().size(); i++) {
+                BookCollection bc = user.getCollectionList().get(i);
+                if (bc.getBookList().size() != 0) bc.getBookList().clear();
+
+                JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
+
+                for (int b = 0; b < bookArray.length(); b++) {
+                    String bookString = bookArray.get(b).toString();
+                    Book book = getBookByID(bookString);
+                    if (!(book == null))
+                        bc.initBook(book);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void initUser(String name) {
         User user = User.getInstance();
         user.name = name;
         Response response = sendGet("user/" + name);
         JSONArray jsonArray = new JSONArray();
         if (response.successful) {
-            try {
-                Response r = getBookCollections(user.name);
-                jsonArray = new JSONArray(r.responseString);
-                if (user.getCollectionList().size() != 0) {
-                    user.getCollectionList().clear();
+
+            Thread thread = new Thread(new Runnable() {
+                public void run() {
+                    loadBooks(user, loadBookCollections((user)));
                 }
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    user.initBookCollection(new BookCollection(jsonArray.getJSONObject(i).getString("name")));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
-                int i = 0;
-                for (BookCollection bc : user.getCollectionList()) {
-                    if (bc.getBookList().size() != 0)
-                        bc.getBookList().clear();
-                    JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
-                    for (int b = 0; b < bookArray.length(); b++) {
-                        String bookString = bookArray.get(b).toString();
-                        Book book = getBookByID(bookString);
-                        if (!(book == null)) {
-                            bc.initBook(book);
-                        }
-                    }
-                    i++;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            });
+
+            thread.start();
         }
     }
 
