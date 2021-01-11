@@ -65,11 +65,11 @@ public class LoginActivity extends AppCompatActivity {
                 ServerConnect.getInstance().initUser(prf.getString("username", ""));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show());
             } else if (response.response.equals("Unable to reach server"))
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Unable to reach server.", Toast.LENGTH_SHORT).show());
             else
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login unsuccessful.", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login failed!", Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -80,20 +80,18 @@ public class LoginActivity extends AppCompatActivity {
 
     private Boolean validateUsername() {
         if (TextUtils.isEmpty(trim_username)) {
-            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Username field is empty.", Toast.LENGTH_SHORT).show());
+            username.setError("Username field is empty!");
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     private Boolean validatePassword() {
         if (TextUtils.isEmpty(trim_password)) {
-            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show());
+            password.setError("Password field is empty!");
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     private ServerConnect.Response sendPost() {
