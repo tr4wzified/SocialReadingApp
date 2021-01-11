@@ -73,11 +73,11 @@ public class RegisterActivity extends AppCompatActivity {
         return false;
     }
 
-    private static Boolean passwordComplexityTest(String reg_password) {
+    static Boolean passwordComplexityTest(String reg_password) {
         return Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{9,64})").matcher(reg_password).matches();
     }
 
-    private static Boolean usernameComplexityTest(String reg_username) {
+    static Boolean usernameComplexityTest(String reg_username) {
        return Pattern.compile("/^([a-z\\d]+-)*[a-z\\d]+$/i").matcher(reg_username).matches();
     }
 
