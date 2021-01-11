@@ -49,54 +49,65 @@ public class RegisterActivity extends AppCompatActivity {
         ServerConnect.Response response = ServerConnect.getInstance().sendPost("register", formBody);
         if (response.successful) {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show());
+            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show());
             return;
         }
 
         if (response.response.equals("Unable to reach server"))
-            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
+            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Unable to reach server.", Toast.LENGTH_SHORT).show());
         else
-            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration unsuccessful.", Toast.LENGTH_SHORT).show());
+            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration failed!", Toast.LENGTH_SHORT).show());
     }
 
     private Boolean validateUsername(String reg_username) {
         if (TextUtils.isEmpty(reg_username)) {
-            Toast.makeText(RegisterActivity.this, "Username field is empty.", Toast.LENGTH_SHORT).show();
-            return false;
+            username.setError("Username field is empty!");
         }
-
-        username.setError(null);
-        return true;
+        else if (usernameComplexityTest(reg_username)) {
+            username.setError("Username cannot contain special characters!");
+        }
+        else {
+            username.setError(null);
+            return true;
+        }
+        return false;
     }
 
     static Boolean passwordComplexityTest(String reg_password) {
-        Matcher matcher = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{9,64})").matcher(reg_password);
-        return matcher.matches();
+        return Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!]).{9,64})").matcher(reg_password).matches();
     }
 
-    private Boolean validatePassword(String reg_password) {
+    static Boolean usernameComplexityTest(String reg_username) {
+       return Pattern.compile("/^([a-z\\d]+-)*[a-z\\d]+$/i").matcher(reg_username).matches();
+    }
+
+    private Boolean validatePassword(String reg_password, String reg_username) {
         if (TextUtils.isEmpty(reg_password)) {
-            Toast.makeText(RegisterActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show();
-            return false;
+            password.setError("Password field is empty!");
         }
-        if (!passwordComplexityTest(reg_password)) {
-            password.setError("Password must contain 8 characters with at least 1 number, 1 lower case letter, 1 upper case letter and 1 special character");
-            return false;
+        else if (!passwordComplexityTest(reg_password)) {
+            password.setError("Password must contain 9 characters with at least a number, a lower case letter, an upper case letter and a special character!");
         }
-        password.setError(null);
-        return true;
+        else if (reg_password.contains(reg_username)) {
+            password.setError("Password must not contain username!");
+        }
+        else {
+            password.setError(null);
+            return true;
+        }
+        return false;
     }
 
     private Boolean validatePasswordConfirm(String reg_password, String reg_passwordConfirm) {
         if (TextUtils.isEmpty(reg_passwordConfirm)) {
-            Toast.makeText(RegisterActivity.this, "Confirm Password field is empty.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Please confirm your password in the second field!", Toast.LENGTH_SHORT).show();
             return false;
         }
         return reg_passwordConfirm.equals(reg_password);
     }
 
     public void registerUser(String username, String password, String passwordConfirm) {
-        if (!validateUsername(username) || !validatePassword(password) || !validatePasswordConfirm(password, passwordConfirm))
+        if (!validateUsername(username) || !validatePassword(password, username) || !validatePasswordConfirm(password, passwordConfirm))
             return;
 
         sendPost(username, password);
