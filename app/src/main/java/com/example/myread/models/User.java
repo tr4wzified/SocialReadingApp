@@ -10,6 +10,7 @@ public class User {
     public String name;
     private final List<BookCollection> collectionList;
     private Book tempBook;
+    private String tempTitle;
 
     private User() {
         this.collectionList = new ArrayList<>();
@@ -20,6 +21,12 @@ public class User {
             u = new User();
         return u;
     }
+
+    public void setTempTitle(String tempTitle) {
+        this.tempTitle = tempTitle;
+    }
+
+    public String getTempTitle() { return tempTitle; }
 
     public void setTempBook(Book book) {
         this.tempBook = book;
@@ -85,6 +92,7 @@ public class User {
         name = "";
         collectionList.clear();
         tempBook = null;
+        tempTitle = null;
     }
 
     public void deleteBookCollection(BookCollection bc) {

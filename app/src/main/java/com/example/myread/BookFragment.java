@@ -15,6 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.myread.models.Book;
 import com.example.myread.models.User;
@@ -31,7 +34,6 @@ public class BookFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_book, container, false);
-
         large_book_cover = rootView.findViewById(R.id.large_book_cover_page);
         book_title = rootView.findViewById(R.id.book_title);
         book_author = rootView.findViewById(R.id.book_author);
@@ -40,9 +42,6 @@ public class BookFragment extends Fragment {
         book_genre = rootView.findViewById(R.id.book_genre);
         book_isbn = rootView.findViewById(R.id.book_isbn);
         book_year = rootView.findViewById(R.id.book_year);
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        System.out.println(fragmentManager.getFragments().toString());
-
         currentBook = user.getTempBook();
         wikiBtn = rootView.findViewById(R.id.wiki_btn);
 
