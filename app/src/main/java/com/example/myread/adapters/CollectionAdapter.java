@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.R;
 import com.example.myread.models.Book;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView bookTitle, bookAuthor;
+        private ImageView medium_cover_image;
         final OnCardListener onCardListener;
 
         public ViewHolder(View view, OnCardListener onCardListener) {
@@ -38,6 +41,8 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
             // book cover
             bookTitle = view.findViewById(R.id.bookTitle);
             bookAuthor = view.findViewById(R.id.bookAuthor);
+            medium_cover_image = view.findViewById(R.id.book_cover);
+
             Button buttonAdd = view.findViewById(R.id.button_add);
             Button buttonDelete = view.findViewById(R.id.button_delete);
             this.onCardListener = onCardListener;
@@ -54,6 +59,10 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
 
         public TextView getBookAuthor() {
             return bookAuthor;
+        }
+
+        public ImageView getMediumBookCover() {
+            return medium_cover_image;
         }
 
         @Override
@@ -76,7 +85,8 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
         } else {
             holder.getBookTitle().setText(mCards.get(position).title);
         }
-        // book cover
+        if (mCards.get(position).mediumcover.contains("http"))
+            Picasso.get().load(mCards.get(position).mediumcover).into(holder.getMediumBookCover());
         holder.getBookAuthor().setText(mCards.get(position).author);
     }
 
