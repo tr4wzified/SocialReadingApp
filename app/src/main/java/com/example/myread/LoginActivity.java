@@ -28,14 +28,15 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        prf = GlobalApplication.getEncryptedSharedPreferences();
-        if (prf.contains("username")) {
+        //Put the username in the SharedPreferences, so the user is automatically logged in.
+        prf = GlobalFunctions.getEncryptedSharedPreferences();
+        if (prf.contains("username"))
             if (ServerConnect.getInstance().checkSession()) {
                 ServerConnect.getInstance().initUser(prf.getString("username", ""));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             }
-        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         spinner = findViewById(R.id.loadingIconLogin);
@@ -52,12 +53,15 @@ public class LoginActivity extends AppCompatActivity {
             runOnUiThread(() -> login_btn.setEnabled(true));
         }).start());
 
-
         registertext.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
+    /**
+     * A function that logs in the user.
+     */
     private void login() {
-        getEditString();
+        trim_username = username.getText().toString().trim();
+        trim_password = password.getText().toString().trim();
         if (validateUsername() && validatePassword()) {
             ServerConnect.Response response = sendPost();
             if (response.successful) {
@@ -75,11 +79,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void getEditString() {
-        trim_username = username.getText().toString().trim();
-        trim_password = password.getText().toString().trim();
-    }
-
+    /**
+     * A function that validates the username.
+     * @return true or false.
+     */
     private Boolean validateUsername() {
         if (TextUtils.isEmpty(trim_username)) {
             username.setError(context.getString(R.string.username_not_entered));
@@ -88,6 +91,10 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * A function that validates the password.
+     * @return true or false.
+     */
     private Boolean validatePassword() {
         if (TextUtils.isEmpty(trim_password)) {
             password.setError(context.getString(R.string.password_not_entered));
@@ -96,6 +103,10 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * A function that sends a post request with the username and password.
+     * @return a serverconnect response.
+     */
     private ServerConnect.Response sendPost() {
         final RequestBody formBody = new FormBody.Builder()
                 .add("name", trim_username)

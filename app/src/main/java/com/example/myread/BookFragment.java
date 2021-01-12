@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,17 +26,17 @@ import com.squareup.picasso.Picasso;
 
 public class BookFragment extends Fragment {
     private TextView book_title, book_author, book_rating, book_description, book_genre, book_isbn, book_year;
-    private User user = User.getInstance();
-    private ImageView large_book_cover;
+    private final User user = User.getInstance();
+    private ImageView book_cover;
     private Book currentBook;
-    private Button wikiBtn;
-    private Context context = GlobalApplication.getAppContext();
+    private final Context context = GlobalApplication.getAppContext();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_book, container, false);
-        large_book_cover = rootView.findViewById(R.id.large_book_cover_page);
+
+        book_cover = rootView.findViewById(R.id.book_cover_page);
         book_title = rootView.findViewById(R.id.book_title);
         book_author = rootView.findViewById(R.id.book_author);
         book_rating = rootView.findViewById(R.id.book_rating);
@@ -45,8 +44,11 @@ public class BookFragment extends Fragment {
         book_genre = rootView.findViewById(R.id.book_genre);
         book_isbn = rootView.findViewById(R.id.book_isbn);
         book_year = rootView.findViewById(R.id.book_year);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
         currentBook = user.getTempBook();
-        wikiBtn = rootView.findViewById(R.id.wiki_btn);
+        final Button wikiBtn = rootView.findViewById(R.id.wiki_btn);
+
 
         wikiBtn.setOnClickListener(v -> openLink());
 
@@ -54,14 +56,21 @@ public class BookFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * A function that updates the field of a view.
+     * @param view to be updated view.
+     * @param text a string.
+     */
     public void updateField(TextView view, String text) {
-        if (text == null || text.equals("")) {
+        if (text == null || text.equals(""))
             view.setText(R.string.unknown);
-            return;
-        }
-        view.setText(text);
+        else
+            view.setText(text);
     }
 
+    /**
+     * A function that opens a web browser to the wikipedia page of the selected book, if it exists.
+     */
     public void openLink() {
         if (currentBook.bookWiki.contains("http")) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(currentBook.bookWiki)));
@@ -70,19 +79,28 @@ public class BookFragment extends Fragment {
         Toast.makeText(getActivity(), context.getString(R.string.no_wikipedia, currentBook.title), Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * A function that updates all fields in the book fragment.
+     */
     public void initBook() {
-        //Picasso.get().load(R.drawable.nocover_dark).into(book_cover);
-        if (currentBook.largecover.contains("http"))
-            Picasso.get().load(currentBook.largecover).into(large_book_cover);
+        // Retrieve Data Saver setting - default is off if not retrievable.
+        boolean dataSaver = GlobalFunctions.getEncryptedSharedPreferences().getBoolean("dataSaver", false);
+        if (currentBook.largecover.contains("http")) {
+            // Load low quality covers when dataSaver is true
+            if (dataSaver)
+                Picasso.get().load(currentBook.smallcover).into(book_cover);
+            else
+                Picasso.get().load(currentBook.largecover).into(book_cover);
+        }
+
         updateField(book_title, currentBook.title);
         updateField(book_author, currentBook.author);
         updateField(book_rating, currentBook.rating);
         updateField(book_description, currentBook.description);
-        if (!(currentBook.subjects.size() == 0))
+        if (currentBook.subjects.size() != 0)
             updateField(book_genre, currentBook.subjects.get(0));
-        else {
+        else
             book_genre.setText(R.string.unknown);
-        }
         updateField(book_isbn, currentBook.isbn);
         updateField(book_year, currentBook.publishDate);
     }
