@@ -15,11 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myread.CollectionFragment;
 import com.example.myread.R;
 import com.example.myread.adapters.BookListItemAdapter;
-import com.example.myread.adapters.LibraryAdapter;
 import com.example.myread.models.Book;
 import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
-import com.example.myread.ui.library.LibraryFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +33,13 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         final FragmentActivity c = getActivity();
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.bookListItemRecycler);
+        mRecyclerView = rootView.findViewById(R.id.bookListItemRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(c);
         mRecyclerView.setLayoutManager(layoutManager);
-
         mAdapter = new BookListItemAdapter(mCards, HomeFragment.this);
 
-        new Thread(() -> {
-            mRecyclerView.setAdapter(mAdapter);
-            initCards();
-        }).start();
+        mRecyclerView.setAdapter(mAdapter);
+        initCards();
 
         return rootView;
     }

@@ -29,6 +29,7 @@ import java.util.List;
 public class CollectionFragment extends Fragment implements CollectionAdapter.OnCardListener, CollectionListAdapter.OnCardListener {
     private RecyclerView mRecyclerView;
     private CollectionAdapter mAdapter;
+
     private List<Book> mCards = new ArrayList<>();
     private User user;
     private Book clickedBook;

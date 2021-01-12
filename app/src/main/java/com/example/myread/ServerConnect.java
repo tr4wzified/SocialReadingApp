@@ -178,7 +178,9 @@ public class ServerConnect extends AppCompatActivity {
         Response response = sendGet("user/" + name);
         JSONArray jsonArray = new JSONArray();
         if (response.successful) {
-            threadPool.submit(() -> loadBooks(user, loadBookCollections(user)));
+//            threadPool.submit(() -> loadBooks(user, loadBookCollections(user)));
+            loadBooks(user, loadBookCollections(user));
+            user.initAllBooksList();
         }
     }
 
