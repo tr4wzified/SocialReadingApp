@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -89,12 +90,7 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
     @Override
     public void OnCardClick(int position) {
         user.setTempBook(mCards.get(position));
-        Fragment fragment = new BookFragment();
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        System.out.println(fragmentManager.getFragments().toString());
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
-        fragmentTransaction.commit();
+        Navigation.findNavController(getView()).navigate(R.id.action_nav_search_to_bookFragment);
 
     }
 

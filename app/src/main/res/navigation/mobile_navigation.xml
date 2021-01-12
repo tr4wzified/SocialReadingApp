@@ -25,7 +25,11 @@
         android:id="@+id/nav_search"
         android:name="com.example.myread.ui.search.SearchFragment"
         android:label="@string/menu_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_nav_search_to_bookFragment"
+            app:destination="@id/bookFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_settings"

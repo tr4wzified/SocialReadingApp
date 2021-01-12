@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:layout_gravity="center"
         app:srcCompat="@drawable/ic_book" />
 
     <TextView
@@ -19,6 +20,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text="@string/book_title"
+        android:textAlignment="textStart"
         android:gravity="center" />
 
     <TextView

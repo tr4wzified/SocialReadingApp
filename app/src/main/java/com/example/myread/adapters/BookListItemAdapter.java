@@ -32,8 +32,8 @@ public class BookListItemAdapter extends RecyclerView.Adapter<BookListItemAdapte
 
         public ViewHolder(View view, BookListItemAdapter.OnCardListener onCardListener) {
             super(view);
-            bookTitle = view.findViewById(R.id.bookTitle);
-            bookAuthor = view.findViewById(R.id.bookAuthor);
+            bookTitle = view.findViewById(R.id.book_title);
+            bookAuthor = view.findViewById(R.id.book_author);
             medium_cover_image = view.findViewById(R.id.book_cover);
 
             this.onCardListener = onCardListener;
@@ -62,7 +62,7 @@ public class BookListItemAdapter extends RecyclerView.Adapter<BookListItemAdapte
     @NonNull
     @Override
     public BookListItemAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.booklistitem, parent, false);
         return new BookListItemAdapter.ViewHolder(view, mOnCardListener);
     }
 

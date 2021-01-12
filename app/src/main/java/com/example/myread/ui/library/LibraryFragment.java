@@ -85,27 +85,8 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
     @Override
     public void OnCardClick(int position) {
         clickedCard = mCards.get(position);
-        Bundle bundle = new Bundle();
-        bundle.putString("collectiontitle", clickedCard.name);
-
-        Fragment fragment = new CollectionFragment();
-        fragment.setArguments(bundle);
-
         User.getInstance().setTempTitle(clickedCard.name);
-
         Navigation.findNavController(getView()).navigate(R.id.action_nav_library_to_collectionFragment);
-
-//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//        System.out.println(fragmentManager.getFragments().toString());
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
-////        fragmentTransaction.remove(this);
-//        fragmentTransaction.commit();
-
-
-//        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
-
-//        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
     }
 
     @Override
