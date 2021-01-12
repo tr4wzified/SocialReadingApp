@@ -116,7 +116,7 @@
 
     <ImageView
         style="@style/coverimage"
-        android:id="@+id/large_book_cover_page"
+        android:id="@+id/book_cover_page"
         android:layout_width="fill_parent"
         android:layout_height="300dp"
         android:contentDescription="@string/book_cover_image_description"
@@ -140,7 +140,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/large_book_cover_page"
+        app:layout_constraintTop_toBottomOf="@+id/book_cover_page"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
