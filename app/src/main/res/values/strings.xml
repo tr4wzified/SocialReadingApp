@@ -17,6 +17,22 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="username_not_entered">Username field is empty!</string>
+    <string name="username_no_special_chars">Username cannot contain special characters!</string>
+    <string name="password_not_entered">Password field is empty!</string>
+    <string name="password_requirements">Password must contain 9 characters with at least a number, a lower case letter, an upper case letter and a special character!</string>
+    <string name="password_no_username">Password must not contain username!</string>
+    <string name="request_confirm_password">Please confirm your password in the second field!</string>
+    <string name="server_unreachable">Unable to reach server.</string>
+    <string name="no_body_in_request">No body in request!</string>
+    <string name="registration_failed">Registration failed!</string>
+    <string name="registration_successful">Registration successful!</string>
+    <string name="login_successful">Login successful!</string>
+    <string name="login_failed">Login failed!</string>
+
+    <string name="no_results">No results found!</string>
+    <string name="no_collections">No collections found! Try creating a collection first.</string>
+    <string name="no_wikipedia">%s does not have a Wikipedia page!</string>
 
     <string name="datasaverswitch_desc">A switch to turn on the data saver</string>
     <string name="datasaverswitch_text">Data Saver</string>
@@ -40,6 +56,7 @@
     <string name="book_collection">Book collection</string>
     <string name="books">Books</string>
     <string name="select_a_collection">Select a collection</string>
+
     <!-- IP -->
     <string name="ip">https://10.0.2.2:2048/</string>
     <string name="altip">https://192.168.2.13:2048/</string>
