@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myread.GlobalApplication;
 import com.example.myread.R;
 import com.example.myread.models.Book;
 import com.squareup.picasso.Picasso;
@@ -81,9 +82,14 @@ public class CollectionSearchAdapter extends RecyclerView.Adapter<CollectionSear
         } else {
             holder.getBookTitle().setText(mCards.get(position).title);
         }
-        // book cover
+        // Set book cover
+        boolean dataSaver = GlobalApplication.getEncryptedSharedPreferences().getBoolean("dataSaver", false);
         if (mCards.get(position).mediumcover.contains("http"))
-            Picasso.get().load(mCards.get(position).mediumcover).into(holder.getMediumBookCover());
+            if (dataSaver)
+                Picasso.get().load(mCards.get(position).smallcover).into(holder.getMediumBookCover());
+            else
+                Picasso.get().load(mCards.get(position).mediumcover).into(holder.getMediumBookCover());
+
         holder.getBookAuthor().setText(mCards.get(position).author);
     }
 

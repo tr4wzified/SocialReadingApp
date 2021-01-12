@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ import com.squareup.picasso.Picasso;
 public class BookFragment extends Fragment {
     private TextView book_title, book_author, book_rating, book_description, book_genre, book_isbn, book_year;
     private User user = User.getInstance();
-    private ImageView large_book_cover;
+    private ImageView book_cover;
     private Book currentBook;
     private Button wikiBtn;
     private Context context = GlobalApplication.getAppContext();
@@ -35,7 +34,7 @@ public class BookFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_book, container, false);
 
-        large_book_cover = rootView.findViewById(R.id.large_book_cover_page);
+        book_cover = rootView.findViewById(R.id.book_cover_page);
         book_title = rootView.findViewById(R.id.book_title);
         book_author = rootView.findViewById(R.id.book_author);
         book_rating = rootView.findViewById(R.id.book_rating);
@@ -72,9 +71,16 @@ public class BookFragment extends Fragment {
     }
 
     public void initBook() {
-        //Picasso.get().load(R.drawable.nocover_dark).into(book_cover);
-        if (currentBook.largecover.contains("http"))
-            Picasso.get().load(currentBook.largecover).into(large_book_cover);
+        // Retrieve Data Saver setting - default is off if not retrievable.
+        boolean dataSaver = GlobalApplication.getEncryptedSharedPreferences().getBoolean("dataSaver", false);
+        if (currentBook.largecover.contains("http")) {
+            // Load low quality covers when dataSaver is true
+            if (dataSaver)
+                Picasso.get().load(currentBook.smallcover).into(book_cover);
+            else
+                Picasso.get().load(currentBook.largecover).into(book_cover);
+        }
+
         updateField(book_title, currentBook.title);
         updateField(book_author, currentBook.author);
         updateField(book_rating, currentBook.rating);
