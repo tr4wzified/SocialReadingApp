@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.security.crypto.EncryptedSharedPreferences;
 
 import com.example.myread.GlobalApplication;
+import com.example.myread.GlobalFunctions;
 import com.example.myread.LoginActivity;
 import com.example.myread.MainActivity;
 import com.example.myread.R;
@@ -23,7 +24,7 @@ public class SettingsFragment extends Fragment {
     SwitchMaterial userStats;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        boolean dataSaverEnabled = GlobalApplication.getEncryptedSharedPreferences().getBoolean("dataSaver", false);
+        boolean dataSaverEnabled = GlobalFunctions.getEncryptedSharedPreferences().getBoolean("dataSaver", false);
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
         dataSaver = rootView.findViewById(R.id.switch_datasaver);
         dataSaver.setChecked(dataSaverEnabled);
@@ -34,7 +35,7 @@ public class SettingsFragment extends Fragment {
 
     public void toggleDataSaver() {
         System.out.println("Data saver was toggled: " + dataSaver.isChecked());
-        SharedPreferences prf = GlobalApplication.getEncryptedSharedPreferences();
+        SharedPreferences prf = GlobalFunctions.getEncryptedSharedPreferences();
         SharedPreferences.Editor editor = prf.edit();
         editor.putBoolean("dataSaver", dataSaver.isChecked());
         editor.apply();

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.GlobalApplication;
+import com.example.myread.GlobalFunctions;
 import com.example.myread.R;
 import com.example.myread.models.Book;
 import com.squareup.picasso.Picasso;
@@ -100,7 +101,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
 
         if (mCards.get(position).mediumcover.contains("http")) {
             // Get DataSaver preference, default to off when not found in SharedPreferences (false)
-            boolean dataSaver = GlobalApplication.getEncryptedSharedPreferences().getBoolean("dataSaver", false);
+            boolean dataSaver = GlobalFunctions.getEncryptedSharedPreferences().getBoolean("dataSaver", false);
             // Use small images when Data Saver is enabled
             if (dataSaver)
                 Picasso.get().load(mCards.get(position).smallcover).into(holder.getMediumBookCover());
