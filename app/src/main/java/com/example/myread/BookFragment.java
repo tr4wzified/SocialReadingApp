@@ -52,6 +52,11 @@ public class BookFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * A function that updates the field of a view.
+     * @param view to be updated view.
+     * @param text a string.
+     */
     public void updateField(TextView view, String text) {
         if (text == null || text.equals("")) {
             view.setText(R.string.unknown);
@@ -60,6 +65,9 @@ public class BookFragment extends Fragment {
         view.setText(text);
     }
 
+    /**
+     * A function that opens a web browser to the wikipedia page of the selected book, if it exists.
+     */
     public void openLink() {
         if (currentBook.bookWiki.contains("http")) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(currentBook.bookWiki)));
@@ -68,8 +76,10 @@ public class BookFragment extends Fragment {
         Toast.makeText(getActivity(), currentBook.title + " does not have a wikipedia page.", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * A function that updates all fields in the book fragment.
+     */
     public void initBook() {
-        //Picasso.get().load(R.drawable.nocover_dark).into(book_cover);
         if (currentBook.largecover.contains("http"))
             Picasso.get().load(currentBook.largecover).into(large_book_cover);
         updateField(book_title, currentBook.title);

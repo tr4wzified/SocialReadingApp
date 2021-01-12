@@ -74,6 +74,10 @@ public class CollectionSearchAdapter extends RecyclerView.Adapter<CollectionSear
         return new ViewHolder(view, mOnCardListener);
     }
 
+    /** A function that will set the titles of the collection cards, load the cover and set the author's name.
+     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (mCards.get(position).title.length() > 20) {
@@ -81,12 +85,15 @@ public class CollectionSearchAdapter extends RecyclerView.Adapter<CollectionSear
         } else {
             holder.getBookTitle().setText(mCards.get(position).title);
         }
-        // book cover
         if (mCards.get(position).mediumcover.contains("http"))
             Picasso.get().load(mCards.get(position).mediumcover).into(holder.getMediumBookCover());
         holder.getBookAuthor().setText(mCards.get(position).author);
     }
 
+    /**
+     * A function to get the amount of items in mCards.
+     * @return the size of mCards.
+     */
     @Override
     public int getItemCount() {
         return mCards.size();

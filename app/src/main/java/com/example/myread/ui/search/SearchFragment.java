@@ -58,22 +58,28 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
         }).start();
 
         searchBookBtn.setOnClickListener(v -> new Thread(() -> {
-
             getActivity().runOnUiThread(() -> spinner.setVisibility(View.VISIBLE));
             Looper.prepare();
-            showBookResults();
+            initCards();
             getActivity().runOnUiThread(() -> spinner.setVisibility(View.INVISIBLE));
         }).start());
 
         return rootView;
     }
 
-    public void showBookResults() {
+    /**
+     * A function that adds searched books to the mcards list and refreshes the view.
+     */
+    public void initCards() {
         mCards.clear();
         mCards.addAll(searchBooks());
         getActivity().runOnUiThread(() -> mAdapter.notifyDataSetChanged());
     }
 
+    /**
+     * A function that searches for books based on user input.
+     * @return a list of books.
+     */
     private List<Book> searchBooks() {
         String bookName = bookUserInput.getEditText().getText().toString();
         List<Book> bookList = ServerConnect.getInstance().getBooks(bookName);

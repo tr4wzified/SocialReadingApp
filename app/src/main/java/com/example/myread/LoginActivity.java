@@ -26,7 +26,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        prf = GlobalApplication.getEncryptedSharedPreferences();
+        //Put the username in the SharedPreferences, so the user is automatically logged in.
+        prf = GlobalFunctions.getEncryptedSharedPreferences();
         if (prf.contains("username")) {
             if (ServerConnect.getInstance().checkSession()) {
                 ServerConnect.getInstance().initUser(prf.getString("username", ""));
@@ -54,6 +55,9 @@ public class LoginActivity extends AppCompatActivity {
         registertext.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
+    /**
+     * A function that logs in the user.
+     */
     private void login() {
         getEditString();
         if (validateUsername() && validatePassword()) {
@@ -77,7 +81,10 @@ public class LoginActivity extends AppCompatActivity {
         trim_username = username.getText().toString().trim();
         trim_password = password.getText().toString().trim();
     }
-
+    /**
+     * A function that validates the username.
+     * @return true or false.
+     */
     private Boolean validateUsername() {
         if (TextUtils.isEmpty(trim_username)) {
             runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Username field is empty.", Toast.LENGTH_SHORT).show());
@@ -87,6 +94,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * A function that validates the password.
+     * @return true or false.
+     */
     private Boolean validatePassword() {
         if (TextUtils.isEmpty(trim_password)) {
             runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show());
@@ -96,6 +107,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * A function that sends a post request with the username and password.
+     * @return a serverconnect response.
+     */
     private ServerConnect.Response sendPost() {
         final RequestBody formBody = new FormBody.Builder()
                 .add("name", trim_username)
