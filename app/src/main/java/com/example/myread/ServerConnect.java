@@ -1,8 +1,8 @@
 package com.example.myread;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.JsonReader;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -42,9 +42,10 @@ public class ServerConnect extends AppCompatActivity {
 
     private static ServerConnect s = null;
     private final OkHttpClient client;
-    private final String ip = GlobalApplication.getAppContext().getString(R.string.altaltip);
+    private final String ip = GlobalApplication.getAppContext().getString(R.string.ip);
     private final SharedPreferences prf = GlobalApplication.getEncryptedSharedPreferences();
     ExecutorService threadPool = newFixedThreadPool(2);
+    private static final Context context = GlobalApplication.getAppContext();
 
     private ServerConnect() {
         client = getUnsafeOkHttpClient();
@@ -90,9 +91,9 @@ public class ServerConnect extends AppCompatActivity {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                return new Response(false, "Unable to reach server", "");
+                return new Response(false, context.getString(R.string.server_unreachable), "");
             } catch (NullPointerException e) {
-                return new Response(false, "No body in request", "");
+                return new Response(false, context.getString(R.string.no_body_in_request), "");
             }
         }
     }

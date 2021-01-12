@@ -1,5 +1,6 @@
 package com.example.myread.ui.search;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.AddCollectionDialog;
 import com.example.myread.BookFragment;
+import com.example.myread.GlobalApplication;
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
 import com.example.myread.adapters.CollectionListAdapter;
@@ -40,6 +42,7 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
     private Book clickedBook;
     private AddCollectionDialog addCollectionDialog;
     private ProgressBar spinner;
+    private Context context = GlobalApplication.getAppContext();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
@@ -78,7 +81,7 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
         String bookName = bookUserInput.getEditText().getText().toString();
         List<Book> bookList = ServerConnect.getInstance().getBooks(bookName);
         if (bookList.isEmpty()) {
-            Toast.makeText(getActivity(), "No results found.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), context.getString(R.string.no_results), Toast.LENGTH_SHORT).show();
         }
         return bookList;
     }
@@ -98,7 +101,7 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
     @Override
     public void OnPositiveButtonClick(int position) {
         if (user.getCollectionList().isEmpty()) {
-            Toast.makeText(getActivity(), "No existing collections, try adding a collection first.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), context.getString(R.string.no_collections), Toast.LENGTH_SHORT).show();
             return;
         }
         clickedBook = mCards.get(position);
