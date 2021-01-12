@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.GlobalApplication;
+import com.example.myread.GlobalFunctions;
 import com.example.myread.R;
 import com.example.myread.models.Book;
 import com.squareup.picasso.Picasso;
@@ -83,7 +84,7 @@ public class CollectionSearchAdapter extends RecyclerView.Adapter<CollectionSear
             holder.getBookTitle().setText(mCards.get(position).title);
 
         // Set book cover
-        boolean dataSaver = GlobalApplication.getEncryptedSharedPreferences().getBoolean("dataSaver", false);
+        boolean dataSaver = GlobalFunctions.getEncryptedSharedPreferences().getBoolean("dataSaver", false);
 
         if (mCards.get(position).mediumcover.contains("http")) {
             if (dataSaver)
