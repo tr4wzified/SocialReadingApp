@@ -37,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
         prf = GlobalApplication.getEncryptedSharedPreferences();
         //prf = getSharedPreferences("user_details",MODE_PRIVATE);
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_library,
-                R.id.nav_home, R.id.nav_search, R.id.nav_settings)
-                .setOpenableLayout(drawer)
-                .build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_library, R.id.nav_home, R.id.nav_search, R.id.nav_settings
+        ).setOpenableLayout(drawer).build();
+
         NavController navController = getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -50,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
     @NonNull
     private NavController getNavController() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        if (!(fragment instanceof NavHostFragment)) {
-            throw new IllegalStateException("Activity " + this
-                    + " does not have a NavHostFragment");
-        }
+
+        if (!(fragment instanceof NavHostFragment))
+            throw new IllegalStateException("Activity " + this + " does not have a NavHostFragment");
+
         return ((NavHostFragment) fragment).getNavController();
     }
 
@@ -79,17 +79,4 @@ public class MainActivity extends AppCompatActivity {
         User.getInstance().destroy();
         finish();
     }
-
-//    @Override
-//    public void onBackPressed() {
-//        if(getSupportFragmentManager().getBackStackEntryCount() == 0) {
-//            super.onBackPressed();
-//        }
-////        else if(getSupportFragmentManager().getBackStackEntryCount() == 1) {
-////            moveTaskToBack(false);
-////        }
-//        else {
-//            getSupportFragmentManager().popBackStack();
-//        }
-//    }
 }

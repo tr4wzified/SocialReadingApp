@@ -29,13 +29,14 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         prf = GlobalApplication.getEncryptedSharedPreferences();
-        if (prf.contains("username")) {
+
+        if (prf.contains("username"))
             if (ServerConnect.getInstance().checkSession()) {
                 ServerConnect.getInstance().initUser(prf.getString("username", ""));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             }
-        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         spinner = findViewById(R.id.loadingIconLogin);
@@ -52,12 +53,12 @@ public class LoginActivity extends AppCompatActivity {
             runOnUiThread(() -> login_btn.setEnabled(true));
         }).start());
 
-
         registertext.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
     private void login() {
-        getEditString();
+        trim_username = username.getText().toString().trim();
+        trim_password = password.getText().toString().trim();
         if (validateUsername() && validatePassword()) {
             ServerConnect.Response response = sendPost();
             if (response.successful) {
@@ -73,11 +74,6 @@ public class LoginActivity extends AppCompatActivity {
             else
                 runOnUiThread(() -> Toast.makeText(LoginActivity.this, context.getString(R.string.login_failed), Toast.LENGTH_SHORT).show());
         }
-    }
-
-    private void getEditString() {
-        trim_username = username.getText().toString().trim();
-        trim_password = password.getText().toString().trim();
     }
 
     private Boolean validateUsername() {

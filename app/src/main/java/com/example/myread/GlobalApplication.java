@@ -31,7 +31,7 @@ public class GlobalApplication extends Application {
 
     public static SharedPreferences getEncryptedSharedPreferences() {
         SharedPreferences prf = null;
-        KeyGenParameterSpec spec = new KeyGenParameterSpec.Builder(
+        final KeyGenParameterSpec spec = new KeyGenParameterSpec.Builder(
                 MasterKey.DEFAULT_MASTER_KEY_ALIAS,
                 KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
@@ -40,7 +40,7 @@ public class GlobalApplication extends Application {
                 .build();
 
         try {
-            MasterKey masterKey = new MasterKey.Builder(GlobalApplication.getAppContext()).setKeyGenParameterSpec(spec).build();
+            final MasterKey masterKey = new MasterKey.Builder(GlobalApplication.getAppContext()).setKeyGenParameterSpec(spec).build();
             prf = EncryptedSharedPreferences.create(GlobalApplication.getAppContext(), MasterKey.DEFAULT_MASTER_KEY_ALIAS, masterKey, EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();

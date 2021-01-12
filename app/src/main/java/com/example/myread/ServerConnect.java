@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -41,18 +42,16 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
 public class ServerConnect extends AppCompatActivity {
 
     private static ServerConnect s = null;
-    private final OkHttpClient client;
-    private final String ip = GlobalApplication.getAppContext().getString(R.string.ip);
+    private final OkHttpClient client = getUnsafeOkHttpClient();
+    private final String ip = GlobalApplication.getAppContext().getString(R.string.altaltip);
     private final SharedPreferences prf = GlobalApplication.getEncryptedSharedPreferences();
     ExecutorService threadPool = newFixedThreadPool(2);
     private static final Context context = GlobalApplication.getAppContext();
 
-    private ServerConnect() {
-        client = getUnsafeOkHttpClient();
-    }
+    private ServerConnect() {}
 
-    //static method to create an instance of the Singleton class
-// we can also create a method with the same name as the class name
+    // static method to create an instance of the Singleton class
+    // we can also create a method with the same name as the class name
     public static ServerConnect getInstance() {
         if (s == null)
             s = new ServerConnect();
@@ -60,7 +59,6 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public static class Response {
-
         public Response(boolean successful, String response, String responseString) {
             this.successful = successful;
             this.response = response;
@@ -83,11 +81,11 @@ public class ServerConnect extends AppCompatActivity {
 
         @Override
         public Response call() {
-            try (okhttp3.Response response = client.newCall(request).execute()) {
+            try (final okhttp3.Response response = client.newCall(request).execute()) {
                 System.out.println("Response: " + response.toString());
                 if (response.isSuccessful())
-                    return new Response(true, response.toString(), response.body().string());
-                return new Response(false, response.toString(), response.body().string());
+                    return new Response(true, response.toString(), Objects.requireNonNull(response.body()).string());
+                return new Response(false, response.toString(), Objects.requireNonNull(response.body()).string());
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -99,8 +97,7 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public boolean checkSession() {
-        Response response = sendGet("user/" + prf.getString("username", ""));
-        if (response.successful) return true;
+        if (sendGet("user/" + prf.getString("username", "")).successful) return true;
         System.out.println("Session expired");
         return false;
     }
@@ -118,7 +115,7 @@ public class ServerConnect extends AppCompatActivity {
             final Request.Builder request = new Request.Builder().url(url);
             if (body != null) request.post(body);
 
-            ServerCall c = new ServerCall(client, request.build());
+            final ServerCall c = new ServerCall(client, request.build());
             return (Response) threadPool.submit(c).get();
 
         } catch (Exception e) {
@@ -136,10 +133,9 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public JSONArray loadBookCollections(User user) {
-        Response r = getBookCollections(user.name);
         JSONArray jsonArray = null;
         try {
-            jsonArray = new JSONArray(r.responseString);
+            jsonArray = new JSONArray(getBookCollections(user.name).responseString);
 
             if (user.getCollectionList().size() != 0) user.getCollectionList().clear();
 
@@ -155,10 +151,10 @@ public class ServerConnect extends AppCompatActivity {
     public void loadBooks(User user, JSONArray jsonArray) {
         try {
             for (int i = 0; i < user.getCollectionList().size(); i++) {
-                BookCollection bc = user.getCollectionList().get(i);
+                final BookCollection bc = user.getCollectionList().get(i);
                 if (bc.getBookList().size() != 0) bc.getBookList().clear();
 
-                JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
+                final JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
 
                 for (int b = 0; b < bookArray.length(); b++) {
                     String bookString = bookArray.get(b).toString();
@@ -173,13 +169,10 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public void initUser(String name) {
-        User user = User.getInstance();
+        final User user = User.getInstance();
         user.name = name;
-        Response response = sendGet("user/" + name);
-        JSONArray jsonArray = new JSONArray();
-        if (response.successful) {
+        if (sendGet("user/" + name).successful)
             threadPool.submit(() -> loadBooks(user, loadBookCollections(user)));
-        }
     }
 
     private Book jsonToBook(JSONObject j) {
@@ -200,23 +193,22 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public Book getBookByID(String id) {
-        Response response = sendGet("book/" + id);
-        if (response.successful) {
+        final Response response = sendGet("book/" + id);
+        if (response.successful)
             try {
                 return jsonToBook(new JSONObject(response.responseString));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
         System.out.println("Response not successful");
         return null;
     }
 
     private List<String> getSubjects(JSONObject jsonObject) {
-        List<String> subjects = new ArrayList<>();
+        final List<String> subjects = new ArrayList<>();
         try {
             if (jsonObject.toString().contains("subjects") && !jsonObject.get("subjects").equals("")) {
-                JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
+                final JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
                 for (int j = 0; j < subjectsArray.length(); j++)
                     subjects.add(subjectsArray.getString(j));
             }
@@ -227,8 +219,8 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     public List<Book> getBooks(String bookName) {
-        Response response = sendGet("search_book/" + bookName.replaceAll("[/.]", ""));
-        List<Book> books = new ArrayList<>();
+        final Response response = sendGet("search_book/" + bookName.replaceAll("[/.]", ""));
+        final List<Book> books = new ArrayList<>();
         if (response.successful)
             try {
                 JSONArray jsonArray = new JSONArray(response.responseString);
@@ -268,13 +260,11 @@ public class ServerConnect extends AppCompatActivity {
                     new X509TrustManager() {
                         @SuppressLint("TrustAllX509TrustManager")
                         @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                        }
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
 
                         @SuppressLint("TrustAllX509TrustManager")
                         @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                        }
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
 
                         @Override
                         public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -284,18 +274,16 @@ public class ServerConnect extends AppCompatActivity {
 
             final SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
-            builder.hostnameVerifier((hostname, session) -> true);
-            builder.readTimeout(60, TimeUnit.SECONDS);
-
-            ClearableCookieJar cookieJar = new PersistentCookieJar(
+            final ClearableCookieJar cookieJar = new PersistentCookieJar(
                     new SetCookieCache(),
                     new SharedPrefsCookiePersistor(GlobalApplication.getAppContext())
             );
+
+            final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
+            builder.hostnameVerifier((hostname, session) -> true);
+            builder.readTimeout(60, TimeUnit.SECONDS);
             builder.cookieJar(cookieJar);
 
             return builder.build();

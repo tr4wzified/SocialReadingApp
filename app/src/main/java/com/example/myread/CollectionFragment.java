@@ -25,11 +25,12 @@ import com.example.myread.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CollectionFragment extends Fragment implements CollectionAdapter.OnCardListener, CollectionListAdapter.OnCardListener {
     private RecyclerView mRecyclerView;
     private CollectionAdapter mAdapter;
-    private List<Book> mCards = new ArrayList<>();
+    private final List<Book> mCards = new ArrayList<>();
     private User user;
     private Book clickedBook;
     private AddCollectionDialog addCollectionDialog;
@@ -63,14 +64,12 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
     }
 
     private void updateData() {
-        if (collectionTitle.length() > 20) {
+        if (collectionTitle.length() > 20)
             editText.setText(collectionTitle.substring(0,19).concat("..."));
-        }
-        else {
+        else
             editText.setText(collectionTitle);
-        }
-        String books = "Books: " + user.getBookCollection(collectionTitle).size();
-        bookAmount.setText(books);
+
+        bookAmount.setText("Books: " + user.getBookCollection(collectionTitle).size());
     }
 
     private void initBooks() {
@@ -81,9 +80,9 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
 
     @Override
     public void OnCardClick(int position) {
-        Book tempBook = mCards.get(position);
+        final Book tempBook = mCards.get(position);
         user.setTempBook(tempBook);
-        Navigation.findNavController(getView()).navigate(R.id.action_collectionFragment_to_bookFragment);
+        Navigation.findNavController(requireView()).navigate(R.id.action_collectionFragment_to_bookFragment);
     }
 
     @Override
@@ -111,9 +110,7 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
     public void OnListItemClick(int position) {
         BookCollection bc = mListItem.get(position);
         user.getBookCollection(bc).add(clickedBook);
-        if (bc.name.equals(collectionTitle)) {
-            mCards.add(clickedBook);
-        }
+        if (bc.name.equals(collectionTitle)) mCards.add(clickedBook);
         Toast.makeText(getActivity(), clickedBook.title + " has been added to " + bc.name, Toast.LENGTH_SHORT).show();
         mAdapter.notifyDataSetChanged();
         updateData();

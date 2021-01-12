@@ -27,26 +27,25 @@ import com.squareup.picasso.Picasso;
 
 public class BookFragment extends Fragment {
     private TextView book_title, book_author, book_rating, book_description, book_genre, book_isbn, book_year;
-    private User user = User.getInstance();
+    private final User user = User.getInstance();
     private ImageView large_book_cover;
     private Book currentBook;
-    private Button wikiBtn;
-    private Context context = GlobalApplication.getAppContext();
+    private final Context context = GlobalApplication.getAppContext();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_book, container, false);
-        large_book_cover = rootView.findViewById(R.id.large_book_cover_page);
-        book_title = rootView.findViewById(R.id.book_title);
-        book_author = rootView.findViewById(R.id.book_author);
-        book_rating = rootView.findViewById(R.id.book_rating);
-        book_description = rootView.findViewById(R.id.book_description);
-        book_genre = rootView.findViewById(R.id.book_genre);
-        book_isbn = rootView.findViewById(R.id.book_isbn);
-        book_year = rootView.findViewById(R.id.book_year);
-        currentBook = user.getTempBook();
-        wikiBtn = rootView.findViewById(R.id.wiki_btn);
+        large_book_cover =  rootView.findViewById(R.id.large_book_cover_page);
+        book_title =        rootView.findViewById(R.id.book_title);
+        book_author =       rootView.findViewById(R.id.book_author);
+        book_rating =       rootView.findViewById(R.id.book_rating);
+        book_description =  rootView.findViewById(R.id.book_description);
+        book_genre =        rootView.findViewById(R.id.book_genre);
+        book_isbn =         rootView.findViewById(R.id.book_isbn);
+        book_year =         rootView.findViewById(R.id.book_year);
+        currentBook =       user.getTempBook();
+        final Button wikiBtn =    rootView.findViewById(R.id.wiki_btn);
 
         wikiBtn.setOnClickListener(v -> openLink());
 
@@ -55,11 +54,10 @@ public class BookFragment extends Fragment {
     }
 
     public void updateField(TextView view, String text) {
-        if (text == null || text.equals("")) {
+        if (text == null || text.equals(""))
             view.setText(R.string.unknown);
-            return;
-        }
-        view.setText(text);
+        else
+            view.setText(text);
     }
 
     public void openLink() {
@@ -78,11 +76,10 @@ public class BookFragment extends Fragment {
         updateField(book_author, currentBook.author);
         updateField(book_rating, currentBook.rating);
         updateField(book_description, currentBook.description);
-        if (!(currentBook.subjects.size() == 0))
+        if (currentBook.subjects.size() != 0)
             updateField(book_genre, currentBook.subjects.get(0));
-        else {
+        else
             book_genre.setText(R.string.unknown);
-        }
         updateField(book_isbn, currentBook.isbn);
         updateField(book_year, currentBook.publishDate);
     }

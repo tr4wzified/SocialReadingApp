@@ -28,23 +28,19 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView bookTitle, bookAuthor;
-        private ImageView medium_cover_image;
+        private final ImageView medium_cover_image;
         final OnCardListener onCardListener;
 
         public ViewHolder(View view, OnCardListener onCardListener) {
             super(view);
 
-//            view.setOnClickListener(v -> {
-//                Intent intent = new Intent(view.getContext(), BookCollectionActivity.class);
-//                view.getContext().startActivity(intent);
-//            });
             // book cover
             bookTitle = view.findViewById(R.id.bookTitle);
             bookAuthor = view.findViewById(R.id.bookAuthor);
             medium_cover_image = view.findViewById(R.id.book_cover);
 
-            Button buttonAdd = view.findViewById(R.id.button_add);
-            Button buttonDelete = view.findViewById(R.id.button_delete);
+            final Button buttonAdd = view.findViewById(R.id.button_add);
+            final Button buttonDelete = view.findViewById(R.id.button_delete);
             this.onCardListener = onCardListener;
 
             view.setOnClickListener(this);
@@ -74,17 +70,17 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
     @NonNull
     @Override
     public CollectionAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem, parent, false);
         return new ViewHolder(view, mOnCardListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (mCards.get(position).title.length() > 20) {
+        if (mCards.get(position).title.length() > 20)
             holder.getBookTitle().setText(mCards.get(position).title.substring(0, 19).concat("..."));
-        } else {
+        else
             holder.getBookTitle().setText(mCards.get(position).title);
-        }
+
         if (mCards.get(position).mediumcover.contains("http"))
             Picasso.get().load(mCards.get(position).mediumcover).into(holder.getMediumBookCover());
         holder.getBookAuthor().setText(mCards.get(position).author);
