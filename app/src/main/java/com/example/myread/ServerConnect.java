@@ -1,6 +1,7 @@
 package com.example.myread;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +44,8 @@ public class ServerConnect extends AppCompatActivity {
     private final OkHttpClient client;
     private final String ip = GlobalApplication.getAppContext().getString(R.string.ip);
     private final SharedPreferences prf = GlobalApplication.getEncryptedSharedPreferences();
+    ExecutorService threadPool = newFixedThreadPool(2);
+    private static final Context context = GlobalApplication.getAppContext();
 
     private ServerConnect() {
         client = getUnsafeOkHttpClient();
@@ -88,9 +91,9 @@ public class ServerConnect extends AppCompatActivity {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                return new Response(false, "Unable to reach server", "");
+                return new Response(false, context.getString(R.string.server_unreachable), "");
             } catch (NullPointerException e) {
-                return new Response(false, "No body in request", "");
+                return new Response(false, context.getString(R.string.no_body_in_request), "");
             }
         }
     }
@@ -116,8 +119,7 @@ public class ServerConnect extends AppCompatActivity {
             if (body != null) request.post(body);
 
             ServerCall c = new ServerCall(client, request.build());
-            ExecutorService e = newFixedThreadPool(1);
-            return (Response) e.submit(c).get();
+            return (Response) threadPool.submit(c).get();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,52 +135,75 @@ public class ServerConnect extends AppCompatActivity {
         return sendRequest(page, null);
     }
 
+    public JSONArray loadBookCollections(User user) {
+        Response r = getBookCollections(user.name);
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(r.responseString);
+
+            if (user.getCollectionList().size() != 0) user.getCollectionList().clear();
+
+            for (int i = 0; i < jsonArray.length(); i++)
+                user.initBookCollection(new BookCollection(jsonArray.getJSONObject(i).getString("name")));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
+    }
+
+    public void loadBooks(User user, JSONArray jsonArray) {
+        try {
+            for (int i = 0; i < user.getCollectionList().size(); i++) {
+                BookCollection bc = user.getCollectionList().get(i);
+                if (bc.getBookList().size() != 0) bc.getBookList().clear();
+
+                JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
+
+                for (int b = 0; b < bookArray.length(); b++) {
+                    String bookString = bookArray.get(b).toString();
+                    Book book = getBookByID(bookString);
+                    if (book != null)
+                        bc.initBook(book);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void initUser(String name) {
         User user = User.getInstance();
         user.name = name;
         Response response = sendGet("user/" + name);
         JSONArray jsonArray = new JSONArray();
         if (response.successful) {
-            try {
-                Response r = getBookCollections(user.name);
-                jsonArray = new JSONArray(r.responseString);
-                if (user.getCollectionList().size() != 0) {
-                    user.getCollectionList().clear();
-                }
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    user.initBookCollection(new BookCollection(jsonArray.getJSONObject(i).getString("name")));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
-                int i = 0;
-                for (BookCollection bc : user.getCollectionList()) {
-                    if (bc.getBookList().size() != 0)
-                        bc.getBookList().clear();
-                    JSONArray bookArray = jsonArray.getJSONObject(i).getJSONArray("books");
-                    for (int b = 0; b < bookArray.length(); b++) {
-                        String bookString = bookArray.get(b).toString();
-                        Book book = getBookByID(bookString);
-                        if (!(book == null)) {
-                            bc.initBook(book);
-                        }
-                    }
-                    i++;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            threadPool.submit(() -> loadBooks(user, loadBookCollections(user)));
         }
     }
 
+    private Book jsonToBook(JSONObject j) {
+        return new Book(
+                j.optString("id", ""),
+                j.optString("title", ""),
+                j.optString("author", ""),
+                j.optString("cover_img_large", ""),
+                j.optString("cover_img_small", ""),
+                j.optString("cover_img_medium", ""),
+                j.optString("description", ""),
+                getSubjects(j),
+                j.optString("publish_date", ""),
+                j.optString("book_wiki", ""),
+                j.optString("isbn", ""),
+                j.optString("rating", "")
+        );
+    }
+
     public Book getBookByID(String id) {
-        JSONObject jsonObject;
         Response response = sendGet("book/" + id);
         if (response.successful) {
             try {
-                jsonObject = new JSONObject(response.responseString);
-                return new Book(jsonObject.optString("id", ""), jsonObject.optString("title", ""), jsonObject.optString("author", ""), jsonObject.optString("cover_img_large", ""), jsonObject.optString("cover_img_small", ""), jsonObject.optString("cover_img_medium", ""), jsonObject.optString("description", ""), getSubjects(jsonObject), jsonObject.optString("publish_date", ""), jsonObject.optString("book_wiki", ""), jsonObject.optString("isbn", ""), jsonObject.optString("rating", ""));
+                return jsonToBook(new JSONObject(response.responseString));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -188,21 +213,17 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     private List<String> getSubjects(JSONObject jsonObject) {
-        JSONArray subjectsArray;
         List<String> subjects = new ArrayList<>();
         try {
-            if (jsonObject.toString().contains("subjects")) {
-                if (!jsonObject.get("subjects").equals("")) {
-                    subjectsArray = jsonObject.getJSONArray("subjects");
-                    for (int j = 0; j < subjectsArray.length(); j++)
-                        subjects.add(subjectsArray.getString(j));
-                    return subjects;
-                }
+            if (jsonObject.toString().contains("subjects") && !jsonObject.get("subjects").equals("")) {
+                JSONArray subjectsArray = jsonObject.getJSONArray("subjects");
+                for (int j = 0; j < subjectsArray.length(); j++)
+                    subjects.add(subjectsArray.getString(j));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return new ArrayList<>();
+        return subjects;
     }
 
     public List<Book> getBooks(String bookName) {
@@ -211,11 +232,10 @@ public class ServerConnect extends AppCompatActivity {
         if (response.successful)
             try {
                 JSONArray jsonArray = new JSONArray(response.responseString);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Book book = new Book(jsonObject.optString("id", ""), jsonObject.optString("title", ""), jsonObject.optString("author", ""), jsonObject.optString("cover_img_large", ""), jsonObject.optString("cover_img_small", ""), jsonObject.optString("cover_img_medium", ""), jsonObject.optString("description", ""), getSubjects(jsonObject), jsonObject.optString("publish_date", ""), jsonObject.optString("book_wiki", ""), jsonObject.optString("isbn", ""), jsonObject.optString("rating", ""));
-                    books.add(book);
-                }
+
+                for (int i = 0; i < jsonArray.length(); i++)
+                    books.add(jsonToBook(jsonArray.getJSONObject(i)));
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -272,8 +292,10 @@ public class ServerConnect extends AppCompatActivity {
             builder.hostnameVerifier((hostname, session) -> true);
             builder.readTimeout(60, TimeUnit.SECONDS);
 
-            ClearableCookieJar cookieJar =
-                    new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(GlobalApplication.getAppContext()));
+            ClearableCookieJar cookieJar = new PersistentCookieJar(
+                    new SetCookieCache(),
+                    new SharedPrefsCookiePersistor(GlobalApplication.getAppContext())
+            );
             builder.cookieJar(cookieJar);
 
             return builder.build();
