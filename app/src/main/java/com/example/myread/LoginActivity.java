@@ -1,5 +1,6 @@
 package com.example.myread;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,18 +24,19 @@ public class LoginActivity extends AppCompatActivity {
     private String trim_username, trim_password;
     SharedPreferences prf;
     private ProgressBar spinner;
+    private Context context = GlobalApplication.getAppContext();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         //Put the username in the SharedPreferences, so the user is automatically logged in.
         prf = GlobalFunctions.getEncryptedSharedPreferences();
-        if (prf.contains("username")) {
+        if (prf.contains("username"))
             if (ServerConnect.getInstance().checkSession()) {
                 ServerConnect.getInstance().initUser(prf.getString("username", ""));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             }
-        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         spinner = findViewById(R.id.loadingIconLogin);
@@ -51,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
             runOnUiThread(() -> login_btn.setEnabled(true));
         }).start());
 
-
         registertext.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
@@ -59,7 +60,8 @@ public class LoginActivity extends AppCompatActivity {
      * A function that logs in the user.
      */
     private void login() {
-        getEditString();
+        trim_username = username.getText().toString().trim();
+        trim_password = password.getText().toString().trim();
         if (validateUsername() && validatePassword()) {
             ServerConnect.Response response = sendPost();
             if (response.successful) {
@@ -69,29 +71,24 @@ public class LoginActivity extends AppCompatActivity {
                 ServerConnect.getInstance().initUser(prf.getString("username", ""));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show());
-            } else if (response.response.equals("Unable to reach server"))
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Can't reach server", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, context.getString(R.string.login_successful), Toast.LENGTH_SHORT).show());
+            } else if (response.response.equals(context.getString(R.string.server_unreachable)))
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, context.getString(R.string.server_unreachable), Toast.LENGTH_SHORT).show());
             else
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login unsuccessful.", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, context.getString(R.string.login_failed), Toast.LENGTH_SHORT).show());
         }
     }
 
-    private void getEditString() {
-        trim_username = username.getText().toString().trim();
-        trim_password = password.getText().toString().trim();
-    }
     /**
      * A function that validates the username.
      * @return true or false.
      */
     private Boolean validateUsername() {
         if (TextUtils.isEmpty(trim_username)) {
-            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Username field is empty.", Toast.LENGTH_SHORT).show());
+            username.setError(context.getString(R.string.username_not_entered));
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**
@@ -100,11 +97,10 @@ public class LoginActivity extends AppCompatActivity {
      */
     private Boolean validatePassword() {
         if (TextUtils.isEmpty(trim_password)) {
-            runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Password field is empty.", Toast.LENGTH_SHORT).show());
+            password.setError(context.getString(R.string.password_not_entered));
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**

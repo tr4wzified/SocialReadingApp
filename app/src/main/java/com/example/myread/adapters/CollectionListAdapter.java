@@ -26,7 +26,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
     @NonNull
     @Override
     public CollectionListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.booklist_component_addingto, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.booklist_component_addingto, parent, false);
         return new ViewHolder(view, mOnCardListener);
     }
 
@@ -36,13 +36,12 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
      */
     @Override
     public void onBindViewHolder(@NonNull CollectionListAdapter.ViewHolder holder, int position) {
-        if (holder.getListName().length() > 20) {
+        if (holder.getListName().length() > 20)
             holder.getListName().setText(mCards.get(position).name.substring(0, 19).concat("..."));
-        } else {
+        else
             holder.getListName().setText(mCards.get(position).name);
-        }
-        String amount = "Books: ".concat(Integer.toString(mCards.get(position).length()));
-        holder.getBookAmount().setText(amount);
+
+        holder.getBookAmount().setText("Books: ".concat(Integer.toString(mCards.get(position).length())));
     }
 
     /**
@@ -63,7 +62,6 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
             listName = view.findViewById(R.id.list_title);
             bookAmount = view.findViewById(R.id.book_amount);
             this.onCardListener = onCardListener;
-
             view.setOnClickListener(this);
         }
 

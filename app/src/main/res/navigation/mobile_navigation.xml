@@ -9,7 +9,11 @@
         android:id="@+id/nav_library"
         android:name="com.example.myread.ui.library.LibraryFragment"
         android:label="@string/menu_library"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_nav_library_to_collectionFragment"
+            app:destination="@id/collectionFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_home"
@@ -28,4 +32,14 @@
         android:name="com.example.myread.ui.settings.SettingsFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/collectionFragment"
+        android:name="com.example.myread.CollectionFragment">
+        <action
+            android:id="@+id/action_collectionFragment_to_bookFragment"
+            app:destination="@id/bookFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookFragment"
+        android:name="com.example.myread.BookFragment" />
 </navigation>

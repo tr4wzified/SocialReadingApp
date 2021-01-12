@@ -23,6 +23,4 @@ public class GlobalApplication extends Application {
     public static Context getAppContext() {
         return appContext;
     }
-
-
 }
