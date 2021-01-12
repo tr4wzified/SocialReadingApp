@@ -1,8 +1,10 @@
 package com.example.myread;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,7 @@ public class BookFragment extends Fragment {
     private ImageView large_book_cover;
     private Book currentBook;
     private Button wikiBtn;
+    private Context context = GlobalApplication.getAppContext();
 
     @Nullable
     @Override
@@ -64,7 +67,7 @@ public class BookFragment extends Fragment {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(currentBook.bookWiki)));
             return;
         }
-        Toast.makeText(getActivity(), currentBook.title + " does not have a wikipedia page.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), context.getString(R.string.no_wikipedia, currentBook.title), Toast.LENGTH_SHORT).show();
     }
 
     public void initBook() {
