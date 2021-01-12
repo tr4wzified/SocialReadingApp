@@ -48,9 +48,9 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_library, container, false);
 
-        NavHostFragment navHostFragment =
-                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        NavController navController = navHostFragment.getNavController();
+//        NavHostFragment navHostFragment =
+//                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+//        NavController navController = navHostFragment.getNavController();
 
 
         final FragmentActivity c = getActivity();
