@@ -1,5 +1,6 @@
 package com.example.myread;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import okhttp3.RequestBody;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText username, password, confirm_password;
+    private Context context = GlobalApplication.getAppContext();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,22 +51,22 @@ public class RegisterActivity extends AppCompatActivity {
         ServerConnect.Response response = ServerConnect.getInstance().sendPost("register", formBody);
         if (response.successful) {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show());
+            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, context.getString(R.string.registration_successful), Toast.LENGTH_SHORT).show());
             return;
         }
 
-        if (response.response.equals("Unable to reach server"))
-            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Unable to reach server.", Toast.LENGTH_SHORT).show());
+        if (response.response.equals(context.getString(R.string.server_unreachable)))
+            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, context.getString(R.string.server_unreachable), Toast.LENGTH_SHORT).show());
         else
-            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Registration failed!", Toast.LENGTH_SHORT).show());
+            runOnUiThread(() -> Toast.makeText(RegisterActivity.this, context.getString(R.string.registration_failed), Toast.LENGTH_SHORT).show());
     }
 
     private Boolean validateUsername(String reg_username) {
         if (TextUtils.isEmpty(reg_username)) {
-            username.setError("Username field is empty!");
+            username.setError(context.getString(R.string.username_not_entered));
         }
         else if (usernameComplexityTest(reg_username)) {
-            username.setError("Username cannot contain special characters!");
+            username.setError(context.getString(R.string.username_no_special_chars));
         }
         else {
             username.setError(null);
@@ -83,13 +85,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     private Boolean validatePassword(String reg_password, String reg_username) {
         if (TextUtils.isEmpty(reg_password)) {
-            password.setError("Password field is empty!");
+            password.setError(context.getString(R.string.password_not_entered));
         }
         else if (!passwordComplexityTest(reg_password)) {
-            password.setError("Password must contain 9 characters with at least a number, a lower case letter, an upper case letter and a special character!");
+            password.setError(context.getString(R.string.password_requirements));
         }
         else if (reg_password.contains(reg_username)) {
-            password.setError("Password must not contain username!");
+            password.setError(context.getString(R.string.password_no_username));
         }
         else {
             password.setError(null);
@@ -100,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private Boolean validatePasswordConfirm(String reg_password, String reg_passwordConfirm) {
         if (TextUtils.isEmpty(reg_passwordConfirm)) {
-            Toast.makeText(RegisterActivity.this, "Please confirm your password in the second field!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, context.getString(R.string.request_confirm_password), Toast.LENGTH_SHORT).show();
             return false;
         }
         return reg_passwordConfirm.equals(reg_password);
