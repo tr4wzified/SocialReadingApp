@@ -36,7 +36,7 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
     private List<BookCollection> mListItem;
     private TextView bookAmount;
     private TextView editText;
-    String collectionTitle;
+    private String collectionTitle;
 
     @Nullable
     @Override
@@ -75,7 +75,7 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
 
     private void initBooks() {
         mCards.clear();
-        mCards.addAll(user.getBookCollection("Favourites"));
+        mCards.addAll(user.getBookCollection(collectionTitle));
         mAdapter.notifyDataSetChanged();
     }
 

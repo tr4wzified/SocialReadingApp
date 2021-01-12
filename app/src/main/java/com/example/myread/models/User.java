@@ -9,17 +9,29 @@ public class User {
     private static User u = null;
     public String name;
     private final List<BookCollection> collectionList;
+    private final List<Book> allBooksList;
     private Book tempBook;
     private String tempTitle;
 
     private User() {
         this.collectionList = new ArrayList<>();
+        this.allBooksList = new ArrayList<>();
     }
 
     public static User getInstance() {
         if (u == null)
             u = new User();
         return u;
+    }
+
+    public List<Book> getAllBooksList() {
+        return allBooksList;
+    }
+
+    public void initAllBooksList() {
+        for (BookCollection bc : collectionList) {
+            allBooksList.addAll(bc.getBookList());
+        }
     }
 
     public void setTempTitle(String tempTitle) {
