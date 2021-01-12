@@ -42,7 +42,6 @@ public class RegisterActivity extends AppCompatActivity {
         ));
 
         logintext.setOnClickListener(v -> {
-            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             finish();
         });
     }
