@@ -33,7 +33,6 @@ public class SettingsFragment extends Fragment {
     }
 
     public void toggleDataSaver() {
-        System.out.println("Data saver was toggled: " + dataSaver.isChecked());
         SharedPreferences prf = GlobalApplication.getEncryptedSharedPreferences();
         SharedPreferences.Editor editor = prf.edit();
         editor.putBoolean("dataSaver", dataSaver.isChecked());
