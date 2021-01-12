@@ -1,5 +1,6 @@
 package com.example.myread;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private String trim_username, trim_password;
     SharedPreferences prf;
     private ProgressBar spinner;
+    private Context context = GlobalApplication.getAppContext();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,11 +67,11 @@ public class LoginActivity extends AppCompatActivity {
                 ServerConnect.getInstance().initUser(prf.getString("username", ""));
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show());
-            } else if (response.response.equals("Unable to reach server"))
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Unable to reach server.", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, context.getString(R.string.login_successful), Toast.LENGTH_SHORT).show());
+            } else if (response.response.equals(context.getString(R.string.server_unreachable)))
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, context.getString(R.string.server_unreachable), Toast.LENGTH_SHORT).show());
             else
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login failed!", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, context.getString(R.string.login_failed), Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -80,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private Boolean validateUsername() {
         if (TextUtils.isEmpty(trim_username)) {
-            username.setError("Username field is empty!");
+            username.setError(context.getString(R.string.username_not_entered));
             return false;
         }
         return true;
@@ -88,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private Boolean validatePassword() {
         if (TextUtils.isEmpty(trim_password)) {
-            password.setError("Password field is empty!");
+            password.setError(context.getString(R.string.password_not_entered));
             return false;
         }
         return true;
