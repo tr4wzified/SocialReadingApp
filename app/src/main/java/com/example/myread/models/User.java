@@ -1,9 +1,13 @@
 package com.example.myread.models;
 
 import com.example.myread.ServerConnect;
+import com.example.myread.adapters.BookListItemAdapter;
+import com.example.myread.adapters.CollectionAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import kotlin.jvm.internal.Lambda;
 
 public class User {
     private static User u = null;
@@ -36,6 +40,11 @@ public class User {
         for (BookCollection bc : collectionList) {
             allBooksList.addAll(bc.getBookList());
         }
+    }
+
+    public void addBook(Book book) {
+        if (!allBooksList.contains(book))
+            allBooksList.add(book);
     }
 
     /**
@@ -158,6 +167,7 @@ public class User {
         collectionList.clear();
         tempBook = null;
         tempTitle = null;
+        allBooksList.clear();
     }
 
     /**

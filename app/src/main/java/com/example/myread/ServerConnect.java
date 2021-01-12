@@ -197,8 +197,10 @@ public class ServerConnect extends AppCompatActivity {
                 for (int b = 0; b < bookArray.length(); b++) {
                     String bookString = bookArray.get(b).toString();
                     Book book = getBookByID(bookString);
-                    if (book != null)
+                    if (book != null) {
                         bc.initBook(book);
+                        user.addBook(book);
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -215,7 +217,7 @@ public class ServerConnect extends AppCompatActivity {
         user.name = name;
         if (sendGet("user/" + name).successful) {
             threadPool.submit(() -> loadBooks(user, loadBookCollections(user)));
-            user.initAllBooksList();
+//            user.initAllBooksList();
         }
     }
 

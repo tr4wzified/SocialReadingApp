@@ -68,8 +68,8 @@ public class BookListItemAdapter extends RecyclerView.Adapter<BookListItemAdapte
 
     @Override
     public void onBindViewHolder(@NonNull BookListItemAdapter.ViewHolder holder, int position) {
-        if (mCards.get(position).title.length() > 20) {
-            holder.getBookTitle().setText(mCards.get(position).title.substring(0, 19).concat("..."));
+        if (mCards.get(position).title.length() > 26) {
+            holder.getBookTitle().setText(mCards.get(position).title.substring(0, 25).concat("..."));
         } else {
             holder.getBookTitle().setText(mCards.get(position).title);
         }
