@@ -22,7 +22,7 @@ import okhttp3.RequestBody;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText username, password, confirm_password;
-    private Context context = GlobalApplication.getAppContext();
+    private final Context context = GlobalApplication.getAppContext();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,7 +35,12 @@ public class RegisterActivity extends AppCompatActivity {
         Button register_btn = findViewById(R.id.register_btn);
         TextView logintext = findViewById(R.id.login_txt);
 
-        register_btn.setOnClickListener(v -> registerUser(username.getText().toString().trim(), password.getText().toString().trim(), confirm_password.getText().toString().trim()));
+        register_btn.setOnClickListener(v -> registerUser(
+                username.getText().toString().trim(),
+                password.getText().toString().trim(),
+                confirm_password.getText().toString().trim()
+        ));
+
         logintext.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             finish();
@@ -62,12 +67,10 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private Boolean validateUsername(String reg_username) {
-        if (TextUtils.isEmpty(reg_username)) {
+        if (TextUtils.isEmpty(reg_username))
             username.setError(context.getString(R.string.username_not_entered));
-        }
-        else if (usernameComplexityTest(reg_username)) {
+        else if (usernameComplexityTest(reg_username))
             username.setError(context.getString(R.string.username_no_special_chars));
-        }
         else {
             username.setError(null);
             return true;
@@ -84,15 +87,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private Boolean validatePassword(String reg_password, String reg_username) {
-        if (TextUtils.isEmpty(reg_password)) {
+        if (TextUtils.isEmpty(reg_password))
             password.setError(context.getString(R.string.password_not_entered));
-        }
-        else if (!passwordComplexityTest(reg_password)) {
+        else if (!passwordComplexityTest(reg_password))
             password.setError(context.getString(R.string.password_requirements));
-        }
-        else if (reg_password.contains(reg_username)) {
+        else if (reg_password.contains(reg_username))
             password.setError(context.getString(R.string.password_no_username));
-        }
         else {
             password.setError(null);
             return true;

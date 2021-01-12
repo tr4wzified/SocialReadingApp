@@ -26,21 +26,18 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
     @NonNull
     @Override
     public CollectionListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.booklist_component_addingto, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.booklist_component_addingto, parent, false);
         return new ViewHolder(view, mOnCardListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CollectionListAdapter.ViewHolder holder, int position) {
-        if (holder.getListName().length() > 20) {
+        if (holder.getListName().length() > 20)
             holder.getListName().setText(mCards.get(position).name.substring(0, 19).concat("..."));
-        } else {
+        else
             holder.getListName().setText(mCards.get(position).name);
-        }
-//        String as = holder.getListName().getText().toString();
-//        String ad = Integer.toString(user.getBookCollection(as).getBookList().size());
-        String amount = "Books: ".concat(Integer.toString(mCards.get(position).length()));
-        holder.getBookAmount().setText(amount);
+
+        holder.getBookAmount().setText("Books: ".concat(Integer.toString(mCards.get(position).length())));
     }
 
     @Override
@@ -56,9 +53,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
             super(view);
             listName = view.findViewById(R.id.list_title);
             bookAmount = view.findViewById(R.id.book_amount);
-            Button deleteBtn = view.findViewById(R.id.delete_bookcollection);
             this.onCardListener = onCardListener;
-
             view.setOnClickListener(this);
         }
 

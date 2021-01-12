@@ -24,22 +24,17 @@ public class BookCollection {
     }
 
     public void delete(Book book) {
-        ServerConnect.Response r = ServerConnect.getInstance().deleteBookFromCollectionServer(user.name, name, book.id);
-        if (r.successful) {
+        if (ServerConnect.getInstance().deleteBookFromCollectionServer(user.name, name, book.id).successful)
             bookList.remove(book);
-            return;
-        }
-        System.out.println("Removing book from collection failed");
-
+        else
+            System.out.println("Removing book from collection failed");
     }
 
     public void add(Book book) {
-        ServerConnect.Response r = ServerConnect.getInstance().addBookToCollectionServer(user.name, name, book.id);
-        if (r.successful) {
+        if (ServerConnect.getInstance().addBookToCollectionServer(user.name, name, book.id).successful)
             this.bookList.add(book);
-            return;
-        }
-        System.out.println("Adding book to collection failed");
+        else
+            System.out.println("Adding book to collection failed");
     }
 
     public int length() {

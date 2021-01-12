@@ -32,9 +32,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SearchFragment extends Fragment implements CollectionSearchAdapter.OnCardListener, CollectionListAdapter.OnCardListener {
-    private List<Book> mCards = new ArrayList<>();
+    private final List<Book> mCards = new ArrayList<>();
     private CollectionSearchAdapter mAdapter;
     protected User user = User.getInstance();
     private TextInputLayout bookUserInput;
@@ -42,18 +43,17 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
     private Book clickedBook;
     private AddCollectionDialog addCollectionDialog;
     private ProgressBar spinner;
-    private Context context = GlobalApplication.getAppContext();
+    private final Context context = GlobalApplication.getAppContext();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         final FragmentActivity c = getActivity();
         final RecyclerView mRecyclerView = rootView.findViewById(R.id.searchRecyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(c);
-        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(c));
 
-        Button searchBookBtn = rootView.findViewById(R.id.searchBook);
+        final Button searchBookBtn = rootView.findViewById(R.id.searchBook);
         bookUserInput = rootView.findViewById(R.id.bookSearchQuery);
-        spinner = (ProgressBar) rootView.findViewById(R.id.loadingIconSearch);
+        spinner = rootView.findViewById(R.id.loadingIconSearch);
 
         new Thread(() -> {
             mAdapter = new CollectionSearchAdapter(mCards, SearchFragment.this);
@@ -62,10 +62,10 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
 
         searchBookBtn.setOnClickListener(v -> new Thread(() -> {
 
-            getActivity().runOnUiThread(() -> spinner.setVisibility(View.VISIBLE));
+            requireActivity().runOnUiThread(() -> spinner.setVisibility(View.VISIBLE));
             Looper.prepare();
             showBookResults();
-            getActivity().runOnUiThread(() -> spinner.setVisibility(View.INVISIBLE));
+            requireActivity().runOnUiThread(() -> spinner.setVisibility(View.INVISIBLE));
         }).start());
 
         return rootView;
@@ -74,12 +74,12 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
     public void showBookResults() {
         mCards.clear();
         mCards.addAll(searchBooks());
-        getActivity().runOnUiThread(() -> mAdapter.notifyDataSetChanged());
+        requireActivity().runOnUiThread(() -> mAdapter.notifyDataSetChanged());
     }
 
     private List<Book> searchBooks() {
-        String bookName = bookUserInput.getEditText().getText().toString();
-        List<Book> bookList = ServerConnect.getInstance().getBooks(bookName);
+        final String bookName = Objects.requireNonNull(bookUserInput.getEditText()).getText().toString();
+        final List<Book> bookList = ServerConnect.getInstance().getBooks(bookName);
         if (bookList.isEmpty()) {
             Toast.makeText(getActivity(), context.getString(R.string.no_results), Toast.LENGTH_SHORT).show();
         }
@@ -89,10 +89,10 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
     @Override
     public void OnCardClick(int position) {
         user.setTempBook(mCards.get(position));
-        Fragment fragment = new BookFragment();
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        final Fragment fragment = new BookFragment();
+        final FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         System.out.println(fragmentManager.getFragments().toString());
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
         fragmentTransaction.commit();
 
@@ -106,7 +106,7 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
         }
         clickedBook = mCards.get(position);
         mListItem = user.getCollectionList();
-        CollectionListAdapter collectionListAdapter = new CollectionListAdapter(mListItem, this);
+        final CollectionListAdapter collectionListAdapter = new CollectionListAdapter(mListItem, this);
         addCollectionDialog = new AddCollectionDialog(getActivity(), collectionListAdapter);
         addCollectionDialog.show();
         addCollectionDialog.setCanceledOnTouchOutside(true);
@@ -114,7 +114,7 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
 
     @Override
     public void OnListItemClick(int position) {
-        BookCollection bc = mListItem.get(position);
+        final BookCollection bc = mListItem.get(position);
         bc.add(clickedBook);
         Toast.makeText(getActivity(), clickedBook.title + " has been added to " + bc.name, Toast.LENGTH_SHORT).show();
         mAdapter.notifyDataSetChanged();

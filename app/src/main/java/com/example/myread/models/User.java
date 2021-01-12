@@ -10,6 +10,7 @@ public class User {
     public String name;
     private final List<BookCollection> collectionList;
     private Book tempBook;
+    private String tempTitle;
 
     private User() {
         this.collectionList = new ArrayList<>();
@@ -20,6 +21,12 @@ public class User {
             u = new User();
         return u;
     }
+
+    public void setTempTitle(String tempTitle) {
+        this.tempTitle = tempTitle;
+    }
+
+    public String getTempTitle() { return tempTitle; }
 
     public void setTempBook(Book book) {
         this.tempBook = book;
@@ -38,31 +45,30 @@ public class User {
     }
 
     public BookCollection getBookCollection(BookCollection bookCollection) {
-        for (BookCollection bc : collectionList) {
+        for (BookCollection bc : collectionList)
             if (bc.equals(bookCollection)) return bc;
-        }
+
         return null;
     }
 
     public List<Book> getBookCollection(String name) {
-        for (BookCollection bc : collectionList) {
+        for (BookCollection bc : collectionList)
             if (bc.name.equals(name)) return bc.getBookList();
-        }
+
         return null;
     }
 
     public BookCollection getBookCollectionByName(String name) {
-        for (BookCollection bc : collectionList) {
+        for (BookCollection bc : collectionList)
             if (bc.name.equals(name)) return bc;
-        }
+
         return null;
     }
 
     public Book getBook(String cTitle, String bTitle) {
-        List<Book> bc = getBookCollection(cTitle);
-        for (Book book : bc) {
+        for (Book book : getBookCollection(cTitle))
             if (book.title.equals(bTitle)) return book;
-        }
+
         return null;
     }
 
@@ -71,28 +77,25 @@ public class User {
     }
 
     public boolean addBookCollection(BookCollection bookCollection) {
-        ServerConnect.Response r = ServerConnect.getInstance().addBookCollectionServer(name, bookCollection.name);
-        if (r.successful) {
+        if (ServerConnect.getInstance().addBookCollectionServer(name, bookCollection.name).successful) {
             collectionList.add(bookCollection);
             return true;
         }
         System.out.println("Adding book collection failed");
         return false;
-//      ServerConnect.postBookCollection(name, formBody);
     }
 
     public void destroy() {
         name = "";
         collectionList.clear();
         tempBook = null;
+        tempTitle = null;
     }
 
     public void deleteBookCollection(BookCollection bc) {
-        ServerConnect.Response r = ServerConnect.getInstance().deleteBookCollectionServer(name, bc.name);
-        if (r.successful) {
+        if (ServerConnect.getInstance().deleteBookCollectionServer(name, bc.name).successful)
             collectionList.remove(bc);
-            return;
-        }
-        System.out.println("Removing book collection failed");
+        else
+            System.out.println("Removing book collection failed");
     }
 }
