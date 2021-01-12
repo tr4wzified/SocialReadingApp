@@ -54,6 +54,6 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
     public void OnCardClick(int position) {
         clickedCard = mCards.get(position);
         User.getInstance().setTempBook(clickedCard);
-        Navigation.findNavController(getView()).navigate(R.id.action_collectionFragment_to_bookFragment);
+        Navigation.findNavController(getView()).navigate(R.id.action_nav_home_to_bookFragment);
     }
 }
