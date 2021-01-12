@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Objects;
+
 public class NewCollectionDialog extends DialogFragment {
     @NonNull
     @Override
@@ -20,13 +22,11 @@ public class NewCollectionDialog extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
         builder.setView(inflater.inflate(R.layout.dialog_newcollection, null))
-                .setPositiveButton(R.string.add_collection_btn, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getActivity().getIntent());
-                    }
-                })
-                .setNegativeButton(R.string.cancel_collection_btn, (dialog, which) -> NewCollectionDialog.this.getDialog().cancel());
+                .setPositiveButton(R.string.add_collection_btn,
+                        (dialog, which) -> Objects.requireNonNull(getTargetFragment())
+                        .onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, requireActivity().getIntent()))
+                .setNegativeButton(R.string.cancel_collection_btn, (dialog, which) ->
+                        Objects.requireNonNull(NewCollectionDialog.this.getDialog()).cancel());
         return builder.create();
     }
 

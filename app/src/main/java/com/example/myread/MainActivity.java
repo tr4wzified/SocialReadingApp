@@ -34,26 +34,25 @@ public class MainActivity extends AppCompatActivity {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        prf = GlobalApplication.getEncryptedSharedPreferences();
-        //prf = getSharedPreferences("user_details",MODE_PRIVATE);
+        prf = GlobalFunctions.getEncryptedSharedPreferences();
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_library,
-                R.id.nav_home, R.id.nav_search, R.id.nav_settings)
-                .setOpenableLayout(drawer)
-                .build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_library, R.id.nav_home, R.id.nav_search, R.id.nav_settings
+        ).setOpenableLayout(drawer).build();
+
         NavController navController = getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
-    // workaround for https://issuetracker.google.com/issues/142847973 ty google https://stackoverflow.com/questions/59275009/fragmentcontainerview-using-findnavcontroller
+    // workaround for https://issuetracker.google.com/issues/142847973
     @NonNull
     private NavController getNavController() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        if (!(fragment instanceof NavHostFragment)) {
-            throw new IllegalStateException("Activity " + this
-                    + " does not have a NavHostFragment");
-        }
+
+        if (!(fragment instanceof NavHostFragment))
+            throw new IllegalStateException("Activity " + this + " does not have a NavHostFragment");
+
         return ((NavHostFragment) fragment).getNavController();
     }
 
@@ -71,25 +70,13 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    /**
+     * A function that logs out the user by clearing the SharedPreferences and destroying the user.
+     */
     public void logout(MenuItem item) {
-        SharedPreferences.Editor editor = prf.edit();
-        editor.remove("username");
-        editor.apply();
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        prf.edit().clear().apply();
         User.getInstance().destroy();
         finish();
     }
-
-//    @Override
-//    public void onBackPressed() {
-//        if(getSupportFragmentManager().getBackStackEntryCount() == 0) {
-//            super.onBackPressed();
-//        }
-////        else if(getSupportFragmentManager().getBackStackEntryCount() == 1) {
-////            moveTaskToBack(false);
-////        }
-//        else {
-//            getSupportFragmentManager().popBackStack();
-//        }
-//    }
 }

@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myread.GlobalApplication;
+import com.example.myread.GlobalFunctions;
 import com.example.myread.R;
 import com.example.myread.models.Book;
 import com.squareup.picasso.Picasso;
@@ -28,23 +30,19 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView bookTitle, bookAuthor;
-        private ImageView medium_cover_image;
+        private final ImageView medium_cover_image;
         final OnCardListener onCardListener;
 
         public ViewHolder(View view, OnCardListener onCardListener) {
             super(view);
 
-//            view.setOnClickListener(v -> {
-//                Intent intent = new Intent(view.getContext(), BookCollectionActivity.class);
-//                view.getContext().startActivity(intent);
-//            });
             // book cover
             bookTitle = view.findViewById(R.id.bookTitle);
             bookAuthor = view.findViewById(R.id.bookAuthor);
             medium_cover_image = view.findViewById(R.id.book_cover);
 
-            Button buttonAdd = view.findViewById(R.id.button_add);
-            Button buttonDelete = view.findViewById(R.id.button_delete);
+            final Button buttonAdd = view.findViewById(R.id.button_add);
+            final Button buttonDelete = view.findViewById(R.id.button_delete);
             this.onCardListener = onCardListener;
 
             view.setOnClickListener(this);
@@ -53,14 +51,26 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
             buttonDelete.setOnClickListener(v -> onCardListener.OnNegativeButtonClick(getAdapterPosition()));
         }
 
+        /**
+         * A function to get the title of the book.
+         * @return the book title.
+         */
         public TextView getBookTitle() {
             return bookTitle;
         }
 
+        /**
+         * A function to get the author of the book.
+         * @return the book author.
+         */
         public TextView getBookAuthor() {
             return bookAuthor;
         }
 
+        /**
+         * A function to get the cover of the book with medium quality.
+         * @return the medium-quality book cover.
+         */
         public ImageView getMediumBookCover() {
             return medium_cover_image;
         }
@@ -74,22 +84,37 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
     @NonNull
     @Override
     public CollectionAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem, parent, false);
         return new ViewHolder(view, mOnCardListener);
     }
 
+    /** A function that will set the titles of the collection cards, load the cover and set the author's name.
+     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (mCards.get(position).title.length() > 20) {
+        if (mCards.get(position).title.length() > 20)
             holder.getBookTitle().setText(mCards.get(position).title.substring(0, 19).concat("..."));
-        } else {
+        else
             holder.getBookTitle().setText(mCards.get(position).title);
+
+        if (mCards.get(position).mediumcover.contains("http")) {
+            // Get DataSaver preference, default to off when not found in SharedPreferences (false)
+            boolean dataSaver = GlobalFunctions.getEncryptedSharedPreferences().getBoolean("dataSaver", false);
+            // Use small images when Data Saver is enabled
+            if (dataSaver)
+                Picasso.get().load(mCards.get(position).smallcover).into(holder.getMediumBookCover());
+            else
+                Picasso.get().load(mCards.get(position).mediumcover).into(holder.getMediumBookCover());
         }
-        if (mCards.get(position).mediumcover.contains("http"))
-            Picasso.get().load(mCards.get(position).mediumcover).into(holder.getMediumBookCover());
         holder.getBookAuthor().setText(mCards.get(position).author);
     }
 
+    /**
+     * A function to get the amount of items in mCards.
+     * @return the size of mCards.
+     */
     @Override
     public int getItemCount() {
         return mCards.size();

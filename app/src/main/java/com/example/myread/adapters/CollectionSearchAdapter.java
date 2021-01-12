@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myread.GlobalApplication;
+import com.example.myread.GlobalFunctions;
 import com.example.myread.R;
 import com.example.myread.models.Book;
 import com.squareup.picasso.Picasso;
@@ -33,14 +35,10 @@ public class CollectionSearchAdapter extends RecyclerView.Adapter<CollectionSear
         public ViewHolder(View view, OnCardListener onCardListener) {
             super(view);
 
-//            view.setOnClickListener(v -> {
-//                Intent intent = new Intent(view.getContext(), BookCollectionActivity.class);
-//                view.getContext().startActivity(intent);
-//            });
             // book cover
             bookTitle = view.findViewById(R.id.bookTitle);
             bookAuthor = view.findViewById(R.id.bookAuthor);
-            Button buttonAdd = view.findViewById(R.id.button_add);
+            final Button buttonAdd = view.findViewById(R.id.button_add);
             medium_cover_image = view.findViewById(R.id.book_cover);
             this.onCardListener = onCardListener;
 
@@ -70,23 +68,37 @@ public class CollectionSearchAdapter extends RecyclerView.Adapter<CollectionSear
     @NonNull
     @Override
     public CollectionSearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.searchlistitem, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.searchlistitem, parent, false);
         return new ViewHolder(view, mOnCardListener);
     }
 
+    /** A function that will set the titles of the collection cards, load the cover and set the author's name.
+     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (mCards.get(position).title.length() > 20) {
+        if (mCards.get(position).title.length() > 20)
             holder.getBookTitle().setText(mCards.get(position).title.substring(0, 19).concat("..."));
-        } else {
+        else
             holder.getBookTitle().setText(mCards.get(position).title);
+
+        // Set book cover
+        boolean dataSaver = GlobalFunctions.getEncryptedSharedPreferences().getBoolean("dataSaver", false);
+
+        if (mCards.get(position).mediumcover.contains("http")) {
+            if (dataSaver)
+                Picasso.get().load(mCards.get(position).smallcover).into(holder.getMediumBookCover());
+            else
+                Picasso.get().load(mCards.get(position).mediumcover).into(holder.getMediumBookCover());
         }
-        // book cover
-        if (mCards.get(position).mediumcover.contains("http"))
-            Picasso.get().load(mCards.get(position).mediumcover).into(holder.getMediumBookCover());
         holder.getBookAuthor().setText(mCards.get(position).author);
     }
 
+    /**
+     * A function to get the amount of items in mCards.
+     * @return the size of mCards.
+     */
     @Override
     public int getItemCount() {
         return mCards.size();
