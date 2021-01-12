@@ -32,6 +32,10 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         return new ViewHolder(view, mOnCardListener);
     }
 
+    /** A function that will set the titles of the collection cards.
+     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull LibraryAdapter.ViewHolder holder, int position) {
         if (mCards.get(position).name.length() > 26) {
@@ -44,6 +48,10 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         holder.getBookAmount().setText(GlobalApplication.getAppContext().getString(R.string.count_books, mCards.get(position).length()));
     }
 
+    /**
+     * A function to get the amount of items in mCards.
+     * @return the size of mCards.
+     */
     @Override
     public int getItemCount() {
         return mCards.size();
@@ -70,10 +78,18 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
             deleteBtn.setOnClickListener(v -> onCardListener.OnButtonClick(getAdapterPosition()));
         }
 
+        /**
+         * A function to get the book collection.
+         * @return the book collection textview.
+         */
         public TextView getListName() {
             return listName;
         }
 
+        /**
+         * A function to get the amount of books in the book collection.
+         * @return the book amount textview.
+         */
         public TextView getBookAmount() {
             return bookAmount;
         }

@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        prf = GlobalApplication.getEncryptedSharedPreferences();
-        //prf = getSharedPreferences("user_details",MODE_PRIVATE);
+        prf = GlobalFunctions.getEncryptedSharedPreferences();
         setSupportActionBar(toolbar);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_library,
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
-    // workaround for https://issuetracker.google.com/issues/142847973 ty google https://stackoverflow.com/questions/59275009/fragmentcontainerview-using-findnavcontroller
+    // workaround for https://issuetracker.google.com/issues/142847973
     @NonNull
     private NavController getNavController() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
@@ -80,15 +79,19 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    /**
+     * A function that logs out the user by clearing the SharedPreferences and destroying the user.
+     */
     public void logout(MenuItem item) {
-        SharedPreferences.Editor editor = prf.edit();
-        editor.remove("username");
-        editor.apply();
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        prf.edit().clear().apply();
         User.getInstance().destroy();
         finish();
     }
 
+    /**
+     * A function that handles pressing back in fragments.
+     */
     @Override
     public void onBackPressed() {
         if(getSupportFragmentManager().getBackStackEntryCount() == 0) {

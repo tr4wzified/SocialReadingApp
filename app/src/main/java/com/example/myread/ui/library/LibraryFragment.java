@@ -45,11 +45,11 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_library, container, false);
         final FragmentActivity c = getActivity();
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.libraryRecyclerView);
+        mRecyclerView = rootView.findViewById(R.id.libraryRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(c);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        Button bookCollectionBtn = (Button)rootView.findViewById(R.id.bookCollectionButton);
+        Button bookCollectionBtn = rootView.findViewById(R.id.bookCollectionButton);
         mAdapter = new LibraryAdapter(mCards, LibraryFragment.this);
 
         new Thread(() -> {
@@ -67,6 +67,9 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
         return rootView;
     }
 
+    /**
+     * A function that adds searched books to the mCards list and refreshes the view.
+     */
     private void initCards() {
         mCards.clear();
         mCards.addAll(user.getCollectionList());
@@ -98,6 +101,10 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
 //        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
     }
 
+    /**
+     * A function that deletes a collection on a button click.
+     * @param position position of the collection.
+     */
     @Override
     public void OnButtonClick(int position) {
         BookCollection bookcollection = mCards.get(position);
@@ -115,10 +122,12 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
             assert dialogView != null;
             EditText inputCollectionName = dialogView.findViewById(R.id.newCollectionName);
             String name = inputCollectionName.getText().toString();
+            //Checks for non ascii characters.
             if (!GlobalFunctions.asciip(name)) {
                 Toast.makeText(getActivity(), "Please only use ASCII characters in the library name.", Toast.LENGTH_SHORT).show();
                 return;
             }
+            //Checks if the adding of the book collection was successful.
             if (user.addBookCollection(new BookCollection(name))) {
                 mCards.add(new BookCollection(name));
                 Toast.makeText(getActivity(), "Collection: " + name + " has been created.", Toast.LENGTH_SHORT).show();

@@ -14,8 +14,8 @@
     <!--    Register & login-->
     <string name="register">Register</string>
     <string name="login">Log in</string>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
+    <string name="username_label">Username</string>
+    <string name="password_label">Password</string>
     <string name="confirm_password">Confirm Password</string>
 
     <string name="datasaverswitch_desc">A switch to turn on the data saver</string>

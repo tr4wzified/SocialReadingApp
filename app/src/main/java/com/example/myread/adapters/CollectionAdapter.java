@@ -33,12 +33,6 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
 
         public ViewHolder(View view, OnCardListener onCardListener) {
             super(view);
-
-//            view.setOnClickListener(v -> {
-//                Intent intent = new Intent(view.getContext(), BookCollectionActivity.class);
-//                view.getContext().startActivity(intent);
-//            });
-            // book cover
             bookTitle = view.findViewById(R.id.bookTitle);
             bookAuthor = view.findViewById(R.id.bookAuthor);
             medium_cover_image = view.findViewById(R.id.book_cover);
@@ -53,14 +47,26 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
             buttonDelete.setOnClickListener(v -> onCardListener.OnNegativeButtonClick(getAdapterPosition()));
         }
 
+        /**
+         * A function to get the title of the book.
+         * @return the book title.
+         */
         public TextView getBookTitle() {
             return bookTitle;
         }
 
+        /**
+         * A function to get the author of the book.
+         * @return the book author.
+         */
         public TextView getBookAuthor() {
             return bookAuthor;
         }
 
+        /**
+         * A function to get the cover of the book with medium quality.
+         * @return the medium-quality book cover.
+         */
         public ImageView getMediumBookCover() {
             return medium_cover_image;
         }
@@ -78,6 +84,10 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
         return new ViewHolder(view, mOnCardListener);
     }
 
+    /** A function that will set the titles of the collection cards, load the cover and set the author's name.
+     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (mCards.get(position).title.length() > 20) {
@@ -90,6 +100,10 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
         holder.getBookAuthor().setText(mCards.get(position).author);
     }
 
+    /**
+     * A function to get the amount of items in mCards.
+     * @return the size of mCards.
+     */
     @Override
     public int getItemCount() {
         return mCards.size();

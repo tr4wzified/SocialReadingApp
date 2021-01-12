@@ -54,12 +54,15 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
         new Thread(() -> {
             mRecyclerView.setAdapter(mAdapter);
             updateData();
-            initBooks();
+            initCards();
         }).start();
 
         return rootView;
     }
 
+    /**
+     * A function that updates the view.
+     */
     private void updateData() {
         if (collectionTitle.length() > 20) {
             editText.setText(collectionTitle.substring(0,19).concat("..."));
@@ -71,7 +74,10 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
         bookAmount.setText(books);
     }
 
-    private void initBooks() {
+    /**
+     * A function that adds searched books to the mcards list and refreshes the view.
+     */
+    private void initCards() {
         mCards.clear();
         mCards.addAll(user.getBookCollection(collectionTitle));
         mAdapter.notifyDataSetChanged();

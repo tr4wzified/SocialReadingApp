@@ -30,6 +30,10 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         return new ViewHolder(view, mOnCardListener);
     }
 
+    /** A function that will set the titles of the collection cards and the amount of books.
+     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull CollectionListAdapter.ViewHolder holder, int position) {
         if (holder.getListName().length() > 20) {
@@ -37,12 +41,14 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         } else {
             holder.getListName().setText(mCards.get(position).name);
         }
-//        String as = holder.getListName().getText().toString();
-//        String ad = Integer.toString(user.getBookCollection(as).getBookList().size());
         String amount = "Books: ".concat(Integer.toString(mCards.get(position).length()));
         holder.getBookAmount().setText(amount);
     }
 
+    /**
+     * A function to get the amount of items in mCards.
+     * @return the size of mCards.
+     */
     @Override
     public int getItemCount() {
         return mCards.size();
@@ -56,16 +62,23 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
             super(view);
             listName = view.findViewById(R.id.list_title);
             bookAmount = view.findViewById(R.id.book_amount);
-            Button deleteBtn = view.findViewById(R.id.delete_bookcollection);
             this.onCardListener = onCardListener;
 
             view.setOnClickListener(this);
         }
 
+        /**
+         * Gets the name of the collection.
+         * @return the collection name.
+         */
         public TextView getListName() {
             return listName;
         }
 
+        /**
+         * Gets the amount of books.
+         * @return the amount of books.
+         */
         public TextView getBookAmount() {
             return bookAmount;
         }
