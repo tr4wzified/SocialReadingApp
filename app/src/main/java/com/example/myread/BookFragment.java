@@ -16,6 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.myread.models.Book;
 import com.example.myread.models.User;
@@ -23,11 +26,10 @@ import com.squareup.picasso.Picasso;
 
 public class BookFragment extends Fragment {
     private TextView book_title, book_author, book_rating, book_description, book_genre, book_isbn, book_year;
-    private User user = User.getInstance();
-    private ImageView book_cover;
+    private final User user = User.getInstance();
+    private ImageView large_book_cover;
     private Book currentBook;
-    private Button wikiBtn;
-    private Context context = GlobalApplication.getAppContext();
+    private final Context context = GlobalApplication.getAppContext();
 
     @Nullable
     @Override
@@ -43,10 +45,10 @@ public class BookFragment extends Fragment {
         book_isbn = rootView.findViewById(R.id.book_isbn);
         book_year = rootView.findViewById(R.id.book_year);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        System.out.println(fragmentManager.getFragments().toString());
 
         currentBook = user.getTempBook();
-        wikiBtn = rootView.findViewById(R.id.wiki_btn);
+        final Button wikiBtn = rootView.findViewById(R.id.wiki_btn);
+
 
         wikiBtn.setOnClickListener(v -> openLink());
 
@@ -55,11 +57,10 @@ public class BookFragment extends Fragment {
     }
 
     public void updateField(TextView view, String text) {
-        if (text == null || text.equals("")) {
+        if (text == null || text.equals(""))
             view.setText(R.string.unknown);
-            return;
-        }
-        view.setText(text);
+        else
+            view.setText(text);
     }
 
     public void openLink() {
@@ -85,11 +86,10 @@ public class BookFragment extends Fragment {
         updateField(book_author, currentBook.author);
         updateField(book_rating, currentBook.rating);
         updateField(book_description, currentBook.description);
-        if (!(currentBook.subjects.size() == 0))
+        if (currentBook.subjects.size() != 0)
             updateField(book_genre, currentBook.subjects.get(0));
-        else {
+        else
             book_genre.setText(R.string.unknown);
-        }
         updateField(book_isbn, currentBook.isbn);
         updateField(book_year, currentBook.publishDate);
     }
