@@ -27,7 +27,7 @@ import com.squareup.picasso.Picasso;
 public class BookFragment extends Fragment {
     private TextView book_title, book_author, book_rating, book_description, book_genre, book_isbn, book_year;
     private final User user = User.getInstance();
-    private ImageView large_book_cover;
+    private ImageView book_cover;
     private Book currentBook;
     private final Context context = GlobalApplication.getAppContext();
 
