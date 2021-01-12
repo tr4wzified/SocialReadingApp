@@ -28,17 +28,17 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
     @NonNull
     @Override
     public LibraryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.booklist_component, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.booklist_component, parent, false);
         return new ViewHolder(view, mOnCardListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull LibraryAdapter.ViewHolder holder, int position) {
-        if (mCards.get(position).name.length() > 26) {
+        if (mCards.get(position).name.length() > 26)
             holder.getListName().setText(mCards.get(position).name.substring(0, 25).concat("..."));
-        } else {
+        else
             holder.getListName().setText(mCards.get(position).name);
-        }
+
 //        String as = holder.getListName().getText().toString();
 //        String ad = Integer.toString(user.getBookCollection(as).getBookList().size());
         holder.getBookAmount().setText(GlobalApplication.getAppContext().getString(R.string.count_books, mCards.get(position).length()));
@@ -56,14 +56,9 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         public ViewHolder(View view, OnCardListener onCardListener) {
             super(view);
 
-//            view.setOnClickListener(v -> {
-//                Intent intent = new Intent(view.getContext(), BookCollectionActivity.class);
-//                view.getContext().startActivity(intent);
-//            });
-
             listName = view.findViewById(R.id.list_title);
             bookAmount = view.findViewById(R.id.book_amount);
-            Button deleteBtn = view.findViewById(R.id.delete_bookcollection);
+            final Button deleteBtn = view.findViewById(R.id.delete_bookcollection);
             this.onCardListener = onCardListener;
 
             view.setOnClickListener(this);
@@ -87,7 +82,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
 
     public interface OnCardListener {
         void OnCardClick(int position);
-
         void OnButtonClick(int position);
     }
 }

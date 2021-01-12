@@ -33,32 +33,29 @@ import com.example.myread.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardListener  {
     private LibraryAdapter mAdapter;
     private RecyclerView mRecyclerView;
-
-    private BookCollection clickedCard;
     protected User user = User.getInstance();
-    private List<BookCollection> mCards = new ArrayList<>();
+    private final List<BookCollection> mCards = new ArrayList<>();
     NewCollectionDialog newCollectionDialog;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.activity_library, container, false);
+        final View rootView = inflater.inflate(R.layout.activity_library, container, false);
 
         NavHostFragment navHostFragment =
-                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        NavController navController = navHostFragment.getNavController();
-
+                (NavHostFragment) requireActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
 
         final FragmentActivity c = getActivity();
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.libraryRecyclerView);
+        mRecyclerView = rootView.findViewById(R.id.libraryRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(c);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        Button bookCollectionBtn = (Button)rootView.findViewById(R.id.bookCollectionButton);
+        final Button bookCollectionBtn = rootView.findViewById(R.id.bookCollectionButton);
         mAdapter = new LibraryAdapter(mCards, LibraryFragment.this);
 
         new Thread(() -> {
@@ -66,11 +63,10 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
             initCards();
         }).start();
 
-
         bookCollectionBtn.setOnClickListener(v -> {
             newCollectionDialog = new NewCollectionDialog();
             newCollectionDialog.setTargetFragment(this, 1);
-            newCollectionDialog.show(getFragmentManager(), "dialog");
+            newCollectionDialog.show(getParentFragmentManager(), "dialog");
         });
 
         return rootView;
@@ -84,33 +80,13 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
 
     @Override
     public void OnCardClick(int position) {
-        clickedCard = mCards.get(position);
-        Bundle bundle = new Bundle();
-        bundle.putString("collectiontitle", clickedCard.name);
-
-        Fragment fragment = new CollectionFragment();
-        fragment.setArguments(bundle);
-
-        User.getInstance().setTempTitle(clickedCard.name);
-
-        Navigation.findNavController(getView()).navigate(R.id.action_nav_library_to_collectionFragment);
-
-//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//        System.out.println(fragmentManager.getFragments().toString());
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
-////        fragmentTransaction.remove(this);
-//        fragmentTransaction.commit();
-
-
-//        getParentFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
-
-//        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, fragment).addToBackStack(null).commit();
+        User.getInstance().setTempTitle(mCards.get(position).name);
+        Navigation.findNavController(requireView()).navigate(R.id.action_nav_library_to_collectionFragment);
     }
 
     @Override
     public void OnButtonClick(int position) {
-        BookCollection bookcollection = mCards.get(position);
+        final BookCollection bookcollection = mCards.get(position);
         mCards.remove(bookcollection);
         user.deleteBookCollection(bookcollection);
         Toast.makeText(getActivity(), "Collection: " + bookcollection.name + " has been deleted.", Toast.LENGTH_SHORT).show();
@@ -121,10 +97,10 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            Dialog dialogView = newCollectionDialog.getDialog();
+            final Dialog dialogView = newCollectionDialog.getDialog();
             assert dialogView != null;
-            EditText inputCollectionName = dialogView.findViewById(R.id.newCollectionName);
-            String name = inputCollectionName.getText().toString();
+            final EditText inputCollectionName = dialogView.findViewById(R.id.newCollectionName);
+            final String name = inputCollectionName.getText().toString();
             if (!GlobalFunctions.asciip(name)) {
                 Toast.makeText(getActivity(), "Please only use ASCII characters in the library name.", Toast.LENGTH_SHORT).show();
                 return;

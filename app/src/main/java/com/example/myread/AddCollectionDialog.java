@@ -15,14 +15,6 @@ import com.example.myread.adapters.CollectionListAdapter;
 
 public class AddCollectionDialog extends Dialog {
 
-    public AddCollectionDialog(Context context, int themeResId) {
-        super(context, themeResId);
-    }
-
-    public AddCollectionDialog(Context context, boolean cancelable, DialogInterface.OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
-    }
-
     public Activity activity;
     public RecyclerView mRecyclerView;
     protected CollectionListAdapter mAdapter;
@@ -42,21 +34,4 @@ public class AddCollectionDialog extends Dialog {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
     }
-
-//    public interface NoticeDialogListener {
-//        public void onClick(DialogFragment dialog);
-////        public void onDialogNegativeClick(DialogFragment dialog);
-//    }
-//    AddCollectionDialog.NoticeDialogListener listener;
-//
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//
-//        try {
-//            listener = (AddCollectionDialog.NoticeDialogListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(getActivity().toString() + "must implement NoticeDialogListener");
-//        }
-//    }
 }
