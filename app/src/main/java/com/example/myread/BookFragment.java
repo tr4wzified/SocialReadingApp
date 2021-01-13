@@ -44,7 +44,6 @@ public class BookFragment extends Fragment {
         book_genre = rootView.findViewById(R.id.book_genre);
         book_isbn = rootView.findViewById(R.id.book_isbn);
         book_year = rootView.findViewById(R.id.book_year);
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
         currentBook = user.getTempBook();
         final Button wikiBtn = rootView.findViewById(R.id.wiki_btn);
@@ -59,11 +58,12 @@ public class BookFragment extends Fragment {
     /**
      * A function that updates the field of a view.
      * @param view to be updated view.
-     * @param text a string.
+     * @param text a string containing the name of the view.
+     * @param text a string containing the current text.
      */
-    public void updateField(TextView view, String text) {
+    public void updateField(TextView view, String viewName, String text) {
         if (text == null || text.equals(""))
-            view.setText(R.string.unknown);
+            view.setText(context.getString(R.string.unknown, viewName));
         else
             view.setText(text);
     }
@@ -93,15 +93,15 @@ public class BookFragment extends Fragment {
                 Picasso.get().load(currentBook.largecover).into(book_cover);
         }
 
-        updateField(book_title, currentBook.title);
-        updateField(book_author, currentBook.author);
-        updateField(book_rating, currentBook.rating);
-        updateField(book_description, currentBook.description);
+        updateField(book_title, "title", currentBook.title);
+        updateField(book_author, "author", currentBook.author);
+        updateField(book_rating, "rating", currentBook.rating);
+        updateField(book_description, "description", currentBook.description);
         if (currentBook.subjects.size() != 0)
-            updateField(book_genre, currentBook.subjects.get(0));
+            updateField(book_genre, "genre", currentBook.subjects.get(0));
         else
             book_genre.setText(R.string.unknown);
-        updateField(book_isbn, currentBook.isbn);
-        updateField(book_year, currentBook.publishDate);
+        updateField(book_isbn, "isbn", currentBook.isbn);
+        updateField(book_year, "publish date", currentBook.publishDate);
     }
 }
