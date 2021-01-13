@@ -146,7 +146,7 @@ public class User {
     }
 
     /**
-     * A function that adds a book collection to the server and the collection list.
+     * A function that adds a book collection to the server and in the app.
      * @param bookCollection a book collection.
      * @return true or false based on the success of the request.
      */
@@ -156,6 +156,25 @@ public class User {
             return true;
         }
         System.out.println("Adding book collection failed");
+        return false;
+    }
+
+    /**
+     * A function that renames an existing book collection on the server and in the app.
+     * @param bookCollection a book collection.
+     * @return true or false based on the success of the request.
+     */
+    public boolean renameBookCollection(BookCollection bookCollection, String newName) {
+        if (ServerConnect.getInstance().renameBookCollectionServer(name, bookCollection.name, newName).successful) {
+            int i = 0;
+            for (BookCollection bc : collectionList) {
+                if (bc.equals(bookCollection)) { break; };
+                i++;
+            }
+            collectionList.get(i).name = newName;
+            return true;
+        }
+        System.out.println("Renaming book collection failed");
         return false;
     }
 

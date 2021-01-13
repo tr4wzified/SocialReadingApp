@@ -33,6 +33,12 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/book_collection" />
 
+        <Button
+            android:id="@+id/renamebutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RENAME COLLECTION" />
+
         <TextView
             android:id="@+id/book_collections"
             android:layout_width="match_parent"
@@ -44,6 +50,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </LinearLayout>
 
 
