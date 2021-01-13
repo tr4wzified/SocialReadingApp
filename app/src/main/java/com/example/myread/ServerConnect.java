@@ -37,6 +37,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -46,7 +47,7 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
 public class ServerConnect extends AppCompatActivity {
 
     private static ServerConnect s = null;
-    private final OkHttpClient client = getUnsafeOkHttpClient();
+    private final OkHttpClient client = getOkHttpClient();
     private final Base64.Decoder d = Base64.getDecoder();
     private final String ip = new String(d.decode(d.decode(GlobalApplication.getAppContext().getString(R.string.ip))));
     private final SharedPreferences prf = GlobalFunctions.getEncryptedSharedPreferences();
@@ -369,6 +370,28 @@ public class ServerConnect extends AppCompatActivity {
      * A function that will create a HTTP client without certificate verification.
      * @return the HTTP client.
      */
+
+    private OkHttpClient getOkHttpClient() {
+        try {
+            final ClearableCookieJar cookieJar = new PersistentCookieJar(
+                    new SetCookieCache(),
+                    new SharedPrefsCookiePersistor(GlobalApplication.getAppContext())
+            );
+            CertificatePinner pinner = new CertificatePinner.Builder()
+                    .add("socialreader.tk", "sha256/8E1B5BA6BF125050896321DBE5A80659936FB9780237D8276886377D69629195")
+                    .build();
+
+            final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.certificatePinner(pinner);
+            builder.readTimeout(60, TimeUnit.SECONDS);
+            builder.cookieJar(cookieJar);
+
+            return builder.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private OkHttpClient getUnsafeOkHttpClient() {
         try {
             final TrustManager[] trustAllCerts = new TrustManager[]{
