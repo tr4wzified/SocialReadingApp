@@ -49,6 +49,7 @@
     <string name="library">Library</string>
     <string name="book_collections">Book collections</string>
     <string name="new_collection">Create your new collection</string>
+    <string name="rename_collection">Rename your collection</string>
     <string name="add_collection_btn">Add</string>
     <string name="cancel_collection_btn">Cancel</string>
 
@@ -59,6 +60,7 @@
 
     <!-- IP -->
     <string name="ip">YUhSMGNITTZMeTl6YjJOcFlXeHlaV0ZrTG5Sck9qSXdORGd2</string>
+    <string name="renamebutton">Rename</string>
     <string name="book_cover">Cover</string>
     <string name="book_cover_image_description">Book cover image</string>
     <string name="book_icon_description">book icon</string>

@@ -1,9 +1,14 @@
 package com.example.myread;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,11 +44,21 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
     private TextView bookAmount;
     private TextView editText;
     private String collectionTitle;
+    private Button renamebutton;
+    private RenameCollectionDialog renameCollectionDialog;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_collection, container, false);
+
+        renamebutton = rootView.findViewById(R.id.renamebutton);
+        renamebutton.setOnClickListener(v -> {
+            renameCollectionDialog = new RenameCollectionDialog();
+            renameCollectionDialog.setTargetFragment(this, 1);
+            renameCollectionDialog.show(getParentFragmentManager(), "dialog");
+        });
+
         final FragmentActivity c = getActivity();
         mRecyclerView = rootView.findViewById(R.id.collectionRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(c);
@@ -62,6 +77,35 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
         }).start();
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            final Dialog dialogView = renameCollectionDialog.getDialog();
+            assert dialogView != null;
+            final EditText inputCollectionName = dialogView.findViewById(R.id.renameCollectionName);
+            final String name = inputCollectionName.getText().toString();
+            //Checks for non ascii characters.
+            if (!GlobalFunctions.asciip(name)) {
+                Toast.makeText(getActivity(), "Please only use ASCII characters in the library name.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            //Checks if the adding of the book collection was successful.
+            if (user.renameBookCollection(user.getInstance().getBookCollectionByName(collectionTitle), name)) {
+                Toast.makeText(getActivity(), "Collection has been renamed to " + name + ".", Toast.LENGTH_SHORT).show();
+                if (name.length() > 20)
+                    editText.setText(name.substring(0, 19).concat("..."));
+                else
+                    editText.setText(name);
+
+                mAdapter.notifyDataSetChanged();
+
+                return;
+            }
+            Toast.makeText(getActivity(), "Failed to rename collection: " + name + ".", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
