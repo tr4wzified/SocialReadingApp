@@ -318,6 +318,16 @@ public class ServerConnect extends AppCompatActivity {
     public Response addBookCollectionServer(String name, String collection_name) {
         return sendGet("user/" + name + "/add_book_collection/" + collection_name);
     }
+    /**
+     * A function that will rename a book collection on the server.
+     * @param name the username.
+     * @param collection_name the collection name.
+     * @param new_collection_name the new collection name (the collection_name will get renamed to new_collection_name)
+     * @return a response object.
+     */
+    public Response renameBookCollectionServer(String name, String collection_name, String new_collection_name) {
+        return sendGet("user/" + name + "/chname_book_collection/" + collection_name + "/" + new_collection_name);
+    }
 
     /**
      * A function that will delete a book collection from the server.
