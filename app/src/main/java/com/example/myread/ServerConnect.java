@@ -48,7 +48,6 @@ public class ServerConnect extends AppCompatActivity {
     private final String ip = new String(d.decode(d.decode(GlobalApplication.getAppContext().getString(R.string.ip))));
     private final SharedPreferences prf = GlobalFunctions.getEncryptedSharedPreferences();
     ExecutorService threadPool = newFixedThreadPool(2);
-    private static final Context context = GlobalApplication.getAppContext();
 
     private ServerConnect() {}
 
@@ -98,9 +97,9 @@ public class ServerConnect extends AppCompatActivity {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                return new Response(false, context.getString(R.string.server_unreachable), "");
+                return new Response(false, GlobalApplication.getAppContext().getString(R.string.server_unreachable), "");
             } catch (NullPointerException e) {
-                return new Response(false, context.getString(R.string.no_body_in_request), "");
+                return new Response(false, GlobalApplication.getAppContext().getString(R.string.no_body_in_request), "");
             }
         }
     }
@@ -119,7 +118,7 @@ public class ServerConnect extends AppCompatActivity {
      * A function that sends a request to the server.
      * @param page the page to which the request will be sent.
      * @param body an optional body for post requests.
-     * @return a reponse object.
+     * @return a response object.
      */
     public Response sendRequest(String page, RequestBody body) {
         try {
@@ -281,7 +280,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will return a list of books based on user input.
-     * @param bookName the userinput containing a book name.
+     * @param bookName the user input containing a book name.
      * @return a list of books.
      */
     public List<Book> getBooks(String bookName) {
