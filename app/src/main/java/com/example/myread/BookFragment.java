@@ -97,11 +97,9 @@ public class BookFragment extends Fragment {
         updateField(book_author, "author", currentBook.author);
         updateField(book_rating, "rating", currentBook.rating);
         updateField(book_description, "description", currentBook.description);
-        if (currentBook.subjects.size() != 0)
-            updateField(book_genre, "genre", currentBook.subjects.get(0));
-        else
-            book_genre.setText(R.string.unknown);
         updateField(book_isbn, "isbn", currentBook.isbn);
         updateField(book_year, "publish date", currentBook.publishDate);
+        if (currentBook.subjects.size() != 0) updateField(book_genre, "genre", currentBook.subjects.get(0));
+        else book_genre.setText(context.getString(R.string.unknown, "genre"));
     }
 }

@@ -27,9 +27,12 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
     private Book clickedCard;
     protected User user = User.getInstance();
     private List<Book> mCards = new ArrayList<>();
+    private List<Book> recBooks = new ArrayList<>();
+    View recommendedView;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        recommendedView = inflater.inflate(R.layout.fragment_recommended, container, false);
         rootView.setTag("HomeFrag");
         final FragmentActivity c = getActivity();
         mRecyclerView = rootView.findViewById(R.id.bookListItemRecyclerView);
@@ -47,6 +50,21 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
         mCards.clear();
         mCards.addAll(user.getAllBooksList());
         mAdapter.notifyDataSetChanged();
+    }
+
+    public void initRecommended() {
+        recBooks.addAll(getRecommendedBooks());
+
+       //TODO: Show books on screen and make clickable
+
+    }
+
+    public List<Book> getRecommendedBooks() {
+        List<Book> books = new ArrayList<>();
+
+        //TODO: do something to add recommended books
+
+        return books;
     }
 
     @Override

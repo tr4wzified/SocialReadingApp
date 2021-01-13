@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="25dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -32,28 +33,28 @@
                 android:padding="4dp">
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/recommend_image_1"
+                    style="@style/coverimage"
                     android:layout_width="wrap_content"
                     android:layout_height="175dp"
                     android:layout_weight="1"
-                    android:padding="2dp"
-                    app:srcCompat="@drawable/nocover_light" />
+                    android:padding="2dp" />
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/recommend_image_2"
+                    style="@style/coverimage"
                     android:layout_width="wrap_content"
                     android:layout_height="175dp"
                     android:layout_weight="1"
-                    android:padding="2dp"
-                    app:srcCompat="@drawable/nocover_light" />
+                    android:padding="2dp" />
 
                 <ImageView
-                    android:id="@+id/imageView5"
+                    android:id="@+id/recommend_image_3"
+                    style="@style/coverimage"
                     android:layout_width="wrap_content"
                     android:layout_height="175dp"
                     android:layout_weight="1"
-                    android:padding="2dp"
-                    app:srcCompat="@drawable/nocover_light" />
+                    android:padding="2dp" />
             </LinearLayout>
 
         </LinearLayout>
