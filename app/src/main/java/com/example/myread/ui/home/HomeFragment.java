@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.R;
+import com.example.myread.ServerConnect;
 import com.example.myread.adapters.BookListItemAdapter;
 import com.example.myread.models.Book;
 import com.example.myread.models.User;
@@ -26,8 +27,8 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
 
     private Book clickedCard;
     protected User user = User.getInstance();
-    private List<Book> mCards = new ArrayList<>();
-    private List<Book> recBooks = new ArrayList<>();
+    private final List<Book> mCards = new ArrayList<>();
+    private final List<Book> recBooks = new ArrayList<>();
     View recommendedView;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
     public void initCards() {
         mCards.clear();
         mCards.addAll(user.getAllBooksList());
+        initRecommended();
         mAdapter.notifyDataSetChanged();
     }
 
@@ -60,11 +62,7 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
     }
 
     public List<Book> getRecommendedBooks() {
-        List<Book> books = new ArrayList<>();
-
-        //TODO: do something to add recommended books
-
-        return books;
+        return ServerConnect.getInstance().getRecommendations();
     }
 
     @Override
