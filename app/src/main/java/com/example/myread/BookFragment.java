@@ -15,10 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.myread.models.Book;
 import com.example.myread.models.User;
@@ -63,7 +59,7 @@ public class BookFragment extends Fragment {
      */
     public void updateField(TextView view, String viewName, String text) {
         if (text == null || text.equals(""))
-            view.setText(context.getString(R.string.unknown, viewName));
+            view.setText(context.getString(R.string.unknown, viewName).substring(0,16).concat("..."));
         else
             view.setText(text);
     }
