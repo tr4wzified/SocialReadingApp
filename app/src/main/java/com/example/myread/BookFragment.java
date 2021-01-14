@@ -54,17 +54,18 @@ public class BookFragment extends Fragment {
 
     /**
      * A function that updates the field of a view.
+     *
      * @param view to be updated view.
      * @param text a string containing the name of the view.
      * @param text a string containing the current text.
      */
     public void updateField(TextView view, String viewName, String text) {
         if (text == null || text.equals("")) {
-            if (viewName.length() > 16) {
-                view.setText(context.getString(R.string.unknown, viewName).substring(0, 16).concat("..."));
-                return;
-            }
             view.setText(context.getString(R.string.unknown, viewName));
+            return;
+        }
+        if (!viewName.equals("description") && text.length() > 25) {
+            view.setText(text.substring(0, 25).concat("..."));
             return;
         }
         view.setText(text);
