@@ -85,7 +85,6 @@ public class LoginActivity extends AppCompatActivity {
      */
     private Boolean validateUsername() {
         if (TextUtils.isEmpty(trim_username)) {
-            System.out.println("Context: " + context);
             runOnUiThread(() -> username.setError(context.getString(R.string.username_not_entered)));
             return false;
         }
