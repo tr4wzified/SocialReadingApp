@@ -13,13 +13,11 @@ public class User {
     private static User u = null;
     public String name;
     private final List<BookCollection> collectionList;
-    private final List<Book> allBooksList;
     private Book tempBook;
     private String tempTitle;
 
     private User() {
         this.collectionList = new ArrayList<>();
-        this.allBooksList = new ArrayList<>();
     }
 
     /**
@@ -32,19 +30,15 @@ public class User {
             u = new User();
         return u;
     }
+
     public List<Book> getAllBooksList() {
-        return allBooksList;
-    }
-
-    public void initAllBooksList() {
+        List<Book> bookList = new ArrayList<>();
         for (BookCollection bc : collectionList) {
-            allBooksList.addAll(bc.getBookList());
+            for (Book book : bc.getBookList()) {
+                bookList.add(book);
+            }
         }
-    }
-
-    public void addBook(Book book) {
-        if (!allBooksList.contains(book))
-            allBooksList.add(book);
+        return bookList;
     }
 
     /**
@@ -186,7 +180,6 @@ public class User {
         collectionList.clear();
         tempBook = null;
         tempTitle = null;
-        allBooksList.clear();
     }
 
     /**

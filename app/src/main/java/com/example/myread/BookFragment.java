@@ -85,7 +85,6 @@ public class BookFragment extends Fragment {
      * A function that opens a web browser to the amazon page of the selected book, if it exists.
      */
     public void openAmazonLink() {
-        System.out.println("amazon: " + currentBook.amazon);
         if (currentBook.amazon.contains("http")) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(currentBook.amazon)));
             return;

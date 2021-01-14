@@ -37,6 +37,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -52,11 +53,13 @@ public class ServerConnect extends AppCompatActivity {
     private final SharedPreferences prf = GlobalFunctions.getEncryptedSharedPreferences();
     ExecutorService threadPool = newFixedThreadPool(2);
 
-    private ServerConnect() {}
+    private ServerConnect() {
+    }
 
     /**
      * A function that creates a ServerConnect instance if none exists and will return the instance if one already exists.
      * This way only one instance can be made.
+     *
      * @return the ServerConnect instance.
      */
     public static ServerConnect getInstance() {
@@ -88,6 +91,7 @@ public class ServerConnect extends AppCompatActivity {
 
         /**
          * A function that sends a request to the server and checks the response.
+         *
          * @return a response object.
          */
         @Override
@@ -109,6 +113,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that checks if the user still has a session.
+     *
      * @return true or false.
      */
     public boolean checkSession() {
@@ -119,6 +124,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that sends a request to the server.
+     *
      * @param page the page to which the request will be sent.
      * @param body an optional body for post requests.
      * @return a response object.
@@ -133,7 +139,7 @@ public class ServerConnect extends AppCompatActivity {
             }
             assert url != null;
 
-            final Request.Builder request = new Request.Builder().url(url);
+            final Request.Builder request = new Request.Builder().url(url).tag(page);
             if (body != null) request.post(body);
 
             final ServerCall c = new ServerCall(client, request.build());
@@ -147,6 +153,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will send a post request to the server.
+     *
      * @param page the page to which the request will be sent.
      * @param body the body for the request.
      * @return a response object.
@@ -157,6 +164,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will send a get request to the server.
+     *
      * @param page the page to which the request will be sent.
      * @return a response object.
      */
@@ -166,6 +174,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will load the book collections for the user.
+     *
      * @param user the user.
      * @return a jsonarray with bookcollections.
      */
@@ -187,7 +196,8 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will load the books for the user.
-     * @param user the user.
+     *
+     * @param user      the user.
      * @param jsonArray the jsonArray with books.
      */
     public void loadBooks(User user, JSONArray jsonArray) {
@@ -203,7 +213,6 @@ public class ServerConnect extends AppCompatActivity {
                     Book book = getBookByID(bookString);
                     if (book != null) {
                         bc.initBook(book);
-                        user.addBook(book);
                     }
                 }
             }
@@ -214,6 +223,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will initialize the user when logging in.
+     *
      * @param name the name of the user.
      */
     public void initUser(String name) {
@@ -227,6 +237,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that translates json into a book.
+     *
      * @param j a json object
      * @return a book object
      */
@@ -250,6 +261,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will return a book by ID.
+     *
      * @param id the openlibrary id of the book.
      * @return a book.
      */
@@ -292,6 +304,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will return a list of subjects based on a jsonObject.
+     *
      * @param jsonObject the jsonObject filled with subjects.
      * @return a list of subjects.
      */
@@ -311,6 +324,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will return a list of books based on user input.
+     *
      * @param bookName the user input containing a book name.
      * @return a list of books.
      */
@@ -330,8 +344,17 @@ public class ServerConnect extends AppCompatActivity {
         return books;
     }
 
+    public void cancelSearchRequests() {
+        for (Call call : client.dispatcher().runningCalls()) {
+            Object tag = call.request().tag();
+            if (tag != null && tag.toString().contains("search_book"))
+                call.cancel();
+        }
+    }
+
     /**
      * A function that will get the book collections of a user.
+     *
      * @param name the username.
      * @return a response object.
      */
@@ -341,17 +364,20 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will add a book collection to the server.
-     * @param name the username.
+     *
+     * @param name            the username.
      * @param collection_name the collection name.
      * @return a response object.
      */
     public Response addBookCollectionServer(String name, String collection_name) {
         return sendGet("user/" + name + "/add_book_collection/" + collection_name);
     }
+
     /**
      * A function that will rename a book collection on the server.
-     * @param name the username.
-     * @param collection_name the collection name.
+     *
+     * @param name                the username.
+     * @param collection_name     the collection name.
      * @param new_collection_name the new collection name (the collection_name will get renamed to new_collection_name)
      * @return a response object.
      */
@@ -361,7 +387,8 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will delete a book collection from the server.
-     * @param name the username.
+     *
+     * @param name            the username.
      * @param collection_name the collection name.
      * @return a response object.
      */
@@ -371,9 +398,10 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will add a book to a collection on the server.
-     * @param name the username.
+     *
+     * @param name            the username.
      * @param collection_name the collection name.
-     * @param book_id the ID of the book.
+     * @param book_id         the ID of the book.
      * @return a response object.
      */
     public Response addBookToCollectionServer(String name, String collection_name, String book_id) {
@@ -382,9 +410,10 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will delete a book from a collection on the server.
-     * @param name the username.
+     *
+     * @param name            the username.
      * @param collection_name the collection name.
-     * @param book_id the ID of the book.
+     * @param book_id         the ID of the book.
      * @return a response object.
      */
     public Response deleteBookFromCollectionServer(String name, String collection_name, String book_id) {
@@ -393,6 +422,7 @@ public class ServerConnect extends AppCompatActivity {
 
     /**
      * A function that will create a HTTP client without certificate verification.
+     *
      * @return the HTTP client.
      */
     private OkHttpClient getUnsafeOkHttpClient() {
@@ -401,11 +431,13 @@ public class ServerConnect extends AppCompatActivity {
                     new X509TrustManager() {
                         @SuppressLint("TrustAllX509TrustManager")
                         @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                        }
 
                         @SuppressLint("TrustAllX509TrustManager")
                         @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) { }
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                        }
 
                         @Override
                         public java.security.cert.X509Certificate[] getAcceptedIssuers() {
