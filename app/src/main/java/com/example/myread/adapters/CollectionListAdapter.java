@@ -3,12 +3,12 @@ package com.example.myread.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myread.GlobalApplication;
 import com.example.myread.R;
 import com.example.myread.models.BookCollection;
 
@@ -41,7 +41,7 @@ public class CollectionListAdapter extends RecyclerView.Adapter<CollectionListAd
         else
             holder.getListName().setText(mCards.get(position).name);
 
-        holder.getBookAmount().setText("Books: ".concat(Integer.toString(mCards.get(position).length())));
+        holder.getBookAmount().setText(GlobalApplication.getAppContext().getString(R.string.count_books, mCards.get(position).length()));
     }
 
     /**

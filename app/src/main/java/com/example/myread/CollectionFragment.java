@@ -16,8 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +28,6 @@ import com.example.myread.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class CollectionFragment extends Fragment implements CollectionAdapter.OnCardListener, CollectionListAdapter.OnCardListener {
     private RecyclerView mRecyclerView;
@@ -117,7 +114,7 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
         else
             editText.setText(collectionTitle);
 
-        bookAmount.setText("Books: " + user.getBookCollection(collectionTitle).size());
+        bookAmount.setText(GlobalApplication.getAppContext().getString(R.string.count_books, user.getBookCollection(collectionTitle).size()));
     }
 
     /**
