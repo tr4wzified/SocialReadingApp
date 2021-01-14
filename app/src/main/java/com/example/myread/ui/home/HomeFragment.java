@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
     public void initCards() {
         mCards.clear();
         mCards.addAll(user.getAllBooksList());
-        initRecommended();
+        //initRecommended();
         mAdapter.notifyDataSetChanged();
     }
 
