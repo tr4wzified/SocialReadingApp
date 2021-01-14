@@ -13,14 +13,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.AddCollectionDialog;
-import com.example.myread.BookFragment;
 import com.example.myread.GlobalApplication;
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
@@ -45,6 +42,7 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
     private AddCollectionDialog addCollectionDialog;
     private ProgressBar spinner;
     private final Context context = GlobalApplication.getAppContext();
+    private boolean destroyed;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
@@ -55,6 +53,7 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
         final Button searchBookBtn = rootView.findViewById(R.id.searchBook);
         bookUserInput = rootView.findViewById(R.id.bookSearchQuery);
         spinner = rootView.findViewById(R.id.loadingIconSearch);
+        destroyed = false;
 
         new Thread(() -> {
             mAdapter = new CollectionSearchAdapter(mCards, SearchFragment.this);
@@ -66,19 +65,21 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
             requireActivity().runOnUiThread(() -> spinner.setVisibility(View.VISIBLE));
             Looper.prepare();
             initCards();
-            requireActivity().runOnUiThread(() -> spinner.setVisibility(View.INVISIBLE));
+            if (!destroyed)
+                requireActivity().runOnUiThread(() -> spinner.setVisibility(View.INVISIBLE));
         }).start());
 
         return rootView;
     }
 
     /**
-     * A function that adds searched books to the mcards list and refreshes the view.
+     * A function that adds searched books to the mCards list and refreshes the view.
      */
     public void initCards() {
         mCards.clear();
         mCards.addAll(searchBooks());
-        requireActivity().runOnUiThread(() -> mAdapter.notifyDataSetChanged());
+        if (!destroyed)
+            requireActivity().runOnUiThread(() -> mAdapter.notifyDataSetChanged());
     }
 
     /**
@@ -88,7 +89,7 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
     private List<Book> searchBooks() {
         final String bookName = Objects.requireNonNull(bookUserInput.getEditText()).getText().toString();
         final List<Book> bookList = ServerConnect.getInstance().getBooks(bookName);
-        if (bookList.isEmpty()) {
+        if (!destroyed && bookList.isEmpty()) {
             Toast.makeText(getActivity(), context.getString(R.string.no_results), Toast.LENGTH_SHORT).show();
         }
         return bookList;
@@ -121,5 +122,12 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
         Toast.makeText(getActivity(), clickedBook.title + " has been added to " + bc.name, Toast.LENGTH_SHORT).show();
         mAdapter.notifyDataSetChanged();
         addCollectionDialog.cancel();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ServerConnect.getInstance().cancelSearchRequests();
+        destroyed = true;
     }
 }
