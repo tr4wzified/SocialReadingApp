@@ -13,10 +13,11 @@ public class Book {
     public final List<String> subjects;
     public final String publishDate;
     public final String bookWiki;
+    public final String amazon;
     public final String isbn;
     public final String rating;
 
-    public Book(String id, String title, String author, String largecover, String smallcover, String mediumcover, String description, List<String> subjects, String publishDate, String bookWiki, String isbn, String rating) {
+    public Book(String id, String title, String author, String largecover, String smallcover, String mediumcover, String description, List<String> subjects, String publishDate, String bookWiki, String amazon, String isbn, String rating) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -27,6 +28,7 @@ public class Book {
         this.subjects = subjects;
         this.publishDate = publishDate;
         this.bookWiki = bookWiki;
+        this.amazon = amazon;
         this.isbn = isbn;
         this.rating = rating;
     }

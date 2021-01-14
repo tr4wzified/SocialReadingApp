@@ -33,6 +33,7 @@
     <string name="no_results">No results found!</string>
     <string name="no_collections">No collections found! Try creating a collection first.</string>
     <string name="no_wikipedia">%s does not have a Wikipedia page!</string>
+    <string name="no_amazon">%s does not have a Amazon page!</string>
 
     <string name="datasaverswitch_desc">A switch to turn on the data saver</string>
     <string name="datasaverswitch_text">Data Saver</string>
@@ -81,4 +82,5 @@
     <string name="unknown">unknown %1$s</string>
     <string name="count_books">Books: %1$d</string>
     <string name="recommended_title">Recommended</string>
+    <string name="amazon">Amazon</string>
 </resources>

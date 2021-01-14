@@ -242,6 +242,7 @@ public class ServerConnect extends AppCompatActivity {
                 getSubjects(j),
                 j.optString("publish_date", ""),
                 j.optString("book_wiki", ""),
+                j.optString("amazon_link", ""),
                 j.optString("isbn", ""),
                 j.optString("rating", "")
         );

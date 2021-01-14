@@ -43,9 +43,10 @@ public class BookFragment extends Fragment {
 
         currentBook = user.getTempBook();
         final Button wikiBtn = rootView.findViewById(R.id.wiki_btn);
+        final Button amazonBtn = rootView.findViewById(R.id.amazon_btn);
 
-
-        wikiBtn.setOnClickListener(v -> openLink());
+        wikiBtn.setOnClickListener(v -> openWikiLink());
+        amazonBtn.setOnClickListener(v -> openAmazonLink());
 
         initBook();
         return rootView;
@@ -72,12 +73,24 @@ public class BookFragment extends Fragment {
     /**
      * A function that opens a web browser to the wikipedia page of the selected book, if it exists.
      */
-    public void openLink() {
+    public void openWikiLink() {
         if (currentBook.bookWiki.contains("http")) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(currentBook.bookWiki)));
             return;
         }
         Toast.makeText(getActivity(), context.getString(R.string.no_wikipedia, currentBook.title), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * A function that opens a web browser to the amazon page of the selected book, if it exists.
+     */
+    public void openAmazonLink() {
+        System.out.println("amazon: " + currentBook.amazon);
+        if (currentBook.amazon.contains("http")) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(currentBook.amazon)));
+            return;
+        }
+        Toast.makeText(getActivity(), context.getString(R.string.no_amazon, currentBook.title), Toast.LENGTH_SHORT).show();
     }
 
     /**
