@@ -21,7 +21,6 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class SettingsFragment extends Fragment {
     SwitchMaterial dataSaver;
-    SwitchMaterial userStats;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         boolean dataSaverEnabled = GlobalFunctions.getEncryptedSharedPreferences().getBoolean("dataSaver", false);

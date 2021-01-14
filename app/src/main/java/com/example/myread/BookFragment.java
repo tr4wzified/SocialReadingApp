@@ -58,10 +58,15 @@ public class BookFragment extends Fragment {
      * @param text a string containing the current text.
      */
     public void updateField(TextView view, String viewName, String text) {
-        if (text == null || text.equals(""))
-            view.setText(context.getString(R.string.unknown, viewName).substring(0,16).concat("..."));
-        else
-            view.setText(text);
+        if (text == null || text.equals("")) {
+            if (viewName.length() > 16) {
+                view.setText(context.getString(R.string.unknown, viewName).substring(0, 16).concat("..."));
+                return;
+            }
+            view.setText(context.getString(R.string.unknown, viewName));
+            return;
+        }
+        view.setText(text);
     }
 
     /**
