@@ -34,7 +34,6 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         recommendedView = inflater.inflate(R.layout.fragment_recommended, container, false);
-        rootView.setTag("HomeFrag");
         final FragmentActivity c = getActivity();
         mRecyclerView = rootView.findViewById(R.id.bookListItemRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(c);

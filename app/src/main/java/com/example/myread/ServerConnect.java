@@ -117,9 +117,7 @@ public class ServerConnect extends AppCompatActivity {
      * @return true or false.
      */
     public boolean checkSession() {
-        if (sendGet("user/" + prf.getString("username", "")).successful) return true;
-        System.out.println("Session expired");
-        return false;
+        return sendGet("user/" + prf.getString("username", "")).successful;
     }
 
     /**

@@ -1,6 +1,8 @@
 package com.example.myread.ui.search;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -19,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.AddCollectionDialog;
 import com.example.myread.GlobalApplication;
+import com.example.myread.GlobalFunctions;
+import com.example.myread.LoginActivity;
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
 import com.example.myread.adapters.CollectionListAdapter;
@@ -43,6 +47,7 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
     private ProgressBar spinner;
     private final Context context = GlobalApplication.getAppContext();
     private boolean destroyed;
+    SharedPreferences prf = GlobalFunctions.getEncryptedSharedPreferences();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
@@ -87,6 +92,17 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
      * @return a list of books.
      */
     private List<Book> searchBooks() {
+
+        if (!ServerConnect.getInstance().checkSession()) {
+            Toast.makeText(getActivity(), "Session expired, please try logging in again", Toast.LENGTH_SHORT).show();
+            prf.edit().clear().apply();
+            User.getInstance().destroy();
+            startActivity(new Intent(requireActivity(), LoginActivity.class));
+            requireActivity().finish();
+            destroyed = true;
+            return new ArrayList<>();
+        }
+
         final String bookName = Objects.requireNonNull(bookUserInput.getEditText()).getText().toString();
         final List<Book> bookList = ServerConnect.getInstance().getBooks(bookName);
         if (!destroyed && bookList.isEmpty()) {
