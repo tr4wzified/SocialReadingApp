@@ -277,6 +277,31 @@ public class ServerConnect extends AppCompatActivity {
         return null;
     }
 
+    public ArrayList<Book> getRecommendations() {
+        final User user = User.getInstance();
+        final Response response = sendGet("user/" + user.name + "/recommend_books");
+
+        if (response.successful) {
+            try {
+                //System.out.println(response.responseString);
+                final JSONArray arr = new JSONArray(response.responseString);
+                final List<String> list = new ArrayList<>();
+                for(int i = 0; i < arr.length(); i++)
+                    list.add(arr.getString(i));//.getJSONObject(i).getString("name"));
+
+                final ArrayList<Book> b = new ArrayList<>();
+                for (String s : list)
+                    b.add(getBookByID(s));
+
+                return b;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Response not successful");
+        return null;
+    }
+
     /**
      * A function that will return a list of subjects based on a jsonObject.
      *
