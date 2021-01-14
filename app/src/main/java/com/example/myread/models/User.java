@@ -124,13 +124,6 @@ public class User {
         return null;
     }
 
-    public Book getBook(String cTitle, String bTitle) {
-        for (Book book : getBookCollection(cTitle))
-            if (book.title.equals(bTitle)) return book;
-
-        return null;
-    }
-
     /**
      * A function that adds a book collection to the collection list.
      * @param bookCollection a book collection.
