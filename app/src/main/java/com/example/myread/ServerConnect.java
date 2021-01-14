@@ -398,7 +398,7 @@ public class ServerConnect extends AppCompatActivity {
             final OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
             builder.hostnameVerifier((hostname, session) -> true);
-            builder.readTimeout(60, TimeUnit.SECONDS);
+            builder.readTimeout(120, TimeUnit.SECONDS);
             builder.cookieJar(cookieJar);
 
             return builder.build();
