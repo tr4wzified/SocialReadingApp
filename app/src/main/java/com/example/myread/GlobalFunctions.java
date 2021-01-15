@@ -25,6 +25,11 @@ public class GlobalFunctions {
         return sPattern.matcher(s).matches();
     }
 
+    public static boolean passwordCheck(String s) {
+        final Pattern sPattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{9,64}$");
+        return sPattern.matcher(s).matches();
+    }
+
     /**
      * A function that returns the sharedpreferences.
      *

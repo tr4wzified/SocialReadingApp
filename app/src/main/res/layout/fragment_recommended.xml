@@ -23,8 +23,12 @@
                 android:id="@+id/recommended_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onClick"
                 android:text="@string/recommended_title"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
