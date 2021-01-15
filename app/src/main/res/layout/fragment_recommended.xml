@@ -32,29 +32,29 @@
                 android:orientation="horizontal"
                 android:padding="4dp">
 
-                <ImageView
-                    android:id="@+id/recommend_image_1"
-                    style="@style/coverimage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="175dp"
-                    android:layout_weight="1"
-                    android:padding="2dp" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recommendRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/recommend_image_2"
-                    style="@style/coverimage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="175dp"
-                    android:layout_weight="1"
-                    android:padding="2dp" />
+                </androidx.recyclerview.widget.RecyclerView>
 
-                <ImageView
-                    android:id="@+id/recommend_image_3"
-                    style="@style/coverimage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="175dp"
-                    android:layout_weight="1"
-                    android:padding="2dp" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/recommend_image_2"-->
+<!--                    style="@style/coverimage"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="175dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:padding="2dp" />-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/recommend_image_3"-->
+<!--                    style="@style/coverimage"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="175dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:padding="2dp" />-->
             </LinearLayout>
 
         </LinearLayout>
