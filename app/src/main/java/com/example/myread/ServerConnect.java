@@ -37,7 +37,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
@@ -52,8 +51,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-import static java.util.concurrent.Executors.newFixedThreadPool;
-
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class ServerConnect extends AppCompatActivity {
 
@@ -62,7 +59,7 @@ public class ServerConnect extends AppCompatActivity {
     private final Base64.Decoder d = Base64.getDecoder();
     private final String ip = new String(d.decode(d.decode(GlobalApplication.getAppContext().getString(R.string.ip))));
     private final SharedPreferences prf = GlobalFunctions.getEncryptedSharedPreferences();
-    ExecutorService threadPool = newFixedThreadPool(2);
+
 
     private ServerConnect() {
     }
@@ -152,7 +149,7 @@ public class ServerConnect extends AppCompatActivity {
             if (body != null) request.post(body);
 
             final ServerCall c = new ServerCall(client, request.build());
-            return (Response) threadPool.submit(c).get();
+            return (Response) Threads.getInstance().threadPool.submit(c).get();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,11 +236,10 @@ public class ServerConnect extends AppCompatActivity {
         final User user = User.getInstance();
         user.name = name;
         if (sendGet("user/" + name).successful) {
-            threadPool.submit(() -> {
+            Threads.getInstance().threadPool.submit(() -> {
                 loadBooks(user, loadBookCollections(user));
+                getRecommendations();
             } );
-            getRecommendations();
-
 //            user.initAllBooksList();
         }
     }

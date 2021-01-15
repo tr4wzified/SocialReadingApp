@@ -1,19 +1,15 @@
 package com.example.myread.models;
 
 import com.example.myread.ServerConnect;
-import com.example.myread.adapters.BookListItemAdapter;
-import com.example.myread.adapters.CollectionAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import kotlin.jvm.internal.Lambda;
 
 public class User {
     private static User u = null;
     public String name;
     private final List<BookCollection> collectionList;
-    private List<Book> recommendationList;
+    private List<Book> recommendationList = new ArrayList<>();
     private Book tempBook;
     private String tempTitle;
 

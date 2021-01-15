@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myread.R;
 import com.example.myread.ServerConnect;
+import com.example.myread.Threads;
 import com.example.myread.adapters.BookListItemAdapter;
 import com.example.myread.adapters.RecommendedAdapter;
 import com.example.myread.models.Book;
@@ -49,10 +50,9 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
 
         final TextView recommendText = rootView.findViewById(R.id.recommended_title);
         recommendText.setOnClickListener(v -> {
-            ServerConnect.getInstance().getRecommendations();
+            Threads.getInstance().threadPool.submit(() -> ServerConnect.getInstance().getRecommendations());
             rAdapter.notifyDataSetChanged();
         });
-
         initCards();
 
         return rootView;
