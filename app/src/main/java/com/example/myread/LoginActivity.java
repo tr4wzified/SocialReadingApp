@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private String trim_username, trim_password;
     SharedPreferences prf;
     private ProgressBar spinner;
-    private Context context = GlobalApplication.getAppContext();
+    private final Context context = GlobalApplication.getAppContext();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private Boolean validateUsername() {
         if (TextUtils.isEmpty(trim_username)) {
-            username.setError(context.getString(R.string.username_not_entered));
+            runOnUiThread(() -> username.setError(context.getString(R.string.username_not_entered)));
             return false;
         }
         return true;
@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private Boolean validatePassword() {
         if (TextUtils.isEmpty(trim_password)) {
-            password.setError(context.getString(R.string.password_not_entered));
+            runOnUiThread(() -> password.setError(context.getString(R.string.password_not_entered)));
             return false;
         }
         return true;

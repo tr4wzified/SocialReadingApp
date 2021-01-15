@@ -34,9 +34,7 @@ public class User {
     public List<Book> getAllBooksList() {
         List<Book> bookList = new ArrayList<>();
         for (BookCollection bc : collectionList) {
-            for (Book book : bc.getBookList()) {
-                bookList.add(book);
-            }
+            bookList.addAll(bc.getBookList());
         }
         return bookList;
     }
@@ -64,7 +62,7 @@ public class User {
     }
 
     /**
-     * A function that returns the currently selected book.
+     * A function that gets the currently selected book.
      * @return a book.
      */
     public Book getTempBook() {
@@ -120,13 +118,6 @@ public class User {
     public BookCollection getBookCollectionByName(String name) {
         for (BookCollection bc : collectionList)
             if (bc.name.equals(name)) return bc;
-
-        return null;
-    }
-
-    public Book getBook(String cTitle, String bTitle) {
-        for (Book book : getBookCollection(cTitle))
-            if (book.title.equals(bTitle)) return book;
 
         return null;
     }

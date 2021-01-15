@@ -56,7 +56,7 @@ public class BookFragment extends Fragment {
      * A function that updates the field of a view.
      *
      * @param view to be updated view.
-     * @param text a string containing the name of the view.
+     * @param viewName a string containing the name of the view.
      * @param text a string containing the current text.
      */
     public void updateField(TextView view, String viewName, String text) {
