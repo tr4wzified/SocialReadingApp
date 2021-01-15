@@ -297,7 +297,7 @@ public class ServerConnect extends AppCompatActivity {
             }
         }
         System.out.println("Response not successful");
-        return null;
+        return new ArrayList<>();
     }
 
     /**
