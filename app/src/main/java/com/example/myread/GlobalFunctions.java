@@ -18,7 +18,7 @@ public class GlobalFunctions {
         return s.chars().allMatch(c -> c < 128);
     }
 
-    public static boolean createCollectionRegex(String s) {
+    public static boolean collectionRegex(String s) {
         final Pattern sPattern
                 = Pattern.compile("^[a-zA-Z0-9 ]*$");
 
