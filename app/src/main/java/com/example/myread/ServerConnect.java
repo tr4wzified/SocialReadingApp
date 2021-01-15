@@ -445,7 +445,7 @@ public class ServerConnect extends AppCompatActivity {
     }
 
     private TrustManager[] getTrustManager() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException {
-        String certString = "-----BEGIN CERTIFICATE-----\n" +
+        final String certString = "-----BEGIN CERTIFICATE-----\n" +
                 "MIIFIjCCBAqgAwIBAgISA76Bf3D+I804IqfSmgKMDwj7MA0GCSqGSIb3DQEBCwUA\n" +
                 "MDIxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQswCQYDVQQD\n" +
                 "EwJSMzAeFw0yMTAxMTMwNzUyNTNaFw0yMTA0MTMwNzUyNTNaMBgxFjAUBgNVBAMT\n" +
@@ -476,29 +476,29 @@ public class ServerConnect extends AppCompatActivity {
                 "y1FrIXPmM3muc5T0lf2zRBsZ6FZd3g==\n" +
                 "-----END CERTIFICATE-----";
 
-        Charset charset = StandardCharsets.US_ASCII;
-        byte[] certBytes = charset.encode(certString).array();
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        ByteArrayInputStream ba = new ByteArrayInputStream(certBytes);
-        Certificate cert = cf.generateCertificate(ba);
+        final Charset charset = StandardCharsets.US_ASCII;
+        final byte[] certBytes = charset.encode(certString).array();
+        final CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        final ByteArrayInputStream ba = new ByteArrayInputStream(certBytes);
+        final Certificate cert = cf.generateCertificate(ba);
 
         // Create a KeyStore containing our trusted CAs
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        final KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         keyStore.load(null, null);
         keyStore.setCertificateEntry("socialread.tk", cert);
 
         //Default TrustManager to get device trusted CA
-        TrustManagerFactory defaultTmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        final TrustManagerFactory defaultTmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         defaultTmf.init((KeyStore) null);
 
-        X509TrustManager trustManager = (X509TrustManager) defaultTmf.getTrustManagers()[0];
+        final X509TrustManager trustManager = (X509TrustManager) defaultTmf.getTrustManagers()[0];
         int number = 0;
         for(Certificate c : trustManager.getAcceptedIssuers()) {
             keyStore.setCertificateEntry(Integer.toString(number), c);
             number++;
         }
         // Create a TrustManager that trusts the CAs in our KeyStore
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        final TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmf.init(keyStore);
 
         return tmf.getTrustManagers();
@@ -512,7 +512,7 @@ public class ServerConnect extends AppCompatActivity {
     private OkHttpClient getSafeOkHttpClient() {
 
         try {
-            SSLContext context = SSLContext.getInstance("TLS");
+            final SSLContext context = SSLContext.getInstance("TLS");
             context.init(null, getTrustManager(), null);
 
             final ClearableCookieJar cookieJar = new PersistentCookieJar(
