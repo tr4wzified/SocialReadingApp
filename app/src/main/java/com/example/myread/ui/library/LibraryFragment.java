@@ -111,13 +111,13 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
                 return;
             }
             //Checks if the adding of the book collection was successful.
-            if (user.addBookCollection(new BookCollection(name))) {
+            if (GlobalFunctions.createCollectionRegex(name) && user.addBookCollection(new BookCollection(name))) {
                 mCards.add(new BookCollection(name));
                 Toast.makeText(getActivity(), "Collection: " + name + " has been created.", Toast.LENGTH_SHORT).show();
                 mAdapter.notifyDataSetChanged();
                 return;
             }
-            Toast.makeText(getActivity(), "Failed to add collection: " + name + ".", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Failed to add collection: " + name + ". Please only use alphanumeric characters.", Toast.LENGTH_SHORT).show();
         }
     }
 }
