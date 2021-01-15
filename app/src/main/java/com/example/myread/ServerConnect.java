@@ -345,6 +345,18 @@ public class ServerConnect extends AppCompatActivity {
         return books;
     }
 
+    /**
+     * A function that checks for a server connection.
+     * @return true or false
+     */
+    public boolean checkServerConnection() {
+        Response r = sendGet("");
+        return r.successful;
+    }
+
+    /**
+     * A function that cancels all currently executed search requests.
+     */
     public void cancelSearchRequests() {
         for (Call call : client.dispatcher().runningCalls()) {
             Object tag = call.request().tag();
