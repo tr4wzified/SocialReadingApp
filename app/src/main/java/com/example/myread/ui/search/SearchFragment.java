@@ -102,7 +102,10 @@ public class SearchFragment extends Fragment implements CollectionSearchAdapter.
             destroyed = true;
             return new ArrayList<>();
         }
-
+        if (!ServerConnect.getInstance().checkServerConnection()) {
+            Toast.makeText(getActivity(), context.getString(R.string.server_unreachable), Toast.LENGTH_SHORT).show();
+            return new ArrayList<>();
+        }
         final String bookName = Objects.requireNonNull(bookUserInput.getEditText()).getText().toString();
         final List<Book> bookList = ServerConnect.getInstance().getBooks(bookName);
         if (!destroyed && bookList.isEmpty()) {

@@ -9,12 +9,25 @@ import androidx.security.crypto.MasterKey;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.regex.Pattern;
 
 public class GlobalFunctions {
     private static SharedPreferences prf;
 
     public static boolean asciip(String s) {
         return s.chars().allMatch(c -> c < 128);
+    }
+
+    public static boolean collectionRegex(String s) {
+        final Pattern sPattern
+                = Pattern.compile("^[a-zA-Z0-9 ]*$");
+
+        return sPattern.matcher(s).matches();
+    }
+
+    public static boolean passwordCheck(String s) {
+        final Pattern sPattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{9,64}$");
+        return sPattern.matcher(s).matches();
     }
 
     /**

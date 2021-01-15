@@ -239,7 +239,11 @@ public class ServerConnect extends AppCompatActivity {
         final User user = User.getInstance();
         user.name = name;
         if (sendGet("user/" + name).successful) {
-            threadPool.submit(() -> loadBooks(user, loadBookCollections(user)));
+            threadPool.submit(() -> {
+                loadBooks(user, loadBookCollections(user));
+            } );
+            getRecommendations();
+
 //            user.initAllBooksList();
         }
     }
@@ -286,7 +290,7 @@ public class ServerConnect extends AppCompatActivity {
         return null;
     }
 
-    public ArrayList<Book> getRecommendations() {
+    public void getRecommendations() {
         final User user = User.getInstance();
         final Response response = sendGet("user/" + user.name + "/recommend_books");
 
@@ -298,17 +302,16 @@ public class ServerConnect extends AppCompatActivity {
                 for (int i = 0; i < arr.length(); i++)
                     list.add(arr.getString(i));//.getJSONObject(i).getString("name"));
 
-                final ArrayList<Book> b = new ArrayList<>();
+                final List<Book> b = new ArrayList<>();
                 for (String s : list)
                     b.add(getBookByID(s));
 
-                return b;
+                user.setRecommendationList(b);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-        System.out.println("Response not successful");
-        return null;
+        } else
+            System.out.println("Response not successful");
     }
 
     /**
@@ -353,6 +356,18 @@ public class ServerConnect extends AppCompatActivity {
         return books;
     }
 
+    /**
+     * A function that checks for a server connection.
+     * @return true or false
+     */
+    public boolean checkServerConnection() {
+        Response r = sendGet("");
+        return r.successful;
+    }
+
+    /**
+     * A function that cancels all currently executed search requests.
+     */
     public void cancelSearchRequests() {
         for (Call call : client.dispatcher().runningCalls()) {
             Object tag = call.request().tag();

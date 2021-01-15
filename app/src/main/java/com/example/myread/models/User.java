@@ -13,6 +13,7 @@ public class User {
     private static User u = null;
     public String name;
     private final List<BookCollection> collectionList;
+    private List<Book> recommendationList;
     private Book tempBook;
     private String tempTitle;
 
@@ -122,6 +123,14 @@ public class User {
         return null;
     }
 
+    public List<Book> getRecommendations() {
+        return recommendationList;
+    }
+
+    public void setRecommendationList(List<Book> bookList) {
+        this.recommendationList = bookList;
+    }
+
     /**
      * A function that adds a book collection to the collection list.
      * @param bookCollection a book collection.
@@ -171,6 +180,7 @@ public class User {
         collectionList.clear();
         tempBook = null;
         tempTitle = null;
+        recommendationList.clear();
     }
 
     /**
