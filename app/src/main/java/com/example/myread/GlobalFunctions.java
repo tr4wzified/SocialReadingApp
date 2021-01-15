@@ -18,10 +18,15 @@ public class GlobalFunctions {
         return s.chars().allMatch(c -> c < 128);
     }
 
-    public static boolean createCollectionRegex(String s) {
+    public static boolean collectionRegex(String s) {
         final Pattern sPattern
                 = Pattern.compile("^[a-zA-Z0-9 ]*$");
 
+        return sPattern.matcher(s).matches();
+    }
+
+    public static boolean passwordCheck(String s) {
+        final Pattern sPattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{9,64}$");
         return sPattern.matcher(s).matches();
     }
 

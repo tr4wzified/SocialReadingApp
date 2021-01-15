@@ -90,7 +90,7 @@ public class CollectionFragment extends Fragment implements CollectionAdapter.On
                 return;
             }
             //Checks if the adding of the book collection was successful.
-            if (user.renameBookCollection(user.getInstance().getBookCollectionByName(collectionTitle), name)) {
+            if (GlobalFunctions.collectionRegex(name) && user.renameBookCollection(user.getInstance().getBookCollectionByName(collectionTitle), name)) {
                 Toast.makeText(getActivity(), "Collection has been renamed to " + name + ".", Toast.LENGTH_SHORT).show();
                 if (name.length() > 20)
                     editText.setText(name.substring(0, 19).concat("..."));

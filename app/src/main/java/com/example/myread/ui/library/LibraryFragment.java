@@ -15,15 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myread.CollectionFragment;
 import com.example.myread.GlobalFunctions;
 import com.example.myread.NewCollectionDialog;
 import com.example.myread.R;
@@ -33,7 +28,6 @@ import com.example.myread.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardListener  {
     private LibraryAdapter mAdapter;
@@ -111,7 +105,7 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
                 return;
             }
             //Checks if the adding of the book collection was successful.
-            if (GlobalFunctions.createCollectionRegex(name) && user.addBookCollection(new BookCollection(name))) {
+            if (GlobalFunctions.collectionRegex(name) && user.addBookCollection(new BookCollection(name))) {
                 mCards.add(new BookCollection(name));
                 Toast.makeText(getActivity(), "Collection: " + name + " has been created.", Toast.LENGTH_SHORT).show();
                 mAdapter.notifyDataSetChanged();

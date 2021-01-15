@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -49,6 +50,12 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
         mRecyclerView.setAdapter(mAdapter);
         rRecyclerView.setAdapter(rAdapter);
 
+        TextView recommendText = rootView.findViewById(R.id.recommended_title);
+        recommendText.setOnClickListener(v -> {
+            ServerConnect.getInstance().getRecommendations();
+            rAdapter.notifyDataSetChanged();
+        });
+
         initCards();
 
         return rootView;
@@ -57,20 +64,14 @@ public class HomeFragment extends Fragment implements BookListItemAdapter.OnCard
     public void initCards() {
         mCards.clear();
         mCards.addAll(user.getAllBooksList());
-        initRecommended();
         mAdapter.notifyDataSetChanged();
+        initRecommended();
     }
 
     public void initRecommended() {
         rCards.clear();
-        rCards.addAll(getRecommendedBooks());
-
-       //TODO: Show books on screen and make clickable
-
-    }
-
-    public List<Book> getRecommendedBooks() {
-        return ServerConnect.getInstance().getRecommendations();
+        rCards.addAll(user.getRecommendations());
+        rAdapter.notifyDataSetChanged();
     }
 
     @Override
