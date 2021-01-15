@@ -3,7 +3,6 @@ package com.example.myread.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +26,7 @@ public class BookListItemAdapter extends RecyclerView.Adapter<BookListItemAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView bookTitle, bookAuthor;
-        private ImageView medium_cover_image;
+        private final ImageView medium_cover_image;
         final BookListItemAdapter.OnCardListener onCardListener;
 
         public ViewHolder(View view, BookListItemAdapter.OnCardListener onCardListener) {

@@ -1,17 +1,15 @@
 package com.example.myread;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.myread.models.Book;
 import com.example.myread.models.BookCollection;
 import com.example.myread.models.User;
-import com.example.myread.ui.home.HomeFragment;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -21,10 +19,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
@@ -35,19 +43,22 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
+import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class ServerConnect extends AppCompatActivity {
 
     private static ServerConnect s = null;
-    private final OkHttpClient client = getUnsafeOkHttpClient();
+    private final OkHttpClient client = getSafeOkHttpClient();
     private final Base64.Decoder d = Base64.getDecoder();
     private final String ip = new String(d.decode(d.decode(GlobalApplication.getAppContext().getString(R.string.ip))));
     private final SharedPreferences prf = GlobalFunctions.getEncryptedSharedPreferences();
@@ -284,7 +295,7 @@ public class ServerConnect extends AppCompatActivity {
                 //System.out.println(response.responseString);
                 final JSONArray arr = new JSONArray(response.responseString);
                 final List<String> list = new ArrayList<>();
-                for(int i = 0; i < arr.length(); i++)
+                for (int i = 0; i < arr.length(); i++)
                     list.add(arr.getString(i));//.getJSONObject(i).getString("name"));
 
                 final ArrayList<Book> b = new ArrayList<>();
@@ -418,6 +429,94 @@ public class ServerConnect extends AppCompatActivity {
         return sendGet("user/" + name + "/del_book_from_collection/" + collection_name + "/" + book_id);
     }
 
+    private TrustManager[] getTrustManager() throws CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException {
+        String certString = "-----BEGIN CERTIFICATE-----\n" +
+                "MIIFIjCCBAqgAwIBAgISA76Bf3D+I804IqfSmgKMDwj7MA0GCSqGSIb3DQEBCwUA\n" +
+                "MDIxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQswCQYDVQQD\n" +
+                "EwJSMzAeFw0yMTAxMTMwNzUyNTNaFw0yMTA0MTMwNzUyNTNaMBgxFjAUBgNVBAMT\n" +
+                "DXNvY2lhbHJlYWQudGswggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC4\n" +
+                "OWqMCDw+nr3MO5wyVPVzZgVD60VqyUrVeCYYfg7f692+NOtTsFYwsetYD7FpJbWU\n" +
+                "PdUliPaXkv1xH8nZHDNTYt63A1OGFI/fsgDUSXZGMHA7tJVkBwBo3pmYAutXpb5b\n" +
+                "kdE0BLk76zI69Llyx6QrRiNP9HEjMXhXehird7UGJOHoyp4ux0zZuqqyUWAlV3Dd\n" +
+                "W1Aw1RhKFHLV6KUDgdpoiQ9EHjPdvHgXbojbp/+tVynd2SX+RgjKWnfroJ5Lv4Sa\n" +
+                "g42+YXXiC9Gpvnn4StBmooVRkbZuMUdlKwxPbIBBRwrhczBWhPed+Bq0C3QZ9e7c\n" +
+                "RLM4feu+iPe/sCn/qbofAgMBAAGjggJKMIICRjAOBgNVHQ8BAf8EBAMCBaAwHQYD\n" +
+                "VR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0O\n" +
+                "BBYEFK2QfqK9EXv0SDI/uyINNCJfpQv1MB8GA1UdIwQYMBaAFBQusxe3WFbLrlAJ\n" +
+                "QOYfr52LFMLGMFUGCCsGAQUFBwEBBEkwRzAhBggrBgEFBQcwAYYVaHR0cDovL3Iz\n" +
+                "Lm8ubGVuY3Iub3JnMCIGCCsGAQUFBzAChhZodHRwOi8vcjMuaS5sZW5jci5vcmcv\n" +
+                "MBgGA1UdEQQRMA+CDXNvY2lhbHJlYWQudGswTAYDVR0gBEUwQzAIBgZngQwBAgEw\n" +
+                "NwYLKwYBBAGC3xMBAQEwKDAmBggrBgEFBQcCARYaaHR0cDovL2Nwcy5sZXRzZW5j\n" +
+                "cnlwdC5vcmcwggEGBgorBgEEAdZ5AgQCBIH3BIH0APIAdwCUILwejtWNbIhzH4KL\n" +
+                "IiwN0dpNXmxPlD1h204vWE2iwgAAAXb68qDfAAAEAwBIMEYCIQCKruhiUkDETH6E\n" +
+                "mGSENr0OnjqgcJrH6VPGT12u/gGHaQIhAI7wG7kNVd5jU/DrbAPSMbZMTlG3VqCY\n" +
+                "JLwM8EGhOhp7AHcA9lyUL9F3MCIUVBgIMJRWjuNNExkzv98MLyALzE7xZOMAAAF2\n" +
+                "+vKg/gAABAMASDBGAiEArxskQVbjXCz8o+j5PjgDOblZDhhfeHgUMmYOx3V8RHsC\n" +
+                "IQD0NcuFHY8Ueo10sjkQmqilXji/ys8lt2BlNk8GTxwqzTANBgkqhkiG9w0BAQsF\n" +
+                "AAOCAQEAh1fg8OMvpgU+cM1Yn88IqN/zwE2rSswmzIJFJ0PF8oF0Fg4Nf285GuXY\n" +
+                "r1qB7anqZ7fxMAD/4w+akE9Mvbs0mYubXhshsehLd7Z5lBr/JLJ0NYGHEHdkK+uW\n" +
+                "ltjf4t87ryVzqSEiffbOJSROXm8C+KXIgfWfzJVvm+/wGP4MtxOZ8te/KM17XGbK\n" +
+                "uLkezE6zmOciHAdxPePGyKkHFtBUjzGrN5od6fZnNMHyqEKYc8BwJVXRO7H0wqfg\n" +
+                "7kS4Ei319V+nKQenzfFFb73WclwN0/U0/ZObIxZ7B0YSEs0kwsc/Mz44ej7GjK0m\n" +
+                "y1FrIXPmM3muc5T0lf2zRBsZ6FZd3g==\n" +
+                "-----END CERTIFICATE-----";
+
+        Charset charset = StandardCharsets.US_ASCII;
+        byte[] certBytes = charset.encode(certString).array();
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        ByteArrayInputStream ba = new ByteArrayInputStream(certBytes);
+        Certificate cert = cf.generateCertificate(ba);
+
+        // Create a KeyStore containing our trusted CAs
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        keyStore.load(null, null);
+        keyStore.setCertificateEntry("socialread.tk", cert);
+
+        //Default TrustManager to get device trusted CA
+        TrustManagerFactory defaultTmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        defaultTmf.init((KeyStore) null);
+
+        X509TrustManager trustManager = (X509TrustManager) defaultTmf.getTrustManagers()[0];
+        int number = 0;
+        for(Certificate c : trustManager.getAcceptedIssuers()) {
+            keyStore.setCertificateEntry(Integer.toString(number), c);
+            number++;
+        }
+        // Create a TrustManager that trusts the CAs in our KeyStore
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init(keyStore);
+
+        return tmf.getTrustManagers();
+    }
+
+    /**
+     * A function that will create a HTTP client with certificate checking
+     *
+     * @return the HTTP client.
+     */
+    private OkHttpClient getSafeOkHttpClient() {
+
+        try {
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, getTrustManager(), null);
+
+            final ClearableCookieJar cookieJar = new PersistentCookieJar(
+                    new SetCookieCache(),
+                    new SharedPrefsCookiePersistor(GlobalApplication.getAppContext())
+            );
+
+            final OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                    .sslSocketFactory(context.getSocketFactory(), (X509TrustManager) getTrustManager()[0])
+                    .connectionSpecs(Arrays.asList(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS))
+                    .readTimeout(120, TimeUnit.SECONDS)
+                    .cookieJar(cookieJar);
+
+            return builder.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * A function that will create a HTTP client without certificate verification.
      *
@@ -462,4 +561,9 @@ public class ServerConnect extends AppCompatActivity {
             throw new RuntimeException(e);
         }
     }
+
+
+
+
+
 }
