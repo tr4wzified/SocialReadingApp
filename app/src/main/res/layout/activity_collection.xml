@@ -9,10 +9,10 @@
     android:layout_margin="5dp">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/collectionRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,9 +22,9 @@
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_marginStart="8dp"
+            android:gravity="center"
             android:text="@string/library"
             android:textAlignment="center"
-            android:gravity="center"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +37,7 @@
             android:id="@+id/renamebutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="RENAME COLLECTION" />
+            android:text="@string/rename_collection" />
 
         <TextView
             android:id="@+id/book_collections"
@@ -57,15 +57,14 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/collectionRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:padding="5dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
