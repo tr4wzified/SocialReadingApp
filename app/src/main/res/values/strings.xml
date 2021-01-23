@@ -83,10 +83,15 @@
     <string name="count_books">Contains %1$d book(s)</string>
     <string name="recommended_title">Recommended</string>
     <string name="amazon">Amazon</string>
+    <string name="update">Update</string>
 
     <!--    Settings-->
     <string name="deleteAccountBtn">Delete account</string>
     <string name="deleteAccountText">Delete your account</string>
     <string name="deleteAccountTextConfirmation">In order to delete your account you must confirm your password.</string>
     <string name="deletePassword">Password</string>
+    <string name="change_password">Change password</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+    <string name="repeat_new_password">Repeat new password</string>
 </resources>
