@@ -105,7 +105,7 @@ public class LibraryFragment extends Fragment implements LibraryAdapter.OnCardLi
                 return;
             }
             //Checks if the adding of the book collection was successful.
-            if (GlobalFunctions.collectionRegex(name) && user.addBookCollection(new BookCollection(name))) {
+            if (!TextUtils.isEmpty(name) && GlobalFunctions.collectionRegex(name) && user.addBookCollection(new BookCollection(name))) {
                 mCards.add(new BookCollection(name));
                 Toast.makeText(getActivity(), "Collection: " + name + " has been created.", Toast.LENGTH_SHORT).show();
                 mAdapter.notifyDataSetChanged();
